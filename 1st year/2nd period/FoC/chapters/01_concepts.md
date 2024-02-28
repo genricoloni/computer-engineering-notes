@@ -147,6 +147,6 @@ A crypto scheme is said to be **malleable** if it's possible to modify the ciphe
 
 - suppose that Alice sends a message $c = p \oplus k$ to Bob, and Eve intercepts the message;
 - Eve can modify the message by XORing it with another message $m$, and send the new message $c' = c \oplus r$ to Bob, where r is a *perturbation*;
-- Bob now receives the message $c'$, and decrypts it to obtain $p' = c' \oplus k = c \oplus r \oplus k = p \oplus k \oplus r \oplus k = p \oplus r$.
+- Bob now receives the message $c'$, and decrypts it to obtain \\ $p' = c' \oplus k = c \oplus r \oplus k = p \oplus k \oplus r \oplus k = p \oplus r$.
 
-The perturbation goes unnoticed, and can hace a significant impact on the plaintext.
+The perturbation goes unnoticed, and can have a significant impact on the plaintext.

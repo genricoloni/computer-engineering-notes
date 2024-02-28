@@ -264,8 +264,16 @@ Loni</p></li>
         <ul>
         <li><a href="#proof-for-xor-cipher"
         id="toc-proof-for-xor-cipher">Proof for XOR cipher</a></li>
+        <li><a href="#one-time-pad-has-a-perfect-secrecy"
+        id="toc-one-time-pad-has-a-perfect-secrecy">One-time pad has a
+        perfect secrecy</a></li>
+        <li><a href="#one-time-pad-pros-and-cons"
+        id="toc-one-time-pad-pros-and-cons">One-time pad: pros and
+        cons</a></li>
+        <li><a href="#one-time-pad-malleability"
+        id="toc-one-time-pad-malleability">One time pad
+        malleability</a></li>
         </ul></li>
-        <li><a href="#section" id="toc-section"></a></li>
         </ul></li>
         </ul>
 
@@ -514,8 +522,8 @@ holds that <span class="math inline">\(P[M = m | C = c] = P[M = m] &gt;
 (G,E,D)\)</span> over <span class="math inline">\((K,M,C)\)</span> is
 said to be <strong>perfectly indistinguishable</strong> if:</p>
 <ul>
-<li><span class="math inline">\(\forall m_1, m_2 \in M \text{, } |m_1| =
-|m_2|\)</span>;</li>
+<li><span class="math inline">\(\forall m_1 \text{, } m_2 \in M \text{,
+} |m_1| = |m_2|\)</span>;</li>
 <li><span class="math inline">\(k \leftarrow\)</span> Gen() is chosen
 uniformly at random;</li>
 <li><span class="math inline">\(\forall c \in C\)</span>, <span
@@ -562,7 +570,59 @@ such that <span class="math inline">\(K_0 + K_1 = 1\)</span>;</li>
 X_1K_1\)</span> = <span class="math inline">\(X_0\cdot 0.5 + X_1\cdot
 0.5 =\\= 0.5 \cdot (X_0 + X_1) = 0.5\)</span>.</li>
 </ul>
-<h2 id="section"></h2>
+<h3 id="one-time-pad-has-a-perfect-secrecy">One-time pad has a perfect
+secrecy</h3>
+<p>The proof for the one-time pad is the following:</p>
+<ol type="1">
+<li>from <strong>Bayes’ theorem</strong>, we have that <span
+class="math inline">\(P[M = m | C = c] = \frac{P[C = c | M = m]P[M =
+m]}{P[C = c]}\)</span>;</li>
+<li>from <strong>Total probability theorem</strong>, we have that <span
+class="math inline">\(P[C = c] = \sum_{i}^{|M|} P[C = c | M = m_i]P[M =
+m_i] = \sum_{i}^{|M|} P[K = c \oplus m_i]P[M = m_i] =\\= \sum_{i}^{|M|}
+\frac{1}{2^t}P[M = m_i] = \frac{1}{2^t}\)</span>;</li>
+<li>substituting the previous point in the first one, we have that <span
+class="math inline">\(P[M = m | C = c] = P[K = c \oplus m] \frac{P[M =
+m]}{2^t} = 2^{-t} \frac{P[M = m]}{2^t} = P[M = m]\)</span>.</li>
+</ol>
+<h3 id="one-time-pad-pros-and-cons">One-time pad: pros and cons</h3>
+<p>The one-time pad has some pros:</p>
+<ul>
+<li>it’s perfectly secure;</li>
+<li>it’s simple and efficient;</li>
+<li>only one key maps a message <span class="math inline">\(m\)</span>
+to a ciphertext <span class="math inline">\(c\)</span>.</li>
+</ul>
+<p>On the other hand, it has some cons:</p>
+<ul>
+<li>the key must be as long as the message, so it’s almost impossible to
+use it in practice;</li>
+<li>keys must be used only once, so they must be shared in advance, and
+this is not always possible;</li>
+<li>a known-plaintext attack is possible, because the key can be
+recovered by XORing the plaintext and the ciphertext.</li>
+</ul>
+<h3 id="one-time-pad-malleability">One time pad malleability</h3>
+<p>A crypto scheme is said to be <strong>malleable</strong> if it’s
+possible to modify the ciphertext in such a way that the resulting
+plaintext is related to the original plaintext. The one-time pad is
+malleable, because if we XOR the ciphertext with a message, we obtain a
+new ciphertext that decrypts to a message related to the original
+message. A pratical example is the following:</p>
+<ul>
+<li>suppose that Alice sends a message <span class="math inline">\(c = p
+\oplus k\)</span> to Bob, and Eve intercepts the message;</li>
+<li>Eve can modify the message by XORing it with another message <span
+class="math inline">\(m\)</span>, and send the new message <span
+class="math inline">\(c&#39; = c \oplus r\)</span> to Bob, where r is a
+<em>perturbation</em>;</li>
+<li>Bob now receives the message <span
+class="math inline">\(c&#39;\)</span>, and decrypts it to obtain \ <span
+class="math inline">\(p&#39; = c&#39; \oplus k = c \oplus r \oplus k = p
+\oplus k \oplus r \oplus k = p \oplus r\)</span>.</li>
+</ul>
+<p>The perturbation goes unnoticed, and can have a significant impact on
+the plaintext.</p>
             </div>
     </div>
   </div>
