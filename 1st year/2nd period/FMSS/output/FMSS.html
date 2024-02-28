@@ -267,6 +267,9 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
   
 </head>
 <body>
@@ -330,6 +333,49 @@ Loni</p></li>
         <li><a href="#dependability-attributes"
         id="toc-dependability-attributes">Dependability
         attributes</a></li>
+        </ul></li>
+        <li><a href="#taxonomy-of-faults"
+        id="toc-taxonomy-of-faults">Taxonomy of faults</a>
+        <ul>
+        <li><a href="#the-system-life-cycle"
+        id="toc-the-system-life-cycle">The system life cycle</a></li>
+        <li><a href="#faults-classification"
+        id="toc-faults-classification">Faults classification</a></li>
+        </ul></li>
+        <li><a href="#failures" id="toc-failures">Failures</a>
+        <ul>
+        <li><a href="#failure-domain" id="toc-failure-domain">Failure
+        domain</a></li>
+        <li><a href="#consistency-domain"
+        id="toc-consistency-domain">Consistency domain</a></li>
+        <li><a href="#detectability-domain"
+        id="toc-detectability-domain">Detectability domain</a></li>
+        <li><a href="#consequences-domain"
+        id="toc-consequences-domain">Consequences domain</a></li>
+        <li><a href="#criteria-to-evaluate-the-severity-of-a-failure"
+        id="toc-criteria-to-evaluate-the-severity-of-a-failure">Criteria
+        to evaluate the severity of a failure</a></li>
+        <li><a href="#system-failures" id="toc-system-failures">System
+        failures</a></li>
+        <li><a href="#dependability-and-security-failures"
+        id="toc-dependability-and-security-failures">Dependability and
+        security failures</a></li>
+        </ul></li>
+        <li><a href="#errors" id="toc-errors">Errors</a></li>
+        <li><a
+        href="#chain-of-threats---relationship-between-faults-errors-and-failures"
+        id="toc-chain-of-threats---relationship-between-faults-errors-and-failures">Chain
+        of threats - Relationship between faults, errors and
+        failures</a></li>
+        <li><a href="#dependability-means"
+        id="toc-dependability-means">Dependability means</a>
+        <ul>
+        <li><a href="#fault-prevention" id="toc-fault-prevention">Fault
+        prevention</a></li>
+        <li><a href="#fault-tolerance" id="toc-fault-tolerance">Fault
+        tolerance</a></li>
+        <li><a href="#error-recovery" id="toc-error-recovery">Error
+        recovery</a></li>
         </ul></li>
         </ul></li>
         </ul>
@@ -548,6 +594,374 @@ modifications and repairs.</li>
 <p>We also briefly present the concept of <strong>trust</strong> between
 systems, that express the dependance of dependability of the system A
 from the dependability of the system B.</p>
+<p>From them, we can gave a new definition of dependability, based on
+the frequency of the service failures:</p>
+<blockquote>
+<p>Dependability is the ability of the system to deliver the service in
+accordance with the specification, avoiding that service failures occur
+with a frequency that is greater than a certain threshold.</p>
+</blockquote>
+<p>The threshold should be derived from the system requirements, and
+should consider frequency, duration and severity of the service
+failures.</p>
+<h2 id="taxonomy-of-faults">Taxonomy of faults</h2>
+<h3 id="the-system-life-cycle">The system life cycle</h3>
+<p>We define the <strong>system life cycle</strong> as the period of
+time that starts from the conception of the system and continues until
+the system is decommissioned. We’re going to consider only two phases of
+the system life cycle: the <strong>development phase</strong>, during
+which the system is designed and implemented, and the <strong>use
+phase</strong>, during which the system is used to deliver the
+service.</p>
+<h4 id="development-phase">Development phase</h4>
+<p>In this phase the system only interact with the <strong>development
+environment</strong>, such as physical world, human developers, their
+tools and possible facilities: in this phase development faults can be
+introduced in the system.</p>
+<h4 id="use-phase">Use phase</h4>
+<p>In this phase the system interacts with the <strong>use
+environment</strong>:</p>
+<ul>
+<li><strong>Physical environment</strong>: the system is subject to
+physical stress, such as temperature, humidity, vibrations, etc;</li>
+<li><strong>administrator</strong>: who manages the system;</li>
+<li><strong>users</strong>: who interact with the system;</li>
+<li><strong>providers</strong>: who delivers the system to the
+users;</li>
+<li><strong>infrastructure</strong>: everything that is needed to
+support the system;</li>
+<li><strong>intruders</strong>: who try to attack the system.</li>
+</ul>
+<p>The use phase alternates period of <strong>correct delivery</strong>
+of the service, <strong>service outage</strong> and <strong>service
+shutdown</strong>:</p>
+<ul>
+<li><strong>service outage</strong>: when the system has a service
+failure, and it’s not able to deliver the service correctly;</li>
+<li><strong>service shutdown</strong>: when the system is stopped for
+maintenance or for other reasons. Note that maintenance may take place
+during every period of time, and includes both repair and
+modification.</li>
+</ul>
+<p>In fact, there is a taxonomy for the maintenance: if the system is
+stopped for repair an active fault, then we have a <strong>corrective
+maintenance</strong>; if the system is stopped for repair a dormant
+fault, then we have a <strong>preventive maintenance</strong>; if the
+system is stopped for modification, then we have an <strong>adaptive
+maintenance</strong>, or <strong>augmentative maintenance</strong> if
+the system is stopped for improvement.</p>
+<p>$$</p>
+<h3 id="faults-classification">Faults classification</h3>
+<p>Given the fact that faults can’t be enumerated, it’s useful to
+classify them in order to understand their nature and their effects,
+because we can also identify the mechanisms that can be used to prevent
+that specific class of faults.</p>
+<figure>
+<img src="../images/01/fault%20classification.png" width="400"
+alt="Faults classification - Avizienis et al., 2004" />
+<figcaption aria-hidden="true">Faults classification - Avizienis et al.,
+2004</figcaption>
+</figure>
+<p>We identifies three main classes of faults:</p>
+<ul>
+<li><strong>development faults</strong>: faults that are introduced
+during the development phase;</li>
+<li><strong>physical faults</strong>: faults that affect the physical
+components of the system;</li>
+<li><strong>interaction faults</strong>: faults that includes all the
+external faults.</li>
+</ul>
+<p>Overlapping classes are possible, so we’re able to identify 31
+possible combinations of faults.</p>
+<figure>
+<img src="../images/01/fault%20combinations.png" width="400"
+alt="Faults classification - Avizienis et al., 2004" />
+<figcaption aria-hidden="true">Faults classification - Avizienis et al.,
+2004</figcaption>
+</figure>
+<p>We’re going to analyze the most important classes of faults, having
+in mind the previous figure.</p>
+<h4 id="natural-faults">Natural faults</h4>
+<p>They’re the faults numbered from <span
+class="math inline">\(11\)</span> to <span
+class="math inline">\(15\)</span> in the previous figure, and they’re
+are mainly hardware faults caused by natural phenomena, without the
+intervention of humans.</p>
+<ul>
+<li><strong>Production defect</strong>, <span
+class="math inline">\(11\)</span>: a fault that is introduced during the
+development;</li>
+<li><strong>internal defect</strong>, <span class="math inline">\(12
+\text{ and } 13\)</span>: a fault that is introduced during the use
+phase, and it’s caused by the physical degradation of the
+components;</li>
+<li><strong>external defect</strong>, <span class="math inline">\(14
+\text{ and } 15\)</span>: a fault that is introduced during the use
+phase, and it’s caused by the physical stress of the environment,
+outside the system boundaries.</li>
+</ul>
+<h4 id="human-made-faults">Human-made faults</h4>
+<p>We can distinguish between <strong>malicious faults</strong>,
+introduced with the intent to harm the system, and <strong>non-malicious
+faults</strong>, introduced without any malicious intent.</p>
+<p>The formers have as a goal to harm the system, the latter are divided
+in two more classes:</p>
+<ul>
+<li><strong>non-deliberate faults</strong>: faults that are introduced
+as human errors (<span class="math inline">\(1 \text{, } 2 \text{, } 7
+\text{, } 8 \text{, } 16 \text{-}18 \text{, }
+26\text{-}28\)</span>);</li>
+<li><strong>deliberate faults</strong>: faults that are introduced as a
+consequence of a deliberate action, such as a bad decision (<span
+class="math inline">\(3 \text{, } 4 \text{, } 9 \text{, } 10 \text{, }
+19 \text{-}21 \text{, } 29\text{-}31\)</span>).</li>
+</ul>
+<p>The latter can be introduced during <strong>development</strong> or
+by <strong>interaction</strong>:</p>
+<ul>
+<li><strong>deliberate development faults</strong>: are generally the
+result of a trade-off, both in terms of performance and economy (<span
+class="math inline">\(3 \text{, } 4 \text{, } 9 \text{, }
+10\)</span>);</li>
+<li><strong>deliberate interaction faults</strong>: when operational
+procedures are deliberately violated (<span class="math inline">\(19
+\text{-}21 \text{, } 29\text{-}31\)</span>).</li>
+</ul>
+<p>In general, <strong>deliberate faults</strong> shows up only after an
+unacceptable behavior of the system, and it can be difficult to realize
+the actual faults because, when it happened, who introduced the fault
+can be not conscious of the consequences of his action.</p>
+<p>However, not all mistakes and dab decisions by non-malicious humans
+are accidental: we can distinguish between <strong>accidental
+faults</strong> and <strong>incompetence faults</strong>.</p>
+<h4 id="interaction-faults">Interaction faults</h4>
+<p>They can also be named as <strong>operational faults</strong>, given
+the fact that they occour during the use phase, and they’re all
+external, because they’re caused by the interaction between the system
+and the environment. Classes from <span
+class="math inline">\(16\)</span> to <span
+class="math inline">\(31\)</span> are human made, and only <span
+class="math inline">\(14\)</span> and <span
+class="math inline">\(15\)</span> are natural.</p>
+<p>A common feature of these faults is the fact that they usually need
+the presence of a vulnerability in the system, that is a property of the
+system that allows an external agent to cause a fault, both intentional
+and unintentional.</p>
+<p>Lastly, we recognize the <strong>permanent faults</strong>, that are
+continuous and stable, and the <strong>transient faults</strong>, that
+are temporary, even for very short periods of time.</p>
+<h2 id="failures">Failures</h2>
+<p>In order to characterize the failures, we use four different
+dimensions, such that each of them can describe a different aspect of
+the failure.</p>
+<h3 id="failure-domain">Failure domain</h3>
+<p>This point of view leads us to distinguish between <strong>content
+failures</strong>, that are the result of the system’s inability to
+deliver the correct service, and <strong>timing failures</strong>, that
+are the result of the system’s inability to deliver the correct service
+at the correct time (early, late, or never).</p>
+<h3 id="consistency-domain">Consistency domain</h3>
+<p>When a system has more than one user, it’s important to understand if
+a failure shows up identically for each user, and we call this situation
+<strong>consistent failure</strong>, or if the failure shows up
+differently for each user, and we call this situation
+<strong>inconsistent failure</strong>.</p>
+<h3 id="detectability-domain">Detectability domain</h3>
+<p>It’s the property of the system to check the correctness of the
+service, and it’s the ability of the system to detect the failure. These
+mechanisms have two failure modes:</p>
+<ul>
+<li><strong>false alarm</strong>: the system detects a failure when
+there isn’t;</li>
+<li><strong>missed detection</strong>: the system doesn’t detect a
+failure when there is.</li>
+</ul>
+<h3 id="consequences-domain">Consequences domain</h3>
+<p>Consequences of a failure are divided in two classes, based on their
+severity and impact:</p>
+<ul>
+<li><strong>minor failure</strong>: the failure has a similar cost to
+the benefit of the service;</li>
+<li><strong>catastrophic failure</strong>: the failure has a cost that
+is much greater than the benefit of the service.</li>
+</ul>
+<h3 id="criteria-to-evaluate-the-severity-of-a-failure">Criteria to
+evaluate the severity of a failure</h3>
+<p>We can use the following criteria to evaluate the severity of a
+failure:</p>
+<ul>
+<li><strong>availability</strong>: the duration of the service
+outage;</li>
+<li><strong>safety</strong>: possible loss of life or injury;</li>
+<li><strong>confidentiality</strong>: possible unauthorized disclosure
+of information;</li>
+<li><strong>integrity</strong>: data corruption and/or inability to
+recover;</li>
+</ul>
+<h3 id="system-failures">System failures</h3>
+<p>When a system has a failure, it is usually caused by different
+coexisting faults; we talk about <strong>single fails</strong> if the
+failure is caused by a single fault, and <strong>multiple fails</strong>
+if the failure is caused by multiple faults. In the latter we can also
+divide the faults in <strong>independent</strong> and
+<strong>dependent</strong>, respectively if the faults are not related
+to each other, and if the faults have a common cause.</p>
+<h3 id="dependability-and-security-failures">Dependability and security
+failures</h3>
+<p>These failures occurs if the system suffers service failures more
+frequently than an acceptable threshold; even the specifications of the
+system can contain faults:</p>
+<ul>
+<li><strong>omission</strong>: a requirement is not included in the
+specification;</li>
+<li><strong>unjustified requirements</strong>: choice of requirements
+that are not justified by the system’s function, that raises the cost of
+the system.</li>
+</ul>
+<p>Systems can have different type of failures:</p>
+<ul>
+<li><strong>fail-controlled</strong>: the system is designed to fail in
+a controlled way, described by the system’s specification;</li>
+<li><strong>fail-stopped</strong>: the system in which possible failures
+are only <em>haltings</em>;</li>
+<li><strong>fail-silent</strong>: the system in which possible failures
+are only <em>silents</em>;</li>
+<li><strong>fail-safe</strong>: the system in which there are only minor
+failures;</li>
+</ul>
+<h2 id="errors">Errors</h2>
+<p>As we saw, an error is a part of the system state that is able to
+lead to a failure. An error is detected if a signal to indicate its
+presence in raised, otherwise the error is undetected and it’s called
+<strong>latent error</strong>. It’s not true that every error leads to a
+failure, and this depends on:</p>
+<ul>
+<li>the <strong>structure of the system</strong>, specially the presence
+of redundancy;</li>
+<li>the <strong>behavior of the system</strong>, for example the part of
+the state that contains the error is never reached during the delivery
+of the service, then the error is not able to lead to a failure.</li>
+</ul>
+<p>The classification of the error is done according to the damage
+pattern (single, double or triple bit, burst, etc.), and how many
+components are affected by the error (single, multiple, etc.).</p>
+<h2
+id="chain-of-threats---relationship-between-faults-errors-and-failures">Chain
+of threats - Relationship between faults, errors and failures</h2>
+<p>When systems have to interact with each other, an error propagation
+can occur:</p>
+<figure>
+<img src="../images/01/chain%20of%20threats.png" width="400"
+alt="Chain of threats - Avizienis et al., 2004" />
+<figcaption aria-hidden="true">Chain of threats - Avizienis et al.,
+2004</figcaption>
+</figure>
+<p>An <strong>active fault</strong> is when it leads to an error, both
+if it’s internal or external, and it can lead to a failure, and a
+<strong>fault activation</strong> occurs when a particular input
+activates a dormant fault in a specific component. This can also be a
+<strong>propagation</strong> between the components, where an error of a
+component can lead to an error of another component.</p>
+<p><strong>Example</strong>: error propagation</p>
+<blockquote>
+<p>Take a sensor which reports the spinning speed of a turbine. If the
+sensor fails and starts to report that the turbine is no longer
+spinning, it inject incorrect data (fault) into the control system, that
+will send to the turbine the wrong commands, and the turbine could be
+damaged (failure).</p>
+</blockquote>
+<h2 id="dependability-means">Dependability means</h2>
+<p>When we talk about dependability means, we refer to the mechanisms
+that are used to prevent, detect and tolerate, or in general deal, with
+faults.</p>
+<h3 id="fault-prevention">Fault prevention</h3>
+<p>These techniques are usually related to general system design, and
+they’re used to avoid the introduction of faults in the system. They can
+be divided in two classes:</p>
+<ul>
+<li><strong>development fault prevention</strong>: techniques that are
+used to avoid the introduction of faults during the development
+phase;</li>
+<li><strong>improved development process</strong>: techniques that are
+used to improve the development process, such as the use of formal
+methods, the use of a rigorous testing and so on.</li>
+</ul>
+<h3 id="fault-tolerance">Fault tolerance</h3>
+<p>It’s the ability to deal with faults at run-time, and ensure that the
+system is able to deliver the service even in presence of faults. There
+are a lot of techniques that can be used to achieve fault tolerance, as
+we can see in the following figure:</p>
+<figure>
+<img src="../images/01/tolerance.png" width="400"
+alt="Fault tolerance techniques - Avizienis et al., 2004" />
+<figcaption aria-hidden="true">Fault tolerance techniques - Avizienis et
+al., 2004</figcaption>
+</figure>
+<h4 id="error-detection">Error detection</h4>
+<p>For simplicity, let’s state that <em>when the error reaches the
+boundaries of the systems, then we have a failure</em>. In this context,
+the most challenging aspect are:</p>
+<ul>
+<li>the <strong>identification of the error</strong>, that is the
+ability to detect the presence of the error;</li>
+<li><strong>ensure that status containing the error is never
+reached</strong>, that is the ability to avoid that the error leads to a
+failure;</li>
+<li>the <strong>prevention of the error propagation</strong>, that is
+the ability to avoid that the error of a component leads to the error of
+another component.</li>
+</ul>
+<p><strong>Example</strong>: error detection with two systems</p>
+<blockquote>
+<p>Take two systems, A and B, that should provide the same service. If
+they get the same input, then they should provide the same output. If
+the outputs are different, then we have a detection of the error, within
+the hypothesis that the systems are independent and it’s very unlikely
+that they have the same error at the same time.</p>
+</blockquote>
+<h3 id="error-recovery">Error recovery</h3>
+<h4 id="error-compensation">Error compensation</h4>
+<p>When we talk about fault tolerance, we’re in fact talking about
+<strong>fault masking</strong>: a general method to achieve this goal is
+<strong>performing multiple computations</strong> trough replicas, and
+then apply a vote mechanism to the results. It’s worth to remember that
+hardware faults <strong>fails independently</strong> and, on the
+contrary, software faults <strong>fails dependently</strong>: to achieve
+a sort of independence, we can use <strong>design diversity</strong>,
+that is the use of different design techniques to implement the same
+function.</p>
+<p><strong>Example</strong>: error compensation with TMR</p>
+<blockquote>
+<p>Take a system that uses a <strong>Triple Modular Redundancy</strong>
+(TMR) to achieve fault tolerance. The system has three replicas, and the
+output is the result of a majority vote. If one of the replicas fails,
+then the output is still correct, because the other two replicas are
+still able to provide the correct output.</p>
+</blockquote>
+<h4 id="organization-of-fault-tolerance">Organization of fault
+tolerance</h4>
+<p>We can summarize the organization of fault tolerance in the following
+figure:</p>
+<figure>
+<img src="../images/01/summary.png" width="400"
+alt="Organization of fault tolerance - Avizienis et al., 2004" />
+<figcaption aria-hidden="true">Organization of fault tolerance -
+Avizienis et al., 2004</figcaption>
+</figure>
+<p>WE just have to add some definitions:</p>
+<ul>
+<li><strong>solid faults</strong> are those that are permanent and their
+activation is repeatable;</li>
+<li><strong>elusive faults</strong> are those that are permanent and
+their activation is not systematically reproducible;</li>
+<li><strong>intermittent faults</strong> are those with transient
+physical or interaction faults, and their activation is not
+systematically reproducible.</li>
+</ul>
+<p>Remember that the classes of faults that can be actually tolerated
+depend on the fault assumption that is being considered in the
+development process, and on the independence of the redundant components
+that are used to achieve fault tolerance.</p>
             </div>
     </div>
   </div>
