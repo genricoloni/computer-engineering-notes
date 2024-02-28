@@ -1,0 +1,557 @@
+<!doctype html>
+<html  lang="it" >
+<head>
+    <style>
+		#TOC {
+			overflow-y: hidden !important; 
+			font-size: smaller !important;
+			/*margin-right: 20px;*/
+		}
+
+		p, h1, h2, h3, h4, h5, a, span, li, ul, ol, th, tr, table, figcaption {
+			font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif !important;
+		}
+
+		[class*="span"] {
+			margin-left: 0 !important;
+		}
+
+		.well {
+			min-height: 0px !important;
+			padding: 0px !important;
+			margin-bottom: 0px !important;
+			background-color: #FFFFFF  !important;
+			border: 0 !important;
+			-webkit-border-radius: 0 !important;
+			-moz-border-radius: 0 !important;
+			border-radius: 0 !important;
+			-webkit-box-shadow: none !important;
+			-moz-box-shadow: none !important;
+			box-shadow: none !important;
+		}
+
+		.navbar-inner {
+			background-color: #fefefe !important;
+			background-image: none !important;
+			background-repeat: no-repeat !important;
+			filter: none !important;
+			border: 0 !important;
+			-webkit-border-radius: 0px !important;
+			-moz-border-radius: 0px !important;
+			border-radius: 0px !important;
+			margin-bottom: 15pt !important;
+
+			-webkit-box-shadow: 0 1px 10px rgb(0 0 0 / 7%) !important;
+			-moz-box-shadow: 0 1px 10px rgba(0,0,0,.07) 1 !important;
+			box-shadow: 0 1px 10px rgb(0 0 0 / 7%) !important;
+		}
+		
+		
+		li > ul {
+			padding-left: 15px !important;
+		}
+
+		pre {
+			background-color: #f6f8fa !important;
+			border-radius: 3px !important;
+			/*font-size: 85% !important;*/
+			line-height: 1.45 !important;
+			overflow: auto !important;
+			padding: 16px !important;
+			font-family: Monaco, Menlo, Consolas, "Courier New", monospace !important;
+			border: 0 !important;
+		}
+		
+		code {
+			/*background-color: rgba(27,31,35,.05) !important;*/
+			border-radius: 3px !important;
+			border: 0 !important;
+			/*font-size: 85% !important;*/
+			margin: 0 !important;
+			padding: 0.2em 0.4em !important;
+			font-family: Monaco, Menlo, Consolas, "Courier New", monospace !important;
+		}
+
+		table th {
+			background-color: #f6f8fa !important;
+		}
+
+		
+		.math * {
+			font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif !important;
+		}
+
+		.katex-display>.katex>.katex-html {
+			font-size: 85% !important;
+			font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif !important;
+		}
+
+		/*distanzia*/
+		h1:not(:first-of-type){
+			margin-top: 50px !important;
+		}
+
+		/* fa comparire la barra del capitolo */
+		h1 {
+			border-bottom: 1px solid #e8e8e8fa !important;
+			font-size: 2.2em !important;
+		}
+
+		/*distanzia*/
+		h2 {
+			margin-top: 30px !important;
+			font-size: 1.6em !important;
+		}
+
+		/*distanzia*/
+		h3 {
+			margin-top: 20px !important;
+			font-size: 1.3em !important;
+		}
+
+		h4 {
+			font-size: 1em !important;
+		}
+
+		/* stile box */
+		.note, .tip, .caution, .warning, .attention, .error, .danger, .definition {
+			border-radius: 5pt;
+			padding-left: 10px;
+			padding-right: 10px;
+			padding-top: 1px;
+			padding-bottom: 1px;
+			line-height: normal;
+			color: #000000ab;
+			margin: 6pt 0pt 6pt 0pt;
+		}
+
+		.note code, .tip code, .caution code, .warning code, .attention code, .error code, .danger code, .definition code, .danger code {
+			background-color: #00000014;
+		}
+
+		.note {
+			background-color: #88d3f9;
+		}
+
+		.tip {
+			background-color: #87f0b8;
+		}
+
+		.caution, .warning, .attention {
+			background-color: #ffe162;
+		}
+
+		.error, .danger {
+			background-color: #ff7474;
+		}
+
+		.definition {
+			background-color: #f191ff;
+		}
+
+		.table {
+			border-top: 1px solid #ddd;
+			margin-top: 15px;
+		}
+
+
+	</style>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!--[if lt IE 9]>
+                <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+        <![endif]-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+
+    <!-- <link rel="stylesheet" type="text/css" href="template.css" /> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/template.css" />
+
+    <link href="https://vjs.zencdn.net/5.4.4/video-js.css" rel="stylesheet" />
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <!-- <script type='text/javascript' src='menu/js/jquery.cookie.js'></script> -->
+    <!-- <script type='text/javascript' src='menu/js/jquery.hoverIntent.minified.js'></script> -->
+    <!-- <script type='text/javascript' src='menu/js/jquery.dcjqaccordion.2.7.min.js'></script> -->
+
+    <!-- <link href="menu/css/skins/blue.css" rel="stylesheet" type="text/css" /> -->
+    <!-- <link href="menu/css/skins/graphite.css" rel="stylesheet" type="text/css" /> -->
+    <!-- <link href="menu/css/skins/grey.css" rel="stylesheet" type="text/css" /> -->
+  
+    <!-- <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+        
+  
+    <!-- <script src="script.js"></script> -->
+  
+    <!-- <script src="jquery.sticky-kit.js "></script> -->
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/js/jquery.cookie.js'></script>
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/js/jquery.hoverIntent.minified.js'></script>
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/js/jquery.dcjqaccordion.2.7.min.js'></script>
+
+    <link href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/css/skins/blue.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/css/skins/graphite.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/css/skins/grey.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/ryangrose/easy-pandoc-templates@948e28e5/css/elegant_bootstrap.css" rel="stylesheet" type="text/css" />
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+    <script src="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/script.js"></script>
+  
+    <script src="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/jquery.sticky-kit.js"></script>
+    <meta name="generator" content="pandoc" />
+  <meta name="author" content="Giovanni Enrico Loni" />
+  <title>Formal Methods for Secure Systems</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  
+</head>
+<body>
+
+    
+    <div class="navbar navbar-static-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <span class="doc-title">Formal Methods for Secure Systems</span>
+        <ul class="nav pull-right doc-info">
+                    <li><p class="navbar-text">Giovanni Enrico
+Loni</p></li>
+                            </ul>
+      </div>
+    </div>
+  </div>
+    <div class="container">
+    <div class="row">
+            <div id="TOC" class="span3">
+        <div class="well toc">
+
+        <ul>
+        <li><a href="#introduction"
+        id="toc-introduction">Introduction</a>
+        <ul>
+        <li><a href="#outline-of-the-course"
+        id="toc-outline-of-the-course">Outline of the course</a></li>
+        <li><a href="#computer-based-systems"
+        id="toc-computer-based-systems">Computer-based systems</a></li>
+        </ul></li>
+        <li><a href="#basic-concepts-and-terminology"
+        id="toc-basic-concepts-and-terminology">Basic concepts and
+        terminology</a>
+        <ul>
+        <li><a href="#dependability"
+        id="toc-dependability">Dependability</a>
+        <ul>
+        <li><a href="#computer-based-systems-1"
+        id="toc-computer-based-systems-1">Computer-based
+        systems</a></li>
+        <li><a href="#faults-and-failures"
+        id="toc-faults-and-failures">Faults and Failures</a></li>
+        <li><a href="#achieving-dependability"
+        id="toc-achieving-dependability">Achieving
+        Dependability</a></li>
+        </ul></li>
+        <li><a href="#the-system-entity" id="toc-the-system-entity">The
+        <em>system</em> entity</a>
+        <ul>
+        <li><a href="#systems-properties"
+        id="toc-systems-properties">System’s properties</a></li>
+        <li><a href="#systems-requirements"
+        id="toc-systems-requirements">System’s requirements</a></li>
+        </ul></li>
+        <li><a href="#dependability-tree"
+        id="toc-dependability-tree">Dependability tree</a>
+        <ul>
+        <li><a href="#threats-to-dependability"
+        id="toc-threats-to-dependability">Threats to
+        dependability</a></li>
+        <li><a href="#dependability-attributes"
+        id="toc-dependability-attributes">Dependability
+        attributes</a></li>
+        </ul></li>
+        </ul></li>
+        </ul>
+
+        </div>
+      </div>
+            <div class="span9">
+
+      
+      <h1 id="introduction">Introduction</h1>
+<h2 id="outline-of-the-course">Outline of the course</h2>
+<ol type="1">
+<li>Dependability
+<ul>
+<li>Building high reliable computer-based systems</li>
+<li>Quantitative evaluation of dependability</li>
+<li>Threat modeling and risk assessment</li>
+<li>Malware analysis</li>
+<li>Cybersecurity engineering</li>
+</ul></li>
+<li>Formal methods for security
+<ul>
+<li>Formal methods applied to security</li>
+<li>Case studies: Data confidentiality, Security protocols,
+Cyber-physical systems security</li>
+</ul></li>
+</ol>
+<h2 id="computer-based-systems">Computer-based systems</h2>
+<p>Computer-based systems are everywhere, and the services they offer
+are very diverses. From that, we can easy understand why the
+<strong>dependability</strong>, which is the ability of the system to
+deliver the expected service, is a critical aspect of these systems, in
+particular in a security point of view.</p>
+<p>A system should (or must) be able to deliver the expected service,
+even in the presence of faults, errors, and <strong>attacks</strong>.
+This is the main goal of dependability, which is as important as the
+functionality of the system, pheraps even more. TO achieve that, we have
+<strong>Formal Methods</strong> that provide to us a set of techniques
+and tools to design, verify, and validate computer-based systems, in a
+rigorous and systematic way, even in presence of faults and attacks.</p>
+<h1 id="basic-concepts-and-terminology">Basic concepts and
+terminology</h1>
+<p>All the concept and the terminology that will be presented in this
+section derives directly from the paper “Basic Concepts and Taxonomy of
+Dependable and Secure Computing” by Avizienis et al. (2004). This paper
+is a fundamental reference in the field of dependability and security
+and it is the basis for the definition of the concepts and terminology
+that will be used in the entire course, as suggested by the
+professor.</p>
+<h2 id="dependability">Dependability</h2>
+<p>We can give to <strong>dependability</strong> a simple definition:
+given a system, which is designed to provide a certain service, the
+dependability is the ability of that system to deliver the specified
+service also in presence of faults and malfunctions. In other words
+<em>dependability is that property of a computer-based system such that
+reliance can justifiably be placed on the service it delivers</em>. Note
+that the latter definition stresses the need for a justified reliance on
+the service, which is a key aspect of dependability.</p>
+<h3 id="computer-based-systems-1">Computer-based systems</h3>
+<p>A computer-based system is a system that includes a certain number of
+components: each of them can be interconnected and have its own
+functionality. The components can be hardware, software, humans and the
+environment in which the system operates.</p>
+<figure>
+<img src="../images/01/computer%20sysmet.png" width="500"
+alt="Computer-based system - C. Bernardeschi" />
+<figcaption aria-hidden="true">Computer-based system - C.
+Bernardeschi</figcaption>
+</figure>
+<h3 id="faults-and-failures">Faults and Failures</h3>
+<p>We call a <strong>failure</strong> the inability of the system to
+deliver the expected service, and a <strong>fault</strong> the cause of
+that failure.</p>
+<p><strong>Example:</strong> if a cash machine delivers the wrong amount
+of money, we can say that the system has failed.</p>
+<p>A fault causes an <strong>error</strong> in the state of the system,
+which lead to a <strong>failure</strong>. A failure can have different
+nature, such as physical, logical, human error or even as consequence of
+an attack.</p>
+<p><strong>Example: Logic Bomb.</strong> It’s a piece of code that is
+inserted into a software system that will execute a malicious function
+when specified conditions are met.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>legitimate_code<span class="op">();</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>date <span class="op">==</span> <span class="st">&quot;01/01/2020&quot;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    crash_system<span class="op">();</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>legitimate_code<span class="op">();</span></span></code></pre></div>
+<p>Computer Faults vs. Other Equipment Faults Computer faults differ
+from those of other equipment in several ways:</p>
+<ul>
+<li><strong>Subtler Failures</strong>: computer failures are more subtle
+than outright crashes or sudden stops.</li>
+<li><strong>Information Storage</strong>: computers store information in
+various ways, leading to a multitude of possible errors, both internally
+and externally.</li>
+<li><strong>Hidden Small Defects, Big Effects</strong>: even small
+hidden defects can have significant impacts, especially in digital
+systems.</li>
+<li><strong>Complex Hierarchies</strong>: computer systems are intricate
+hierarchies built upon hidden components.</li>
+</ul>
+<h3 id="achieving-dependability">Achieving Dependability</h3>
+<p>The dependability of a system can be achieved going trough a rigorous
+and engineered steps. Two main figures are involved, system and software
+engineers:</p>
+<ul>
+<li><strong>System engineers</strong> are responsible for the design of
+the system, and they have to use analysis to model the dependability of
+the their design. From these, the software specifications are derived,
+and the possible changes to the system are evaluated, in order to
+accomodate software limitations;</li>
+<li><strong>Software engineers</strong> are responsible for the
+implementation of the software, and they have to use the specifications
+to develop the software, and to test it in order to verify that it meets
+the requirements.</li>
+</ul>
+<p>In general, it’s crucial to understand that <strong>dependability is
+not something that can be added to a system as an afterthought</strong>.
+It must be considered from the very beginning of the design process, and
+it must be an integral part of the system, wusing a scientific and
+engineering approach.</p>
+<h2 id="the-system-entity">The <em>system</em> entity</h2>
+<p>A simple but effective definition of a system is the following: a
+system is a entity that interacts with the environment and other
+systems; its boundaries are the common frontier between the system and
+the environment.</p>
+<h3 id="systems-properties">System’s properties</h3>
+<p>A system has a <strong>function</strong>, which is the service that
+it provides to the environment, and it’s described by its own functional
+specification. It also has a <strong>behavior</strong>, visualized as
+the sequence of states that the system goes through during its
+operation, and it’s how the system implements its function. Then there
+is the <strong>structure</strong>, which is the way the system is
+organized, and it’s described by its own structural specification.</p>
+<p>From the user point of view, the system has a <strong>delivered
+service</strong>, which is the result of the interaction between the
+user and the system, that is the behavior of the system as perceived by
+the user. Obviously, the user can be seen as another system that
+interacts with the system under consideration.</p>
+<h3 id="systems-requirements">System’s requirements</h3>
+<p>First of all, we need to define the problem that the system has to
+solve, and then we have to define the requirements that the system has
+to meet, and then we have to define both functional and dependability
+requirements. Pay attention to the difference between the system’s
+function and the system’s specification: the former is the service that
+the system provides, while the latter is the solution implemented to
+provide that service. In the end, we define the
+<strong>correctness</strong> of the system, which is the ability of the
+system to deliver the specified service.</p>
+<h2 id="dependability-tree">Dependability tree</h2>
+<p>Take in consideration the following dependability tree:</p>
+<figure>
+<img src="../images/01/dependability%20tree.png" width="500"
+alt="Dependability tree - Avizienis et al., 2004" />
+<figcaption aria-hidden="true">Dependability tree - Avizienis et al.,
+2004</figcaption>
+</figure>
+<h3 id="threats-to-dependability">Threats to dependability</h3>
+<p>As we said before, a <strong>correct service</strong> is delivered if
+the service is delivered in accordance with the system’s specification.
+When this doesn’t happen, we have a <strong>service failure</strong>,
+which is one the possible states of the system:</p>
+<figure>
+<img src="../images/01/states.png" width="500"
+alt="Service failure - C. Bernardeschi" />
+<figcaption aria-hidden="true">Service failure - C.
+Bernardeschi</figcaption>
+</figure>
+<p>We call <strong>service outage</strong> the period during which the
+system is not able to deliver the service, a <strong>service
+degradation</strong> the period during which the system delivers a
+service that is not in accordance with the specification, such as a
+subset of the services. We also recall the <strong>chain of
+threats</strong> to dependability: <strong>faults</strong> causes
+<strong>errors</strong>, which lead to <strong>failures</strong>: note
+that many errors don’t cause failures because they don’t reach the
+external state of the system.</p>
+<p>Faults can be <strong>dormant</strong>, that is they are present in
+the system but they don’t cause errors, and <strong>active</strong>,
+that is they cause errors, and thay can be <strong>external</strong> or
+<strong>internal</strong>: from the latter we can extract the definition
+of <strong>vulnerability</strong>, which is the property of the system
+that allows an external agent to cause a fault.</p>
+<p><strong>Example: Trapdoor.</strong> It’s a hidden entry within a
+system that allows an attacker to bypass security measures.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>username <span class="op">=</span> read_username<span class="op">();</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>password <span class="op">=</span> read_password<span class="op">();</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>username <span class="op">==</span> <span class="ch">&#39;d</span><span class="er">ummy_user</span><span class="ch">&#39;</span><span class="op">){</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">//note that the password is not checked</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    grant_access<span class="op">();</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>username<span class="op">.</span>isValid<span class="op">()</span> <span class="op">&amp;&amp;</span> password<span class="op">.</span>isValid<span class="op">()){</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    grant_access<span class="op">();</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>From the past example we can learn that, having in mind the
+dependability tree, to achieve security only the authorized actions have
+to be allowed, and the confidentiality and the integrity of the data
+have appears in case of improper or unauthorized actions.</p>
+<h3 id="dependability-attributes">Dependability attributes</h3>
+<p>The dependability of a system can be described by a set of
+attributes, measurable and quantifiable in terms of probabilities:</p>
+<ul>
+<li><strong>Availability</strong>: the readiness for correct
+service;</li>
+<li><strong>Reliability</strong>: the continuity of correct
+service;</li>
+<li><strong>Safety</strong>: the absence of catastrophic consequences on
+the user and the environment;</li>
+<li><strong>Confidentiality</strong>: the absence of unauthorized
+disclosure of information;</li>
+<li><strong>Integrity</strong>: the absence of improper system state
+alterations;</li>
+<li><strong>Maintainability</strong>: the ability to undergo
+modifications and repairs.</li>
+</ul>
+<p>We also briefly present the concept of <strong>trust</strong> between
+systems, that express the dependance of dependability of the system A
+from the dependability of the system B.</p>
+            </div>
+    </div>
+  </div>
+  <script src="https://vjs.zencdn.net/5.4.4/video.js"></script>
+
+</body>
+</html>

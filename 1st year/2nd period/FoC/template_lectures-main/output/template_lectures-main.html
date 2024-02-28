@@ -1,0 +1,572 @@
+<!doctype html>
+<html  lang="it" >
+<head>
+    <style>
+		#TOC {
+			overflow-y: hidden !important; 
+			font-size: smaller !important;
+			/*margin-right: 20px;*/
+		}
+
+		p, h1, h2, h3, h4, h5, a, span, li, ul, ol, th, tr, table, figcaption {
+			font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif !important;
+		}
+
+		[class*="span"] {
+			margin-left: 0 !important;
+		}
+
+		.well {
+			min-height: 0px !important;
+			padding: 0px !important;
+			margin-bottom: 0px !important;
+			background-color: #FFFFFF  !important;
+			border: 0 !important;
+			-webkit-border-radius: 0 !important;
+			-moz-border-radius: 0 !important;
+			border-radius: 0 !important;
+			-webkit-box-shadow: none !important;
+			-moz-box-shadow: none !important;
+			box-shadow: none !important;
+		}
+
+		.navbar-inner {
+			background-color: #fefefe !important;
+			background-image: none !important;
+			background-repeat: no-repeat !important;
+			filter: none !important;
+			border: 0 !important;
+			-webkit-border-radius: 0px !important;
+			-moz-border-radius: 0px !important;
+			border-radius: 0px !important;
+			margin-bottom: 15pt !important;
+
+			-webkit-box-shadow: 0 1px 10px rgb(0 0 0 / 7%) !important;
+			-moz-box-shadow: 0 1px 10px rgba(0,0,0,.07) 1 !important;
+			box-shadow: 0 1px 10px rgb(0 0 0 / 7%) !important;
+		}
+		
+		
+		li > ul {
+			padding-left: 15px !important;
+		}
+
+		pre {
+			background-color: #f6f8fa !important;
+			border-radius: 3px !important;
+			/*font-size: 85% !important;*/
+			line-height: 1.45 !important;
+			overflow: auto !important;
+			padding: 16px !important;
+			font-family: Monaco, Menlo, Consolas, "Courier New", monospace !important;
+			border: 0 !important;
+		}
+		
+		code {
+			/*background-color: rgba(27,31,35,.05) !important;*/
+			border-radius: 3px !important;
+			border: 0 !important;
+			/*font-size: 85% !important;*/
+			margin: 0 !important;
+			padding: 0.2em 0.4em !important;
+			font-family: Monaco, Menlo, Consolas, "Courier New", monospace !important;
+		}
+
+		table th {
+			background-color: #f6f8fa !important;
+		}
+
+		
+		.math * {
+			font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif !important;
+		}
+
+		.katex-display>.katex>.katex-html {
+			font-size: 85% !important;
+			font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif !important;
+		}
+
+		/*distanzia*/
+		h1:not(:first-of-type){
+			margin-top: 50px !important;
+		}
+
+		/* fa comparire la barra del capitolo */
+		h1 {
+			border-bottom: 1px solid #e8e8e8fa !important;
+			font-size: 2.2em !important;
+		}
+
+		/*distanzia*/
+		h2 {
+			margin-top: 30px !important;
+			font-size: 1.6em !important;
+		}
+
+		/*distanzia*/
+		h3 {
+			margin-top: 20px !important;
+			font-size: 1.3em !important;
+		}
+
+		h4 {
+			font-size: 1em !important;
+		}
+
+		/* stile box */
+		.note, .tip, .caution, .warning, .attention, .error, .danger, .definition {
+			border-radius: 5pt;
+			padding-left: 10px;
+			padding-right: 10px;
+			padding-top: 1px;
+			padding-bottom: 1px;
+			line-height: normal;
+			color: #000000ab;
+			margin: 6pt 0pt 6pt 0pt;
+		}
+
+		.note code, .tip code, .caution code, .warning code, .attention code, .error code, .danger code, .definition code, .danger code {
+			background-color: #00000014;
+		}
+
+		.note {
+			background-color: #88d3f9;
+		}
+
+		.tip {
+			background-color: #87f0b8;
+		}
+
+		.caution, .warning, .attention {
+			background-color: #ffe162;
+		}
+
+		.error, .danger {
+			background-color: #ff7474;
+		}
+
+		.definition {
+			background-color: #f191ff;
+		}
+
+		.table {
+			border-top: 1px solid #ddd;
+			margin-top: 15px;
+		}
+
+
+	</style>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!--[if lt IE 9]>
+                <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+        <![endif]-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+
+    <!-- <link rel="stylesheet" type="text/css" href="template.css" /> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/template.css" />
+
+    <link href="https://vjs.zencdn.net/5.4.4/video-js.css" rel="stylesheet" />
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <!-- <script type='text/javascript' src='menu/js/jquery.cookie.js'></script> -->
+    <!-- <script type='text/javascript' src='menu/js/jquery.hoverIntent.minified.js'></script> -->
+    <!-- <script type='text/javascript' src='menu/js/jquery.dcjqaccordion.2.7.min.js'></script> -->
+
+    <!-- <link href="menu/css/skins/blue.css" rel="stylesheet" type="text/css" /> -->
+    <!-- <link href="menu/css/skins/graphite.css" rel="stylesheet" type="text/css" /> -->
+    <!-- <link href="menu/css/skins/grey.css" rel="stylesheet" type="text/css" /> -->
+  
+    <!-- <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+        
+  
+    <!-- <script src="script.js"></script> -->
+  
+    <!-- <script src="jquery.sticky-kit.js "></script> -->
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/js/jquery.cookie.js'></script>
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/js/jquery.hoverIntent.minified.js'></script>
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/js/jquery.dcjqaccordion.2.7.min.js'></script>
+
+    <link href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/css/skins/blue.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/css/skins/graphite.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/css/skins/grey.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/ryangrose/easy-pandoc-templates@948e28e5/css/elegant_bootstrap.css" rel="stylesheet" type="text/css" />
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+    <script src="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/script.js"></script>
+  
+    <script src="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/jquery.sticky-kit.js"></script>
+    <meta name="generator" content="pandoc" />
+  <meta name="author" content="Giovanni Enrico Loni" />
+  <title>Foundations of CyberSecurity</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  
+</head>
+<body>
+
+    
+    <div class="navbar navbar-static-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <span class="doc-title">Foundations of CyberSecurity</span>
+        <ul class="nav pull-right doc-info">
+                    <li><p class="navbar-text">Giovanni Enrico
+Loni</p></li>
+                            </ul>
+      </div>
+    </div>
+  </div>
+    <div class="container">
+    <div class="row">
+            <div id="TOC" class="span3">
+        <div class="well toc">
+
+        <ul>
+        <li><a href="#introduction"
+        id="toc-introduction">Introduction</a>
+        <ul>
+        <li><a href="#outline-of-the-course"
+        id="toc-outline-of-the-course">Outline of the course</a></li>
+        </ul></li>
+        <li><a href="#introduction-to-applied-cryptography"
+        id="toc-introduction-to-applied-cryptography">Introduction to
+        applied cryptography</a>
+        <ul>
+        <li><a href="#symmetric-encryption"
+        id="toc-symmetric-encryption">Symmetric Encryption</a>
+        <ul>
+        <li><a href="#the-cipher" id="toc-the-cipher">The
+        cipher</a></li>
+        <li><a href="#attacks-overview"
+        id="toc-attacks-overview">Attacks overview</a></li>
+        </ul></li>
+        <li><a href="#perfect-cipher" id="toc-perfect-cipher">Perfect
+        cipher</a>
+        <ul>
+        <li><a href="#a-probabilistic-view"
+        id="toc-a-probabilistic-view">A probabilistic view</a></li>
+        <li><a href="#definition-of-a-perfect-cipher"
+        id="toc-definition-of-a-perfect-cipher">Definition of a perfect
+        cipher</a></li>
+        <li><a href="#shannons-theorem"
+        id="toc-shannons-theorem">Shannon’s theorem</a></li>
+        <li><a href="#perfect-indistinguishablity"
+        id="toc-perfect-indistinguishablity">Perfect
+        indistinguishablity</a></li>
+        </ul></li>
+        <li><a href="#one-time-pad" id="toc-one-time-pad">One-time
+        pad</a>
+        <ul>
+        <li><a href="#proof-for-xor-cipher"
+        id="toc-proof-for-xor-cipher">Proof for XOR cipher</a></li>
+        </ul></li>
+        <li><a href="#section" id="toc-section"></a></li>
+        </ul></li>
+        </ul>
+
+        </div>
+      </div>
+            <div class="span9">
+
+      
+      <h1 id="introduction">Introduction</h1>
+<h2 id="outline-of-the-course">Outline of the course</h2>
+<ol type="1">
+<li>Applied cryptography
+<ul>
+<li>Definition <strong>security</strong></li>
+<li>Crypto-primitives: hoe they work and how to use them</li>
+<li>Identification and authentication protocols</li>
+<li>Case studies</li>
+<li>Programming secure applications</li>
+</ul></li>
+<li>Hands-on labs and challenges</li>
+</ol>
+<h1 id="introduction-to-applied-cryptography">Introduction to applied
+cryptography</h1>
+<p>Cryptography, or the art of secret writing, has been around for
+thousands of years, and get more and more important in our digital
+world, because of the need of secure communication and data protection
+in every aspect of our lives, such as online banking, e-commerce,
+e-mail, and social media, given the inevitable presence of malicious
+actors.</p>
+<p>These malicious actors are often referred to as adversaries: they are
+<strong>intelligent</strong> users, with an <em>objective</em>, and lot
+of <strong>resource</strong> and <strong>abilities</strong>. This leads
+to an unfair competition between the adversaries and the defenders, also
+called the security engineers: the latter have to protect a system
+against all possible attacks, having in mind the usage and performance
+of the system, and this will be our role in this course.</p>
+<p>Luckily, we don’t have to reinvent the wheel: we can use tools and
+techniques that have been developed by cryptographers and security
+engineers over the years, and we talk about <strong>applied
+cryptography</strong> because of this very fact.</p>
+<p>Remeber these facts:</p>
+<ul>
+<li>Cryptography is a <strong>useful</strong> tool, but it is not a
+<strong>silver bullet</strong>.</li>
+<li>Cryptography is the basis of <strong>security</strong>, but it’s not
+the solution to all security problems, and it’s not reliable if not used
+properly.</li>
+</ul>
+<h2 id="symmetric-encryption">Symmetric Encryption</h2>
+<p>Let’s give some context to the usage of cryptography in the real
+world.</p>
+<figure>
+<img src="../images/01/scheme1.png"
+alt="A simple scheme with our main actors" />
+<figcaption aria-hidden="true">A simple scheme with our main
+actors</figcaption>
+</figure>
+<p>In the figure above, we have two main actors: Alice and Bob. They
+want to communicate securely, but they are afraid of the presence of an
+eavesdropper.</p>
+<p>To allow a secure communication, we can use a model, defining the
+following elements:</p>
+<ul>
+<li><strong>Plaintext <em>x</em></strong>: the original message that
+Alice wants to send to Bob;</li>
+<li><strong>Ciphertext <em>y</em></strong>: the encrypted message that
+Alice sends to Bob;</li>
+<li><strong>Key <em>k</em></strong>: a shared secret between Alice and
+Bob, that is used to encrypt and decrypt the message;</li>
+<li><strong>Encryption function <em>E</em></strong>: a function that
+takes the plaintext and the key, and returns the ciphertext;</li>
+<li><strong>Decryption function <em>D</em></strong>: a function that
+takes the ciphertext and the key, and returns the plaintext;</li>
+<li><strong>Network</strong>: the insecure communication channel between
+Alice and Bob.</li>
+</ul>
+<p>Note that the encryption and decryption functions are publicly known,
+and the only secret is the key.</p>
+<h3 id="the-cipher">The cipher</h3>
+<p>We define as <strong>cipher</strong> the triple (<em>K</em>,
+<em>P</em>, <em>C</em>) of efficient algorithms (<em>Gen</em>,
+<em>Enc</em>, <em>Dec</em>) such that:</p>
+<ul>
+<li><em>Gen</em> is a algorithm <span class="math inline">\(Z^+
+\rightarrow K\)</span> that outputs a key;</li>
+<li><em>Enc</em> is a algorithm <span class="math inline">\(P \times K
+\rightarrow C\)</span> that takes a key and a plaintext, and returns a
+ciphertext. An equivalent notations are <span
+class="math inline">\(Enc(k, x)\)</span>, <span
+class="math inline">\(E(k, x)\)</span>, or <span
+class="math inline">\(E_k(x)\)</span>;</li>
+<li><em>Dec</em> is a algorithm <span class="math inline">\(C \times K
+\rightarrow P\)</span> that takes a key and a ciphertext, and returns a
+plaintext. An equivalent notations are <span
+class="math inline">\(Dec(k, y)\)</span>, <span
+class="math inline">\(D(k, y)\)</span>, or <span
+class="math inline">\(D_k(y)\)</span>.</li>
+</ul>
+<p>Cipher <strong>properties</strong> are also important, and the main
+ones are:</p>
+<ul>
+<li><strong>Correctness</strong>: for every key <span
+class="math inline">\(k\)</span> and every plaintext <span
+class="math inline">\(p\)</span>, it holds that <span
+class="math inline">\(D(k, E(k, x)) = p\)</span>;</li>
+<li><strong>Security</strong>: for every key <span
+class="math inline">\(k \in K\)</span>, and for every encrypted <span
+class="math inline">\(c \in C\)</span>, it’s computationally infeasible
+to find both a plaintext <span class="math inline">\(p\)</span> such
+that <span class="math inline">\(E(k, p) = c\)</span>, without knowing
+<span class="math inline">\(k\)</span>, and the key <span
+class="math inline">\(k\)</span> itself.</li>
+</ul>
+<h4 id="example-mono-alphabetic-substitution">Example: mono-alphabetic
+substitution</h4>
+<p>A simple example of a cipher is the <strong>mono-alphabetic
+substitution</strong>, where each letter of the alphabet is replaced by
+another letter, and the key is the mapping between the original and the
+substituted letters. The encryption algorithm is implemented by
+substituting each letter of the plaintext with the corresponding letter
+of the key, and the decryption algorithm is implemented by substituting
+each letter of the ciphertext with the corresponding letter of the
+inverse key. To break this cipher, we can think of a brute-force attack,
+where we try all the possible keys, but this is not feasible because of
+the large number of possible keys, which is <span
+class="math inline">\(26! \approx 4 \times 10^[26]\)</span>. However,
+despite the large number of possible keys, the mono-alphabetic
+substitution is not secure, because of the frequency analysis attack,
+which is based on the fact that some letters are more frequent than
+others in a language, and this can be used to guess the key. From this
+example, we can see that the security of a cipher is not only based on
+the number of possible keys, but also on the structure of the cipher,
+and the security of the key: good ciphers sould hide statistical
+properties of the plaintext, and their security mustn’t rely on the
+dimensions of the key space.</p>
+<h3 id="attacks-overview">Attacks overview</h3>
+<p>When we talk about the attack complexity, we refer to the number of
+operations that an adversary has to perform to break a cipher, and we
+can distinguish between three main types of attacks:</p>
+<ul>
+<li><strong>Ciphertext-only attack</strong>: the adversary has access to
+a set of ciphertexts, and he has to find the plaintexts. This is the
+weakest type of attack, and it’s often based on the frequency analysis,
+or on the knowledge of the structure of the plaintext;</li>
+<li><strong>Known-plaintext attack</strong>: the adversary has access to
+a set of plaintext-ciphertext pairs, and he has to find the key. This is
+a stronger type of attack, and it’s often based on the knowledge of the
+structure of the cipher;</li>
+<li><strong>Chosen-plaintext attack</strong>: the adversary has access
+to a set of plaintexts, and he has to find the key. This is the
+strongest type of attack, and it’s often based on the knowledge of the
+structure of the cipher, and on the ability to choose the plaintexts. We
+can easily see that if a cipher is secure against chosen-plaintext
+attacks, then it’s also secure against known-plaintext attacks and
+ciphertext-only attacks.</li>
+</ul>
+<h4 id="kerckhoffs-principle">Kerckhoffs’ principle</h4>
+<p>The security of a cipher must rely only on the secrecy of the key,
+and not on the secrecy of the algorithm. This principle was formulated
+by Auguste Kerckhoffs in the 19th century, and it’s still valid today,
+because it allows the public scrutiny of the algorithms, and it allows
+the development of secure ciphers, even if the adversary knows the
+algorithm. This because is <strong>easier</strong> to keep a small key
+secret, than a large algorithm secret: in case of a leak, changing the
+key is easier (and cheaper) than changing the algorithm.</p>
+<h4 id="security-trough-obscurity">Security trough obscurity</h4>
+<p>The opposite of Kerckhoffs’ principle is the <strong>security trough
+obscurity</strong>, which is the reliance on the secrecy of the
+algorithm, and it’s a bad practice, because it’s not reliable, and it’s
+not a good security measure. This is because the adversary can
+reverse-engineer the algorithm, and find the key, and because the
+algorithm can be leaked, and the security of the system is compromised.
+This has been proved over the year: GSM/A1 were disclosed by mistake,
+Enigma was broken by intelligence, and the DVD encryption was broken by
+reverse-engineering.</p>
+<h2 id="perfect-cipher">Perfect cipher</h2>
+<p>In the hypothesis such that attacker isn’t able to recover both some
+plaintext and the key, a powerful intuition is, regardless of any <em>a
+priori</em> knowledge, the ciphertext shouldn’t reveal any information
+about the plaintext.</p>
+<h3 id="a-probabilistic-view">A probabilistic view</h3>
+<p>Let a message <span class="math inline">\(M\)</span> be a random
+variable, with a probability distribution <span
+class="math inline">\(P_M\)</span> such that <span
+class="math inline">\(P[M = &quot;attack today&quot;] = 0.7\)</span> and
+$P[M = <span class="math inline">\(&quot;don&#39;t
+attack&quot;\)</span>] = 0.3$ knew <em>a priori</em> by the attacker,
+and let <em>Gen()</em> a probability distribution over the keys such
+that <span class="math inline">\(P[K = &quot;key1&quot;] = P[k
+\leftarrow\)</span> Gen()<span class="math inline">\(]\)</span>, with
+<span class="math inline">\(M\)</span> and <span
+class="math inline">\(K\)</span> independent. To generate the
+ciphertext, we can use the following algorithm:</p>
+<ol type="1">
+<li>choose a message <span class="math inline">\(m\)</span> according to
+<span class="math inline">\(P[M]\)</span>;</li>
+<li>generate the key <span class="math inline">\(k\)</span> according to
+<span class="math inline">\(P[K]\)</span>;</li>
+<li>compute the ciphertext <span class="math inline">\(c = E(k,
+m)\)</span>.</li>
+</ol>
+<h3 id="definition-of-a-perfect-cipher">Definition of a perfect
+cipher</h3>
+<p>It’s clear that the ciphertext <span class="math inline">\(c\)</span>
+is a random variable <span class="math inline">\(C\)</span>, defined by
+the encryption function <span class="math inline">\(E\)</span>, so we
+can formalize the concept of <em>information about plaintext</em> in
+terms of probability distributions. A cipher is said to be
+<strong>perfect</strong> if the ciphertext <span
+class="math inline">\(C\)</span> is independent of the plaintext <span
+class="math inline">\(M\)</span>: <span class="math inline">\(P[M = m |
+C = c] = P[M = m]\forall m, c\)</span>. This means that the attacker
+can’t learn anything about the plaintext by observing the ciphertext. If
+a cipher is perfect, it’s said that it’s <strong>perfectly
+secure</strong>, and the necessary conditions for a cipher to be
+perfectly secure are that the key must be chosen uniformly at random,
+and that the key space must be at least as large as the message space,
+as stated by Shannon’s theorem.</p>
+<h3 id="shannons-theorem">Shannon’s theorem</h3>
+<p>In a perfect cipher, the key space must be at least as large as the
+message space. Speaking on mathematical terms, <span
+class="math inline">\(|K| \geq |M|\)</span>. We can prove this by
+contradiction:</p>
+<ol type="1">
+<li>suppose that <span class="math inline">\(|K| &lt; |M|\)</span>,
+which is the contradiction;</li>
+<li>from the previous point, it must be true that <span
+class="math inline">\(|C| \geq |M|\)</span>, because the cipher must be
+invertible;</li>
+<li>combining the two previous points, we have that <span
+class="math inline">\(|C| &gt; |K|\)</span>;</li>
+<li>now select <span class="math inline">\(m \in M\)</span> such that
+<span class="math inline">\(P[M = m] &gt; 0\)</span>, and <span
+class="math inline">\(c \in C\)</span> such that <span
+class="math inline">\(E(k_i, m) = c \forall k_i in K\)</span>;</li>
+<li>because of point 5, must exists al least one <span
+class="math inline">\(c\)</span> such that <span class="math inline">\(c
+\not ={c_i}\)</span>;</li>
+<li>therefore, <span class="math inline">\(P[C = c | M = m] =
+0\)</span>, that is a contradiction because the cipher is perfect, so
+holds that <span class="math inline">\(P[M = m | C = c] = P[M = m] &gt;
+0\)</span>.</li>
+</ol>
+<h3 id="perfect-indistinguishablity">Perfect indistinguishablity</h3>
+<p>An encryption scheme <span class="math inline">\(\prod =
+(G,E,D)\)</span> over <span class="math inline">\((K,M,C)\)</span> is
+said to be <strong>perfectly indistinguishable</strong> if:</p>
+<ul>
+<li><span class="math inline">\(\forall m_1, m_2 \in M \text{, } |m_1| =
+|m_2|\)</span>;</li>
+<li><span class="math inline">\(k \leftarrow\)</span> Gen() is chosen
+uniformly at random;</li>
+<li><span class="math inline">\(\forall c \in C\)</span>, <span
+class="math inline">\(P[E(k, m_1) = c] = P[E(k, m_2) = c]\)</span>.</li>
+</ul>
+<p>This means that the attacker can’t distinguish between two plaintexts
+by observing the ciphertexts: it’s also true that <span
+class="math inline">\(\prod\)</span> is perfectly indistinguishable if
+and only if it’s perfectly secure.</p>
+<h2 id="one-time-pad">One-time pad</h2>
+<p>The one-time pad is a perfectly secure cipher, and it’s based on the
+following assumptions:</p>
+<ul>
+<li>let <span class="math inline">\(x\)</span> be a t-bit message,
+i.e. <span class="math inline">\(x \in \{0,1\}^t\)</span>;</li>
+<li>let <span class="math inline">\(k\)</span> be a t-bit key,
+i.e. <span class="math inline">\(k \in \{0,1\}^t\)</span>, where each
+bit is chosen uniformly at random;</li>
+</ul>
+<p>The encryption function <span class="math inline">\(E(k, x)\)</span>
+is defined as the bitwise XOR between the message and the key, and the
+decryption function <span class="math inline">\(D(k, y)\)</span> is
+defined as the bitwise XOR between the ciphertext and the key.</p>
+<h3 id="proof-for-xor-cipher">Proof for XOR cipher</h3>
+<p>Let <span class="math inline">\(X\)</span> a random variable over
+<span class="math inline">\(\{0,1\}^t\)</span>, and <span
+class="math inline">\(K\)</span> a random variable over <span
+class="math inline">\(\{0,1\}^t\)</span>, with <span
+class="math inline">\(X\)</span> and <span
+class="math inline">\(K\)</span> independent. Then, define <span
+class="math inline">\(Y = X \oplus K\)</span>, where <span
+class="math inline">\(\oplus\)</span> is the bitwise XOR. We want to
+prove that <span class="math inline">\(Y\)</span> is uniformly
+distributed over <span class="math inline">\(\{0,1\}^t\)</span>. The
+proof, for <span class="math inline">\(t = 1\)</span>, is the
+following:</p>
+<ul>
+<li><span class="math inline">\(P[X = 0] = X_0, P[X = 1] = X_1\)</span>,
+such that <span class="math inline">\(X_0 + X_1 = 1\)</span>;</li>
+<li><span class="math inline">\(P[K = 0] = K_0, P[K = 1] = K_1\)</span>,
+such that <span class="math inline">\(K_0 + K_1 = 1\)</span>;</li>
+<li><span class="math inline">\(P[Y = 0] = P[X = 0, K = 0] + P[X = 1, K
+= 1] =\\= P[X = 0]P[K = 0] + P[X = 1]P[K = 1] =\\= X_0K_0 +
+X_1K_1\)</span> = <span class="math inline">\(X_0\cdot 0.5 + X_1\cdot
+0.5 =\\= 0.5 \cdot (X_0 + X_1) = 0.5\)</span>.</li>
+</ul>
+<h2 id="section"></h2>
+            </div>
+    </div>
+  </div>
+  <script src="https://vjs.zencdn.net/5.4.4/video.js"></script>
+
+</body>
+</html>
