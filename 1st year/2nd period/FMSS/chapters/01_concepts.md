@@ -286,7 +286,7 @@ It's the ability to deal with faults at run-time, and ensure that the system is 
 
 ![Fault tolerance techniques - Avizienis et al., 2004](../images/01/tolerance.png){width=400px}
 
-#### Error detection
+#### Example of error detection
 
 For simplicity, let's state that *when the error reaches the boundaries of the systems, then we have a failure*. In this context, the most challenging aspect are:
 
@@ -297,6 +297,39 @@ For simplicity, let's state that *when the error reaches the boundaries of the s
 **Example**: error detection with two systems
 
 > Take two systems, A and B, that should provide the same service. If they get the same input, then they should provide the same output. If the outputs are different, then we have a detection of the error, within the hypothesis that the systems are independent and it's very unlikely that they have the same error at the same time.
+
+### Fault handling
+
+When we talk about fault handling, we refer to the mechanisms that **prevents faults from being activated again**. It's composed by different phases:
+
+1. **diagnois**: the phase in which the system detects the presence of the fault. Usually, a component is made in order to test another components, and the aim is to identify and records the cause of the error, in terms of location and type;
+2. **isolation**: to obtain the physical and/or logical exclusion of the faulty component from the rest of the system;
+3. **reconfiguration**, such as thw switch to a redundant component, or the use of a different path to reach the same component;
+4. **reinitialization**: to restore the system to update the system to the new configuration.
+
+In conclusion we state that the **system recover is composed by the error handling phase and the fault handling phase**.
+
+### Fault removal
+
+The fault removal is the process that is used to remove the faults from the system, and it's usually done during the development phase. The main goal is to remove the faults that are present in the system, and to prevent the introduction of new faults. It's composed by different phases, that we'll see in the next sections:
+
+#### Verification phase
+
+The verification phase is the phase in which the system is tested to verify that it meets the **verification conditions**. To do that, there are two main methods:
+
+- verification **without execution**: the system is tested without executing it, and it's usually done via inspection or theory-proving. A state-transition diagram can be used to verify the correctness of the system, and it's applicable to various type of the system, and applicable to fault tolerance mechanisms. Worth to mention the fact that, in this type of verification errors and faults are artificially injected as part of the test pattern;
+- verification **by execution**: the system is tested by executing it, and it's usually done via **dynamic verification** (e.g. symbolic execution, testing both for hardware and software), **deterministic testing** and **statistical testing**.
+
+Another two steps are crucial:
+
+- **verification of the mechanism**: the verification of the fault tolerance mechanism, and it's usually done via **fault injection**;
+- **verification of the system**: ensure that the system cannot do more than what is supposed to do, and it's usually done via **penetration testing**.
+
+To remove a fault during the exercise, both **corrective maintenance** and **preventive maintenance**.
+
+### Fault forecasting
+
+The fault forecasting is done by performing an evaluation of the system behavior, with respect to fault occurrence and activation, and it's usually done via **qualitative evaluation** and **quantitative evaluation**.
 
 ### Error recovery
 
@@ -321,3 +354,78 @@ WE just have to add some definitions:
 - **intermittent faults** are those with transient physical or interaction faults, and their activation is not systematically reproducible.
 
 Remember that the classes of faults that can be actually tolerated depend on the fault assumption that is being considered in the development process, and on the independence of the redundant components that are used to achieve fault tolerance.
+
+## Error detection
+
+The error detection is the ability of the system to detect the presence of an error, and different strategies can be used to achieve this goal, such as:
+
+- **replication checks**: the use of multiple replicas to perform the same computation, and then compare the results, under the assumption that the replicas fail independently;
+- **reasonability checks**: the use of a model of the system to check the reasonability of the output, and then compare the output with the model;
+- **run-time checks**: mechanisms provided via hardware or software, like division by zero, array bounds, etc.
+- **specification-based checks**: the use of the problem specification to check the correctness of the output (e.g. to find a solution to an equation, we can substitute the result in the equation and check if the result is correct);
+- **reversal checks**: the use of the inverse function to check the correctness of the output.
+- **structural checks**: the use of known properties of the system to check the correctness of the output.
+- **timing checks**: the use of watchdogs to check the timing of the system.
+- **codes**: the use of codes to check the correctness of the output (e.g. parity, checksum, etc.).
+
+### Structural approach to error detection
+
+The main goal is to prevent the propagation of the error, and to achieve that some structural properties should be set to help the system.
+
+#### Principle of least privilege
+
+the concept of **minimum privilege** is crucial, and it's the idea that a component should have the minimum privilege to perform its function, and nothing more. Following this idea, we should consider the fact that **no action is permissible unless it is explicitly allowed**, also known as the concept of **mutual suspicion**.
+
+#### System modularization and partitioning
+
+Remembering the fact that a system should be modularized, we can use the **modularization** to prevent the propagation of the error, adding to each module an error detection (and possibly recovery) mechanism, in order to confine the error to the module in which it occurred and don't let it spread to the other modules.
+The last reasoning is also valid for the **partitioning** of the system, when modules act independently and the error can't spread to the other modules.
+
+#### Temporal structuring
+
+Another thing to take in consideration is the **temporal structuring** of the activities between the modules, for those operations only between two specific modules that don't communicate with the rest of the system. We also introduce the concept of **atomic action**, that is an action that is performed in a single step, and it's not possible to interrupt it: if a failure occurs, only the participating actions are affected.
+
+### Measurement of effectiveness of error detection
+
+Different metrics can be used to measure the effectiveness of the error detection, such as:
+
+- **coverage**: the probability that an error is detected, given that it actually occurs;
+- **latency**: the time that elapses between the occurrence of the error and its detection;
+- **damage confinement**: the probability that the error is confined to the component in which it occurred;
+- **forward recovery**: the probability that the system is able to recover from the error, transforming the erroneous state into a **new** correct state;
+- **backward recovery**: the probability that the system is able to recover from the error, transforming the erroneous state into the **previous** correct state.
+
+It's worth to spent some words for the last two metrics, that will be discussed in the next section.
+
+#### Forward recovery
+
+This technique requires to **asses the damage cause** by the detected error **propagates before detection**, and it's usually implemented ad-hoc for the specific system. An effective **example** is the following:
+
+> In a real time control system, a situation when input a sensor input is occasionally missed is tolerable, and the system should implement a forward recovery by skipping its response of the missed input.
+
+#### Backward recovery
+
+This technique is a little bit more complex, because **requires a previous correct state** to be restored, also called **checkpoint**, and can be tedious, especially in case when multiple modules are involved, because we need to restore a **consistent checkpoint** for each of them, as we can see in the following figure:
+
+![Backward recovery - C. Bernardeschi](../images/01/backwards.png){width=400px}
+
+In this image we see the checkpoint, as circle, the passed messages between the modules, and the error that occurs with a $X$: to avoid a **domino effect**, we need to restore a consistent checkpoint for each module, also considering their communications, remembering the concept of atomic action.
+
+The basic issues of backward recovery are:
+
+- loss of computation time between the checkpoint and the rollback;
+- loss of data between the checkpoint and the rollback;
+- the need of a specific mechanism that implements the rollback;
+- the increase of the overhead of the system, in order to restore the correct state.
+
+The class of faults that gain benefits from the backward recovery are the **transient faults**, because they usually disappear after a short period of time, in **parallel computing**, to avoid a complete restart of the system, and in **real-time systems**, to avoid the loss of the real-time constraints.
+
+On the other hand, the class of faults that are not suitable for the backward recovery are the **hardware and design faults**, because the system will always do the same action, resulting in the same error.
+
+### The exception handling
+
+The exception handling is a mechanism that is used to deal with the errors, and it's usually implemented via software, and it's used to deal with the errors that are detected at run-time. The main goal of the exception handling is to avoid the propagation of the error, and to restore the system to a consistent state. Three are the main classes of exceptions:
+
+- **interface exceptions**: exceptions that are raised when the system receives an input that is not in accordance with the specification, handled by the module that requests the service;
+- **internal local exceptions**: exceptions that are raised when the system detects an error in its own state, handled by the module itself;
+- **failure exceptions**: exceptions that are not handled by the mechanism, communicated to the user.

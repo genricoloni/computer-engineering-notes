@@ -374,8 +374,26 @@ Loni</p></li>
         prevention</a></li>
         <li><a href="#fault-tolerance" id="toc-fault-tolerance">Fault
         tolerance</a></li>
+        <li><a href="#fault-handling" id="toc-fault-handling">Fault
+        handling</a></li>
+        <li><a href="#fault-removal" id="toc-fault-removal">Fault
+        removal</a></li>
+        <li><a href="#fault-forecasting"
+        id="toc-fault-forecasting">Fault forecasting</a></li>
         <li><a href="#error-recovery" id="toc-error-recovery">Error
         recovery</a></li>
+        </ul></li>
+        <li><a href="#error-detection" id="toc-error-detection">Error
+        detection</a>
+        <ul>
+        <li><a href="#structural-approach-to-error-detection"
+        id="toc-structural-approach-to-error-detection">Structural
+        approach to error detection</a></li>
+        <li><a href="#measurement-of-effectiveness-of-error-detection"
+        id="toc-measurement-of-effectiveness-of-error-detection">Measurement
+        of effectiveness of error detection</a></li>
+        <li><a href="#the-exception-handling"
+        id="toc-the-exception-handling">The exception handling</a></li>
         </ul></li>
         </ul></li>
         </ul>
@@ -897,7 +915,7 @@ alt="Fault tolerance techniques - Avizienis et al., 2004" />
 <figcaption aria-hidden="true">Fault tolerance techniques - Avizienis et
 al., 2004</figcaption>
 </figure>
-<h4 id="error-detection">Error detection</h4>
+<h4 id="example-of-error-detection">Example of error detection</h4>
 <p>For simplicity, let’s state that <em>when the error reaches the
 boundaries of the systems, then we have a failure</em>. In this context,
 the most challenging aspect are:</p>
@@ -919,6 +937,65 @@ the outputs are different, then we have a detection of the error, within
 the hypothesis that the systems are independent and it’s very unlikely
 that they have the same error at the same time.</p>
 </blockquote>
+<h3 id="fault-handling">Fault handling</h3>
+<p>When we talk about fault handling, we refer to the mechanisms that
+<strong>prevents faults from being activated again</strong>. It’s
+composed by different phases:</p>
+<ol type="1">
+<li><strong>diagnois</strong>: the phase in which the system detects the
+presence of the fault. Usually, a component is made in order to test
+another components, and the aim is to identify and records the cause of
+the error, in terms of location and type;</li>
+<li><strong>isolation</strong>: to obtain the physical and/or logical
+exclusion of the faulty component from the rest of the system;</li>
+<li><strong>reconfiguration</strong>, such as thw switch to a redundant
+component, or the use of a different path to reach the same
+component;</li>
+<li><strong>reinitialization</strong>: to restore the system to update
+the system to the new configuration.</li>
+</ol>
+<p>In conclusion we state that the <strong>system recover is composed by
+the error handling phase and the fault handling phase</strong>.</p>
+<h3 id="fault-removal">Fault removal</h3>
+<p>The fault removal is the process that is used to remove the faults
+from the system, and it’s usually done during the development phase. The
+main goal is to remove the faults that are present in the system, and to
+prevent the introduction of new faults. It’s composed by different
+phases, that we’ll see in the next sections:</p>
+<h4 id="verification-phase">Verification phase</h4>
+<p>The verification phase is the phase in which the system is tested to
+verify that it meets the <strong>verification conditions</strong>. To do
+that, there are two main methods:</p>
+<ul>
+<li>verification <strong>without execution</strong>: the system is
+tested without executing it, and it’s usually done via inspection or
+theory-proving. A state-transition diagram can be used to verify the
+correctness of the system, and it’s applicable to various type of the
+system, and applicable to fault tolerance mechanisms. Worth to mention
+the fact that, in this type of verification errors and faults are
+artificially injected as part of the test pattern;</li>
+<li>verification <strong>by execution</strong>: the system is tested by
+executing it, and it’s usually done via <strong>dynamic
+verification</strong> (e.g. symbolic execution, testing both for
+hardware and software), <strong>deterministic testing</strong> and
+<strong>statistical testing</strong>.</li>
+</ul>
+<p>Another two steps are crucial:</p>
+<ul>
+<li><strong>verification of the mechanism</strong>: the verification of
+the fault tolerance mechanism, and it’s usually done via <strong>fault
+injection</strong>;</li>
+<li><strong>verification of the system</strong>: ensure that the system
+cannot do more than what is supposed to do, and it’s usually done via
+<strong>penetration testing</strong>.</li>
+</ul>
+<p>To remove a fault during the exercise, both <strong>corrective
+maintenance</strong> and <strong>preventive maintenance</strong>.</p>
+<h3 id="fault-forecasting">Fault forecasting</h3>
+<p>The fault forecasting is done by performing an evaluation of the
+system behavior, with respect to fault occurrence and activation, and
+it’s usually done via <strong>qualitative evaluation</strong> and
+<strong>quantitative evaluation</strong>.</p>
 <h3 id="error-recovery">Error recovery</h3>
 <h4 id="error-compensation">Error compensation</h4>
 <p>When we talk about fault tolerance, we’re in fact talking about
@@ -962,6 +1039,146 @@ systematically reproducible.</li>
 depend on the fault assumption that is being considered in the
 development process, and on the independence of the redundant components
 that are used to achieve fault tolerance.</p>
+<h2 id="error-detection">Error detection</h2>
+<p>The error detection is the ability of the system to detect the
+presence of an error, and different strategies can be used to achieve
+this goal, such as:</p>
+<ul>
+<li><strong>replication checks</strong>: the use of multiple replicas to
+perform the same computation, and then compare the results, under the
+assumption that the replicas fail independently;</li>
+<li><strong>reasonability checks</strong>: the use of a model of the
+system to check the reasonability of the output, and then compare the
+output with the model;</li>
+<li><strong>run-time checks</strong>: mechanisms provided via hardware
+or software, like division by zero, array bounds, etc.</li>
+<li><strong>specification-based checks</strong>: the use of the problem
+specification to check the correctness of the output (e.g. to find a
+solution to an equation, we can substitute the result in the equation
+and check if the result is correct);</li>
+<li><strong>reversal checks</strong>: the use of the inverse function to
+check the correctness of the output.</li>
+<li><strong>structural checks</strong>: the use of known properties of
+the system to check the correctness of the output.</li>
+<li><strong>timing checks</strong>: the use of watchdogs to check the
+timing of the system.</li>
+<li><strong>codes</strong>: the use of codes to check the correctness of
+the output (e.g. parity, checksum, etc.).</li>
+</ul>
+<h3 id="structural-approach-to-error-detection">Structural approach to
+error detection</h3>
+<p>The main goal is to prevent the propagation of the error, and to
+achieve that some structural properties should be set to help the
+system.</p>
+<h4 id="principle-of-least-privilege">Principle of least privilege</h4>
+<p>the concept of <strong>minimum privilege</strong> is crucial, and
+it’s the idea that a component should have the minimum privilege to
+perform its function, and nothing more. Following this idea, we should
+consider the fact that <strong>no action is permissible unless it is
+explicitly allowed</strong>, also known as the concept of <strong>mutual
+suspicion</strong>.</p>
+<h4 id="system-modularization-and-partitioning">System modularization
+and partitioning</h4>
+<p>Remembering the fact that a system should be modularized, we can use
+the <strong>modularization</strong> to prevent the propagation of the
+error, adding to each module an error detection (and possibly recovery)
+mechanism, in order to confine the error to the module in which it
+occurred and don’t let it spread to the other modules. The last
+reasoning is also valid for the <strong>partitioning</strong> of the
+system, when modules act independently and the error can’t spread to the
+other modules.</p>
+<h4 id="temporal-structuring">Temporal structuring</h4>
+<p>Another thing to take in consideration is the <strong>temporal
+structuring</strong> of the activities between the modules, for those
+operations only between two specific modules that don’t communicate with
+the rest of the system. We also introduce the concept of <strong>atomic
+action</strong>, that is an action that is performed in a single step,
+and it’s not possible to interrupt it: if a failure occurs, only the
+participating actions are affected.</p>
+<h3 id="measurement-of-effectiveness-of-error-detection">Measurement of
+effectiveness of error detection</h3>
+<p>Different metrics can be used to measure the effectiveness of the
+error detection, such as:</p>
+<ul>
+<li><strong>coverage</strong>: the probability that an error is
+detected, given that it actually occurs;</li>
+<li><strong>latency</strong>: the time that elapses between the
+occurrence of the error and its detection;</li>
+<li><strong>damage confinement</strong>: the probability that the error
+is confined to the component in which it occurred;</li>
+<li><strong>forward recovery</strong>: the probability that the system
+is able to recover from the error, transforming the erroneous state into
+a <strong>new</strong> correct state;</li>
+<li><strong>backward recovery</strong>: the probability that the system
+is able to recover from the error, transforming the erroneous state into
+the <strong>previous</strong> correct state.</li>
+</ul>
+<p>It’s worth to spent some words for the last two metrics, that will be
+discussed in the next section.</p>
+<h4 id="forward-recovery">Forward recovery</h4>
+<p>This technique requires to <strong>asses the damage cause</strong> by
+the detected error <strong>propagates before detection</strong>, and
+it’s usually implemented ad-hoc for the specific system. An effective
+<strong>example</strong> is the following:</p>
+<blockquote>
+<p>In a real time control system, a situation when input a sensor input
+is occasionally missed is tolerable, and the system should implement a
+forward recovery by skipping its response of the missed input.</p>
+</blockquote>
+<h4 id="backward-recovery">Backward recovery</h4>
+<p>This technique is a little bit more complex, because <strong>requires
+a previous correct state</strong> to be restored, also called
+<strong>checkpoint</strong>, and can be tedious, especially in case when
+multiple modules are involved, because we need to restore a
+<strong>consistent checkpoint</strong> for each of them, as we can see
+in the following figure:</p>
+<figure>
+<img src="../images/01/backwards.png" width="400"
+alt="Backward recovery - C. Bernardeschi" />
+<figcaption aria-hidden="true">Backward recovery - C.
+Bernardeschi</figcaption>
+</figure>
+<p>In this image we see the checkpoint, as circle, the passed messages
+between the modules, and the error that occurs with a <span
+class="math inline">\(X\)</span>: to avoid a <strong>domino
+effect</strong>, we need to restore a consistent checkpoint for each
+module, also considering their communications, remembering the concept
+of atomic action.</p>
+<p>The basic issues of backward recovery are:</p>
+<ul>
+<li>loss of computation time between the checkpoint and the
+rollback;</li>
+<li>loss of data between the checkpoint and the rollback;</li>
+<li>the need of a specific mechanism that implements the rollback;</li>
+<li>the increase of the overhead of the system, in order to restore the
+correct state.</li>
+</ul>
+<p>The class of faults that gain benefits from the backward recovery are
+the <strong>transient faults</strong>, because they usually disappear
+after a short period of time, in <strong>parallel computing</strong>, to
+avoid a complete restart of the system, and in <strong>real-time
+systems</strong>, to avoid the loss of the real-time constraints.</p>
+<p>On the other hand, the class of faults that are not suitable for the
+backward recovery are the <strong>hardware and design faults</strong>,
+because the system will always do the same action, resulting in the same
+error.</p>
+<h3 id="the-exception-handling">The exception handling</h3>
+<p>The exception handling is a mechanism that is used to deal with the
+errors, and it’s usually implemented via software, and it’s used to deal
+with the errors that are detected at run-time. The main goal of the
+exception handling is to avoid the propagation of the error, and to
+restore the system to a consistent state. Three are the main classes of
+exceptions:</p>
+<ul>
+<li><strong>interface exceptions</strong>: exceptions that are raised
+when the system receives an input that is not in accordance with the
+specification, handled by the module that requests the service;</li>
+<li><strong>internal local exceptions</strong>: exceptions that are
+raised when the system detects an error in its own state, handled by the
+module itself;</li>
+<li><strong>failure exceptions</strong>: exceptions that are not handled
+by the mechanism, communicated to the user.</li>
+</ul>
             </div>
     </div>
   </div>
