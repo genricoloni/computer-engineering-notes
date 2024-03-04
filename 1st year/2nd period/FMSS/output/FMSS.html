@@ -396,6 +396,45 @@ Loni</p></li>
         id="toc-the-exception-handling">The exception handling</a></li>
         </ul></li>
         </ul></li>
+        <li><a href="#redundancy-in-fault-tolerant-computing"
+        id="toc-redundancy-in-fault-tolerant-computing">Redundancy in
+        Fault Tolerant Computing</a>
+        <ul>
+        <li><a href="#hardware-redundancy"
+        id="toc-hardware-redundancy">Hardware Redundancy</a>
+        <ul>
+        <li><a href="#passive-fault-tolerance-techniques"
+        id="toc-passive-fault-tolerance-techniques">Passive fault
+        tolerance techniques</a></li>
+        <li><a href="#active-fault-tolerance-techniques"
+        id="toc-active-fault-tolerance-techniques">Active fault
+        tolerance techniques</a></li>
+        <li><a href="#hybrid-fault-tolerance-techniques"
+        id="toc-hybrid-fault-tolerance-techniques">Hybrid fault
+        tolerance techniques</a></li>
+        <li><a href="#summary-of-the-hardware-redundancy-techniques"
+        id="toc-summary-of-the-hardware-redundancy-techniques">Summary
+        of the hardware redundancy techniques</a></li>
+        </ul></li>
+        <li><a href="#information-redundancy"
+        id="toc-information-redundancy">Information Redundancy</a>
+        <ul>
+        <li><a href="#parity-codes" id="toc-parity-codes">Parity
+        codes</a></li>
+        <li><a href="#complemented-duplication"
+        id="toc-complemented-duplication">Complemented
+        duplication</a></li>
+        <li><a href="#hamming-distance"
+        id="toc-hamming-distance">Hamming distance</a></li>
+        <li><a href="#checksums" id="toc-checksums">Checksums</a></li>
+        <li><a href="#ecc" id="toc-ecc">ECC</a></li>
+        <li><a href="#hamming-codes" id="toc-hamming-codes">Hamming
+        codes</a></li>
+        <li><a href="#self-checking-circuitry"
+        id="toc-self-checking-circuitry">Self-checking
+        circuitry</a></li>
+        </ul></li>
+        </ul></li>
         </ul>
 
         </div>
@@ -1178,6 +1217,321 @@ raised when the system detects an error in its own state, handled by the
 module itself;</li>
 <li><strong>failure exceptions</strong>: exceptions that are not handled
 by the mechanism, communicated to the user.</li>
+</ul>
+<h1 id="redundancy-in-fault-tolerant-computing">Redundancy in Fault
+Tolerant Computing</h1>
+<p>In this chapter we’ll se how to use redundancy to improve the
+reliability of a system. There are various types of redundancy, and
+we’ll go through them one by one.</p>
+<h2 id="hardware-redundancy">Hardware Redundancy</h2>
+<p>Briefly, hardware redundancy is the physical replication of the
+hardware components of a system. This is done to ensure that if one
+component fails, the system can continue to operate using the redundant
+component. In this category we can find <strong>passive</strong>,
+<strong>active</strong> and <strong>hybrid</strong> redundancy.</p>
+<h3 id="passive-fault-tolerance-techniques">Passive fault tolerance
+techniques</h3>
+<p>In passive tolerance, the <strong>fault masking</strong> is the
+keystone of the technique: a <strong>voting mechanism</strong> is
+implemented upon the redundant components, and the output of the system
+is the result of the majority of the components. This way, if one
+component fails, the system can continue to operate using the redundant
+component, and <strong>without any external intervention</strong>.</p>
+<h4 id="triple-modular-redundancy-tmr">Triple Modular Redundancy
+(TMR)</h4>
+<p>This technique is schematized in the following figure:</p>
+<figure>
+<img src="../images/02/tmr.png" width="300"
+alt="Scheme of a TMR implementation - C.Bernardeschi" />
+<figcaption aria-hidden="true">Scheme of a TMR implementation -
+C.Bernardeschi</figcaption>
+</figure>
+<p>The main idea is to <strong>triplicate</strong> the specific
+component, and perform a <strong>majority voting</strong> on the
+outputs. This technique obviously needs the assumption that the
+<strong>probability of failure of the components is
+independent</strong>, but ensure a fault neutralization without the need
+of any external intervention, and this for each of the components.</p>
+<p>TMR is very effective when we’re dealing with <strong>transient
+faults</strong>, but on the contrary isn’t very helpful when dealing
+with <strong>permanent faults</strong>, and this because the fault
+tolerance decreases since the faulty component remains in the
+system.</p>
+<h4 id="cascaded-tmr-with-triplicated-voters">Cascaded TMR with
+triplicated voters</h4>
+<p>This technique is a further development of the TMR, and is
+schematized in the following figure:</p>
+<figure>
+<img src="../images/02/CTMR.png"
+alt="Scheme of a cascaded TMR with triplicated voters - C.Bernardeschi" />
+<figcaption aria-hidden="true">Scheme of a cascaded TMR with triplicated
+voters - C.Bernardeschi</figcaption>
+</figure>
+<p>The effect of partitioning the modules is that the design can now
+withstands more failures than the TMR, thanks to the multiple voters.
+Unfortunately, we can let this technique arbitrarily reliable, because
+the reliability of the system is limited by the <strong>reliability of
+the voters</strong>, which also are a <strong>single point of
+failure</strong>.</p>
+<h4 id="the-voter">The Voter</h4>
+<p>The voter is a crucial component in the previous techniques: it’s
+usually implemented as an hardware digital circuiting, and it’s
+responsible for the majority voting. This leads to difficulties on its
+implementation:</p>
+<ul>
+<li><strong>delay on signal propagation</strong>: the voter must wait
+for the inputs to be stable before performing the voting, waiting for
+the synchronization of the inputs;</li>
+<li>trade-off between <strong>achieved fault tolerance</strong> and
+<strong>cost</strong> in hardware complexity.</li>
+</ul>
+<p>There is also another main problem, that come out when we’re dealing
+with <strong>analog signals</strong>: in this case, the majority voting
+is not so straightforward, and the voter must be implemented as a
+<strong>digital-to-analog converter</strong>. Given that these converter
+could produce inconsistent results, another techniques are implemented
+to ensure the correct voting, such as:</p>
+<ul>
+<li><strong>average of the signals</strong>;</li>
+<li>choose the <strong>mean of similar signals</strong>;</li>
+<li>choose the <strong>median of the signals</strong>.</li>
+</ul>
+<h4 id="n-modular-redundancy-nmr">N-Modular Redundancy (NMR)</h4>
+<p>This technique is a generalization of the TMR, when the number of
+redundant components, which <strong>must be odd</strong>, is arbitrary.
+Using this method, we can cover up to <span
+class="math inline">\(m\)</span> faulty modules, such that <span
+class="math inline">\(N = 2m+1\)</span>. The main problem of this
+technique is that the number of voters grows with the number of
+redundant components, and this leads to a <strong>high
+cost</strong>.</p>
+<h3 id="active-fault-tolerance-techniques">Active fault tolerance
+techniques</h3>
+<p>In active tolerance, redundancy is used in a <strong>dynamic
+way</strong>, through fault detection, location and recovery. Briefly,
+the existence of faults is detected, and some actions are taken in order
+to remove the faulty component from the system, and replace through a
+reconfiguration. These techniques are used in context where temporary
+faults while the system is being reconfigured are acceptable.</p>
+<h4 id="duplication-with-comparison-scheme">Duplication with comparison
+scheme</h4>
+<p>Two identical pieces of hardware are used, performing the same
+computation in parallel, with a comparator that takes as input their
+results. If the results differs, a failure is detected and an error
+signal is generated. The technique has a good coverage ratio, because
+it’s able to detect <strong>every faults</strong>, except fot those that
+affect the comparator: worth to mention is the simplicity and the low
+cost, with a minimal impact on the performance. On the other hand, we
+have to deal with the possibility that the comparator itself could
+fails, leading to both false positives and false negatives.</p>
+<h4 id="reconfigurable-duplication">Reconfigurable Duplication</h4>
+<p>This technique is a further development of the previous one, and is
+schematized in the following figure:</p>
+<figure>
+<img src="../images/02/ReconfDuplication.png"
+alt="Scheme of a reconfigurable duplication - C.Bernardeschi" />
+<figcaption aria-hidden="true">Scheme of a reconfigurable duplication -
+C.Bernardeschi</figcaption>
+</figure>
+<p>The circuit works like the previous one, with the difference that the
+output of the comparator is used as input of the switch, in order to
+select the module that will be used as output, with the implicit
+hypothesis that the comparator is able to select the correct value in
+case of disagreement. To do that, checks such as coding, reversal or
+reasonable checks are performed, and the switch is used to select the
+correct output disconnecting the faulty module. This configuration is
+also called <strong>duplex system</strong>.</p>
+<h4 id="stand-by-sparing">Stand-by sparing</h4>
+<p>As we can see in the schema, modules can be
+<strong>operational</strong> or <strong>spares</strong>:</p>
+<figure>
+<img src="../images/02/spares.png" width="400"
+alt="Scheme of a stand-by sparing - C.Bernardeschi" />
+<figcaption aria-hidden="true">Scheme of a stand-by sparing -
+C.Bernardeschi</figcaption>
+</figure>
+<p>The switch implements the <strong>fault detection and
+localization</strong>, and can decide to no longer use a module if it’s
+faulty, and to replace it with a spare. Spares are divided in three
+categories:</p>
+<ul>
+<li><strong>hot spares</strong>: they are always active, and ready to
+replace a faulty module in every moment;</li>
+<li><strong>warm spares</strong>: they are running, but receives inputs
+from the system only when they are activated;</li>
+<li><strong>cold spares</strong>: they are off, and must be activated
+before being used.</li>
+</ul>
+<p>A <strong>pair-and-spare</strong> approach can also be used, when
+every module is a <strong>duplex system</strong>, connected to the
+switch with a comparator: as long as the outputs agree, the spares are
+not used, but in case of disagreement, the switch operates the
+replacement.</p>
+<h3 id="hybrid-fault-tolerance-techniques">Hybrid fault tolerance
+techniques</h3>
+<p>In this category, we can find the <strong>combination</strong> of the
+previous techniques, in order to obtain a better fault tolerance. The
+main idea is to combine the advantages of the previous techniques, and
+to mitigate their disadvantages. Intuitively, we can say that costs
+increase dramatically, such as the complexity of the implementations, so
+this techniques are used only in <strong>critical systems</strong>.</p>
+<h4 id="reconfigurable-nmr">Reconfigurable NMR</h4>
+<p>This technique is a combination of the NMR and the reconfigurable
+duplication, and is schematized in the following figure:</p>
+<figure>
+<img src="../images/02/reconfNMR.png" width="300"
+alt="Scheme of a reconfigurable NMR - C.Bernardeschi" />
+<figcaption aria-hidden="true">Scheme of a reconfigurable NMR -
+C.Bernardeschi</figcaption>
+</figure>
+<p>There are <span class="math inline">\(N\)</span> redundant modules,
+and the voter; the <strong>fault detection units</strong> compare the
+outputs of the voters with the output of the active modules, and replace
+the faulty module with a spare, isolating it from the system. The
+reliability of the circuit holds as longs as the number of spare modules
+isn’t zero, and the coverages depends on the number of spare: a TMR with
+one spare can tolerates up to two faults, by masking the first module,
+replacing it and possibly mask the second one.</p>
+<h3 id="summary-of-the-hardware-redundancy-techniques">Summary of the
+hardware redundancy techniques</h3>
+<p>The key differences between the techniques are summarized:</p>
+<ul>
+<li><strong>passive</strong> rely on the <strong>fault masking</strong>,
+and requires high investments in the hardware;</li>
+<li><strong>active</strong> rely on the <strong>error
+detection</strong>, <strong>fault localization</strong> and
+<strong>recovery</strong>, but has the disadvantage of needing
+additional hardware to detect and recover from the faults, and can
+produced <strong>transient errors</strong>;</li>
+<li><strong>hybrid</strong> are a combination of the previous
+techniques. The reliability of the system is increased, but the costs
+are the highest.</li>
+</ul>
+<h2 id="information-redundancy">Information Redundancy</h2>
+<p>When we talk about information redundancy, we’re referring to
+<strong>coding</strong>, that is the application of the redundancy
+within the information itself. This is done using more bits than
+strictly necessary to represent the information: if <span
+class="math inline">\(n\)</span> is the number of bits needed to
+represent the information, we use <span class="math inline">\(m = n +
+c\)</span> bits, such that among all the possible <span
+class="math inline">\(2^m\)</span> combinations, only <span
+class="math inline">\(2^n\)</span> represents acceptable information,
+and these combinations are called <strong>codewords</strong>; if a
+non-codeword is received, an error is detected.</p>
+<p><strong>Coding</strong> needs a phase of <strong>encoding</strong>,
+where the <span class="math inline">\(c\)</span> bit are calculated and
+added to the information, and a phase of <strong>decoding</strong>,
+where the information is extracted from the codeword. We refer to
+<strong>separable code</strong> when the information and the redundancy
+are clearly separated,such as a concatenation of the information and the
+redundancy, and to <strong>non-separable code</strong> when the
+information and the redundancy are mixed together.</p>
+<h3 id="parity-codes">Parity codes</h3>
+<p>The simplest form of coding is the <strong>parity code</strong>,
+where a single bit is added to the information, such that the number of
+1s in the codeword is even or odd. This technique is very simple, but is
+able to detect only <strong>single bit errors</strong>, and can’t
+correct them.</p>
+<p><strong>Example</strong>:</p>
+<blockquote>
+<p>with <span class="math inline">\(n=2\)</span> and <span
+class="math inline">\(m=3\)</span>, 8 are the possible combinations, and
+4 are the codewords. We can easily get that the codewords are <span
+class="math inline">\(001\)</span>, <span
+class="math inline">\(010\)</span>, <span
+class="math inline">\(100\)</span> and <span
+class="math inline">\(111\)</span>.</p>
+</blockquote>
+<h3 id="complemented-duplication">Complemented duplication</h3>
+<p>In this technique, the information is duplicated, having <span
+class="math inline">\(n\)</span> bits of information and <span
+class="math inline">\(n\)</span> bits of redundancy, such that the
+redundancy is the complement of the information. In this case, having
+<span class="math inline">\(n=4\)</span>, we can have 16 possible
+combinations, and 4 are the codewords.</p>
+<h3 id="hamming-distance">Hamming distance</h3>
+<p>We define the <strong>Hamming distance</strong> has it follows:</p>
+<blockquote>
+<p>Given two codewords <span class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span>, the Hamming distance between them is
+the number of bits in which they differ.</p>
+</blockquote>
+<p>The <strong>minimum Hamming distance</strong> between two codewords
+is the number of independent single bit errors that the code can detect;
+a code such that the Hamming distance is $ &gt; k$ will detect up to
+<span class="math inline">\(k\)</span> erroneous bits.</p>
+<p>The main concept is that <strong>the corrupted data is closer to the
+correct data than to any other codeword</strong>. In the following
+figure, we can see a generic example of the Hamming distance, with the
+differences between predictable and unpredictable errors.</p>
+<figure>
+<img src="../images/02/hamming.png" width="300"
+alt="Hamming distance - C.Bernardeschi" />
+<figcaption aria-hidden="true">Hamming distance -
+C.Bernardeschi</figcaption>
+</figure>
+<h3 id="checksums">Checksums</h3>
+<p>This method is usually applied to large blocks of data, and it’s able
+to cover a single fault. The checksum for a block of <span
+class="math inline">\(n\)</span> words is formed by adding together all
+the words modulo <span class="math inline">\(k\)</span>, with <span
+class="math inline">\(k\)</span> arbitrary. The checksum is then stored
+in the data block, and when the block is transmitted, the checksum is
+recalculated and compared with the stored one; the codeword in this case
+is composed by the entire block of data, and the actual checksum.</p>
+<p>The main disadvantages of the technique are:</p>
+<ul>
+<li>the need to recalculate the checksum every time the data is
+modified;</li>
+<li>the error detection is limited is allowed, but the error
+localization is not possible.</li>
+<li>it represents a single point of failure.</li>
+</ul>
+<h3 id="ecc">ECC</h3>
+<p>This technique enables the <strong>error location</strong> for
+single-bit error, as we can see in the following figure:</p>
+<figure>
+<img src="../images/02/ECC.png" width="300"
+alt="ECC - C.Bernardeschi" />
+<figcaption aria-hidden="true">ECC - C.Bernardeschi</figcaption>
+</figure>
+<h3 id="hamming-codes">Hamming codes</h3>
+<p>This technique is usually used in databases, with specific disks that
+implements that mechanism, and it’s based on <strong>spreading parity
+bits across the data</strong>. The main idea is to use the
+<strong>parity bits</strong>, that are all bit in positions that are a
+power of 2, to check the data, and to use the <strong>data bits</strong>
+to store the information. In this way, the data bits are included in a
+set of two or more parity bits, and the parity bits are included in a
+set of two or more data bits, implementing a <strong>detection and
+correction</strong> mechanism. In the figure we can see an example of
+the Hamming code:</p>
+<figure>
+<img src="../images/02/hammingCode.png"
+alt="Hamming code - Wikipedia" />
+<figcaption aria-hidden="true">Hamming code - Wikipedia</figcaption>
+</figure>
+<p>The parity bit <span class="math inline">\(p_j\)</span> covers all
+the bit whose position has the <span class="math inline">\(j\)</span>-th
+bit set to 1, so every data bit is covered by a set of parity bits.</p>
+<h3 id="self-checking-circuitry">Self-checking circuitry</h3>
+<p>In order to implements all the previous methods, we have the
+necessity of reliability on the modules that performs checks and
+comparisons, and this is done through the <strong>self-checking
+circuitry</strong>.: given a set of faults, the circuit has the ability
+to <strong>automatically detect</strong> the fault, during the normal
+course of its operations; this is usually achieved by implementing
+coding techniques in the circuitry, such that input and outputs are
+encoded. . Three are the main techniques:</p>
+<ul>
+<li><strong>self-testing</strong> circuitry: if, for every fault from
+the set, does exists a non-code output;</li>
+<li><strong>fault-secure</strong> circuitry: if, for every fault from
+the set, the circuit never produces an incorrect output for any
+input;</li>
+<li><strong>totally self-checking</strong> circuitry: if the circuit is
+both self-testing and fault-secure.</li>
 </ul>
             </div>
     </div>

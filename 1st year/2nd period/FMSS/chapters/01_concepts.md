@@ -8,7 +8,7 @@ We can give to **dependability** a simple definition: given a system, which is d
 
 ### Computer-based systems
 
-A computer-based system is a system that includes a certain number of components: each of them can be interconnected and have its own functionality. The components can be hardware, software, humans and the environment in which the system operates. 
+A computer-based system is a system that includes a certain number of components: each of them can be interconnected and have its own functionality. The components can be hardware, software, humans and the environment in which the system operates.
 
 ![Computer-based system - C. Bernardeschi](../images/01/computer%20sysmet.png){width=500px}
 
