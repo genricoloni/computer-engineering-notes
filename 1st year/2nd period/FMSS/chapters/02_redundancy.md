@@ -93,7 +93,7 @@ There are $N$ redundant modules, and the voter; the **fault detection units** co
 The key differences between the techniques are summarized:
 
 - **passive** rely on the **fault masking**, and requires high investments in the hardware;
-- **active** rely on the **error detection**, **fault localization** and **recovery**, but has the disadvantage of needing additional hardware to detect and recover from the faults, and can produced **transient errors**; 
+- **active** rely on the **error detection**, **fault localization** and **recovery**, but has the disadvantage of needing additional hardware to detect and recover from the faults, and can produced **transient errors**;
 - **hybrid** are a combination of the previous techniques. The reliability of the system is increased, but the costs are the highest.
 
 ## Information Redundancy
@@ -157,3 +157,4 @@ In order to implements all the previous methods, we have the necessity of reliab
 - **self-testing** circuitry: if, for every fault from the set, does exists a non-code output;
 - **fault-secure** circuitry: if, for every fault from the set, the circuit never produces an incorrect output for any input;
 - **totally self-checking** circuitry: if the circuit is both self-testing and fault-secure.
+- 
