@@ -255,9 +255,9 @@ Loni</p></li>
         cipher</a></li>
         <li><a href="#shannons-theorem"
         id="toc-shannons-theorem">Shannon’s theorem</a></li>
-        <li><a href="#perfect-indistinguishablity"
-        id="toc-perfect-indistinguishablity">Perfect
-        indistinguishablity</a></li>
+        <li><a href="#perfect-indistinguishably"
+        id="toc-perfect-indistinguishably">Perfect
+        indistinguishably</a></li>
         </ul></li>
         <li><a href="#one-time-pad" id="toc-one-time-pad">One-time
         pad</a>
@@ -277,6 +277,9 @@ Loni</p></li>
         ciphers</a></li>
         <li><a href="#case-study-802.11-wep"
         id="toc-case-study-802.11-wep">Case study: 802.11 WEP</a></li>
+        <li><a href="#case-study-linear-feedback-shift-register"
+        id="toc-case-study-linear-feedback-shift-register">Case study:
+        Linear Feedback Shift Register</a></li>
         </ul></li>
         </ul></li>
         </ul>
@@ -521,7 +524,7 @@ class="math inline">\(c\)</span> such that <span class="math inline">\(c
 holds that <span class="math inline">\(P[M = m | C = c] = P[M = m] &gt;
 0\)</span>.</li>
 </ol>
-<h3 id="perfect-indistinguishablity">Perfect indistinguishablity</h3>
+<h3 id="perfect-indistinguishably">Perfect indistinguishably</h3>
 <p>An encryption scheme <span class="math inline">\(\prod =
 (G,E,D)\)</span> over <span class="math inline">\((K,M,C)\)</span> is
 said to be <strong>perfectly indistinguishable</strong> if:</p>
@@ -683,17 +686,37 @@ obtain the ciphertext, and the same keystream is then XORed with the
 ciphertext to obtain the message. During the years, WEP has been proved
 to be insecure, because of the following reasons:</p>
 <ul>
-<li>the key is too short and can be used more than once, and this can
-lead to the recovery of the key. In particular, it’s possible to recover
-the value of <span class="math inline">\(K\)</span> in about <span
-class="math inline">\(40&#39;000\)</span> frames.</li>
-<li>the repetition of the IV after <span
+<li>the <strong>key is too short</strong> and can be used more than
+once, and this can lead to the recovery of the key. In particular, it’s
+possible to recover the value of <span class="math inline">\(K\)</span>
+in about <span class="math inline">\(40&#39;000\)</span> frames.</li>
+<li>the <strong>repetition of the IV</strong> after <span
 class="math inline">\(2^{24}\)</span> frames, and this can lead to the
 recovery of the keystream.</li>
 <li><strong>CRC</strong>, used to check the integrity of the message and
 chosen for its execution speed, is not secure and can be easily
 forged.</li>
 </ul>
+<h3 id="case-study-linear-feedback-shift-register">Case study: Linear
+Feedback Shift Register</h3>
+<p>The LFSR is a pseudo-random generator, and it’s used in many
+applications, such as the generation of pseudo-random numbers, the
+generation of keystreams, and the generation of test patterns for
+digital circuits. First of all, let’s introduce the scheme of a Linear
+Feedback Shift Register:</p>
+<figure>
+<img src="../images/01/LFSR.png" alt="LFSR scheme" />
+<figcaption aria-hidden="true">LFSR scheme</figcaption>
+</figure>
+<p>The crucial parts of the scheme are the <strong>feedback
+coefficients</strong>: those are bits that, if settled to 1, enable the
+feedback mechanism. The feedback is implemented through a multiplication
+between the feedback coefficients and the bits of the register, and the
+result is then XORed to obtain the next bit of the register; trying to
+compute some steps we can easily get:</p>
+<p>$$s_m = p_{m-1} s_{m-1} + + p_1s_1 + p_0s 2</p>
+<p>s_{m+1} = p_{m} s_{m} + + p_1s_2 + p_0s_1 2</p>
+<p>s_{i+m} = {m-1} p_j s_{i+j} 2$$</p>
             </div>
     </div>
   </div>

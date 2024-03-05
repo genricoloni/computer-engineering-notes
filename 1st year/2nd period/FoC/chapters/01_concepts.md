@@ -92,7 +92,7 @@ In a perfect cipher, the key space must be at least as large as the message spac
 5. because of point 5, must exists al least one $c$ such that $c \not ={c_i}$;
 6. therefore, $P[C = c | M = m] = 0$, that is a contradiction because the cipher is perfect, so holds that $P[M = m | C = c] = P[M = m] > 0$.
 
-### Perfect indistinguishablity
+### Perfect indistinguishably
 
 An encryption scheme $\prod = (G,E,D)$ over $(K,M,C)$ is said to be **perfectly indistinguishable** if:
 
@@ -177,3 +177,50 @@ The key length is fixed to 104 bits, and the IV length is fixed to 24 bits; it c
 - the **key is too short** and can be used more than once, and this can lead to the recovery of the key. In particular, it's possible to recover the value of $K$ in about $40'000$ frames.
 - the **repetition of the IV** after $2^{24}$ frames, and this can lead to the recovery of the keystream.
 - **CRC**, used to check the integrity of the message and chosen for its execution speed, is not secure and can be easily forged.
+
+### Case study: Linear Feedback Shift Register
+
+The LFSR is a pseudo-random generator, and it's used in many applications, such as the generation of pseudo-random numbers, the generation of keystreams, and the generation of test patterns for digital circuits. First of all, let's introduce the scheme of a Linear Feedback Shift Register:
+
+![LFSR scheme](../images/01/LFSR.png)
+
+The crucial parts of the scheme are the **feedback coefficients**: those are bits that, if settled to 1, enable the feedback mechanism. The feedback is implemented through a multiplication between the feedback coefficients and the bits of the register, and the result is then XORed to obtain the next bit of the register; trying to compute some steps we can easily get that $s_{i+m} = \sum {j=0} {m-1} p_js_{i+j} \text{ mod } 2$, where $p_j$ are the feedback coefficients.
+
+#### Properties of LFSR
+
+The system is **periodic**, and the period is at most $2^m - 1$, where $m$ is the length of the register, and that property is called **maximum-length LSFR**. $m$ is also the **degree** of the LSFR, and we call **seed** the initial state of the register, that can assume any value except the all-zero value.
+
+This generator has good statistical properties, but on the other hand, it's not secure as a result of the following observation: it's **linear** and **periodic** because of its own construction, means that is **predictable**.
+
+#### Attack against LFSR
+
+It's possible to perform a Known-Plaintext Attack against the LFSR:
+
+1. given $2m$ pairs $(p, c)$, where $p$ is the plaintext and $c$ is the ciphertext, the adversary can determines the prefix of the sequence $s_i$;
+2. then, the adversary can determines the feedback coefficients, resolving a system of $m$ equations with $m$ unknowns;
+3. finally, the adversary can build the entire LSFR and produces the entire sequence.
+
+#### How to use LFSR correctly
+
+A good strategy to use LSFR is to use a non-linear combination of several LSFRs, such as an AND operation between the outputs of two LSFRs.
+
+### CSS: Content Scrambling System
+
+The Content Scrambling System is a cryptographic system used to protect digital video discs: it's a pseudo-random generator that use this structure:
+
+![CSS structure](../images/01/CSS.png)
+
+The output is a keystream, combined with the plaintext with an OR operation, and it takes as input 5 bytes from two different LSFR. Each round is composed by 8 clock cycles, in which each LFSR produces 8 bit, modded by 256.
+
+#### Attack against CSS
+
+This generator is breakable in $2^{17}$ steps with a Known-Plaintext Attack: this is possible knowing the format of the media content that has been encrypted, which has an known initial sequence. In this way, a prefix of the keystream can be computed; let's see how.
+
+For all possible setting of an LFSR-17, we have to:
+
+1. run the LFSR-17 to get 20 bytes in output;
+2. subtract LFSR-17$_{1-20}$ from the keystream$_{1-20}$, to obtain a possible output for LFSR-25$_{1-20}$;
+    - if it's consistent with the known plaintext, we have found the initial setting for both LFSR-17 and LFSR-25, and the keystream can be computed.
+    - otherwise, we have to try with another setting.
+
+Using the initial state, we can compute the entire keystream in at most $2^{17}$ steps, which is dramatically lower than the $2^{40}$ steps that would be required to break the system with a brute-force attack.
