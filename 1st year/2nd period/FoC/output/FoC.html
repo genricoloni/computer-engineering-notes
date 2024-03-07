@@ -297,6 +297,19 @@ Loni</p></li>
         generator</a></li>
         </ul></li>
         </ul></li>
+        <li><a href="#block-ciphers" id="toc-block-ciphers">Block
+        ciphers</a>
+        <ul>
+        <li><a href="#true-random-ciphers"
+        id="toc-true-random-ciphers">True random ciphers</a></li>
+        <li><a href="#pseudo-random-permutation"
+        id="toc-pseudo-random-permutation">Pseudo-random permutation</a>
+        <ul>
+        <li><a href="#practical-block-ciphers"
+        id="toc-practical-block-ciphers">Practical block
+        ciphers</a></li>
+        </ul></li>
+        </ul></li>
         </ul>
 
         </div>
@@ -912,6 +925,77 @@ the next bit of the sequence. This is a consequence of the fact that the
 LCG is <strong>linear</strong>, and this is a common problem of many
 PRBGs, and for this very reason, it’s not suitable for cryptographic
 applications.</p>
+<h1 id="block-ciphers">Block ciphers</h1>
+<p>BLock ciphers are the most used type of encryption. The intuition is
+simple: we take the entire block of data, and we split it into smaller
+blocks with fixed length, and we encrypt each block separately. The
+length is fixed by the chosen algorithm, like the encryption and
+decryption functions. In general, we can say that:</p>
+<ul>
+<li><span class="math inline">\(E_k: \{0,1\}^n \rightarrow
+\{0,1\}^n\)</span>, and outputs, in fact, a keyed permutation of the
+input. It should be <strong>efficient</strong>,
+<strong>bijective</strong> and <strong>invertible</strong>.</li>
+<li><span class="math inline">\(D_k: \{0,1\}^n \rightarrow
+\{0,1\}^n\)</span>.</li>
+</ul>
+<h2 id="true-random-ciphers">True random ciphers</h2>
+<p>Given the fact that, given <span class="math inline">\(n\)</span> the
+length of the block, there are <span class="math inline">\(2^n!\)</span>
+possible permutations, a true random cipher should implement all of
+them: this is impossible, because the size of the key would be <span
+class="math inline">\(\log_2(2n!) \approx (n-1.44)\cdot2^n\)</span>,
+which is exponential in <span class="math inline">\(n\)</span>; given
+also the fact that the block size cannot be small, in order to
+<strong>avoid dictionary attacks</strong> (common values of <span
+class="math inline">\(n\)</span> are 64 or 128), we conclude that a true
+random cipher is impossible to be implemented.</p>
+<h2 id="pseudo-random-permutation">Pseudo-random permutation</h2>
+<p>Considering a family of permutation <span class="math inline">\(k \in
+K = {0,1}^k\)</span>, <span class="math inline">\(E_k : {0,1}^n
+\rightarrow {0,1}^n\)</span> is a pseudo-random permutation if it’s
+indistinguishable from a true random permutation, given a random key
+<span class="math inline">\(k\)</span>. The number of possible
+pseudo-random permutations is <span
+class="math inline">\(2^{k}\)</span>, and it’s the practical instance of
+a true random permutation.</p>
+<h3 id="practical-block-ciphers">Practical block ciphers</h3>
+<p>In real life applications, we intend Indistinguishability as the
+capacity of the encryption function to choose a key in a way that
+appears to be random to an adversary, that is able to perform a
+<strong>exaustive search</strong> on the key space.</p>
+<figure>
+<img src="../images/02/indisti.png" width="500"
+alt="Indistinguishability" />
+<figcaption aria-hidden="true">Indistinguishability</figcaption>
+</figure>
+<p>Let assume that the adversary has access to an encryption oracle, so
+they cannot look into the box, but only submit an input and get the
+relative output. The box, which is our algorithm that choose the
+permutation, is considerate secure if the adversary cannot guess which
+permutation has bee used with a probability larger that <span
+class="math inline">\(0.5\)</span>. Thus, the output of a block cipher
+is a uniform random variable, no efficient analytical attack is
+possible.</p>
+<h4 id="brute-force-attack---exhaustive-search">Brute force attack -
+Exhaustive search</h4>
+<p>This is a known-plaintext attack, where the adversary has access to a
+set of plaintext-ciphertext pairs. Given one of these pairs, check
+whether the plaintext is the correct one, by trying all the possible
+keys. The complexity of this attack is <span
+class="math inline">\(2^k\)</span>, where <span
+class="math inline">\(k\)</span> is the length of the key.</p>
+<h4 id="false-positive">False positive</h4>
+<p>The attack also have to deal with <strong>false positives</strong>:
+given a pair of plaintext-ciphertext, such that the ciphertext is the
+result of the encryption of the plaintext for a given key, we have to
+determines the number of keys that map the plaintext into the
+ciphertext. This can be calculated considering that <span
+class="math inline">\(P[k] = P[E_{k^*}(\text{plaintext}) =
+\text{ciphertext}] = 2^{-n}\)</span>, where <span
+class="math inline">\(k^*\)</span> is the correct key, so the number of
+keys that map the plaintext into the ciphertext is <span
+class="math inline">\(2^k \cdot 2^{-n} = 2^{k-n}\)</span>.</p>
             </div>
     </div>
   </div>
