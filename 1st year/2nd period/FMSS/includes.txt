@@ -1,3 +1,4 @@
 00_introduction.md
 01_concepts.md
 02_redundancy.md
+03_buildingBlocks.md
