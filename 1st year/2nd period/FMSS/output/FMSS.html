@@ -434,6 +434,23 @@ Loni</p></li>
         id="toc-self-checking-circuitry">Self-checking
         circuitry</a></li>
         </ul></li>
+        <li><a href="#time-redundancy" id="toc-time-redundancy">Time
+        Redundancy</a>
+        <ul>
+        <li><a href="#repetition-of-the-computation"
+        id="toc-repetition-of-the-computation">Repetition of the
+        computation</a></li>
+        </ul></li>
+        <li><a href="#software-redundancy"
+        id="toc-software-redundancy">Software Redundancy</a>
+        <ul>
+        <li><a href="#software-diversity"
+        id="toc-software-diversity">Software diversity</a></li>
+        <li><a href="#n-version-programming"
+        id="toc-n-version-programming">N-version programming</a></li>
+        <li><a href="#design-diversity" id="toc-design-diversity">Design
+        diversity</a></li>
+        </ul></li>
         </ul></li>
         </ul>
 
@@ -1533,6 +1550,87 @@ input;</li>
 <li><strong>totally self-checking</strong> circuitry: if the circuit is
 both self-testing and fault-secure.</li>
 </ul>
+<h2 id="time-redundancy">Time Redundancy</h2>
+<p>To avoid the need (and the expense) of additional hardware, we can
+use another type of redundancy, called <strong>time redundancy</strong>:
+the main idea is to exchange the <strong>expense of the
+hardware</strong> with the <strong>expense of the time</strong>.</p>
+<h3 id="repetition-of-the-computation">Repetition of the
+computation</h3>
+<p>If we implement the time redundancy in this way, we have to
+<strong>perform multiple time</strong> the same computation: it appears
+obvious that <strong>permanent faults cannot be detected</strong>, given
+the fact that the latter lead the system to always have the same error,
+but instead it’s effective against <strong>transient faults</strong>. We
+have also the problem to guaranteeing that the computation is performed
+in the same way and with the same data, and the non-negligible
+overhead.</p>
+<h2 id="software-redundancy">Software Redundancy</h2>
+<p>As we briefly said in the previous chapter, the software is subject
+to both <strong>operational faults</strong> and <strong>design
+flaws</strong>. In particular, the latter is due to
+<strong>ambiguities</strong> in the specifications, or in mistakes made
+during the implementation. They’re hard to visualize, and they’re also
+closely related to a human factor: if, for example, only specific inputs
+trigger a fault, the number of failures depends on the number of times
+the inputs are used; it’s also true that the <strong>apparent
+reliability</strong> of a software is more due to the number of the
+exercised design faults, rather than the actual number of design faults
+present in the software. Given these premises, and the fact that the
+software has a large cost of development, the main focuses of software
+reliability are made on the <strong>fault prevention</strong> and
+<strong>testing strategies</strong>, usually with a
+<strong>multi-version</strong> approach.</p>
+<h3 id="software-diversity">Software diversity</h3>
+<p>Implementing two (or more) identical version of the software, these
+versions will always fail not in a independent way, leading to an
+inability to detect possible software faults. For this reason, the
+versions must be <strong>diverse</strong>: they obviously must be
+functionally equivalent, but their development must be carried out by
+different teams, using different tools and different algorithms.
+Developing <span class="math inline">\(N\)</span> different versions,
+the need of a decision mechanism is necessary, and this is usually
+implemented through a <strong>voting mechanism</strong>.</p>
+<h4 id="disadvantages-and-practical-considerations">Disadvantages and
+practical considerations</h4>
+<p>When using software diversity, we have to deal with the higher cost
+for development and concurrent execution of the software, and the
+possibility to have <strong>correlated errors</strong>, due to
+specification mistakes that shouldn’t be tolerated. A practical concern
+over the voting mechanism is that every version will have different
+compilers and formats for data types, that must be taking into account
+when implementing the voting mechanism.</p>
+<h3 id="n-version-programming">N-version programming</h3>
+<h4 id="the-voter-1">The voter</h4>
+<p>Some considerations we made in the previous sections, when we talked
+about hardware redundancy, are also valid for software redundancy: the
+voter is still a <strong>single point of failure</strong>, and it’s not
+replicated, in order to remain simple and verifiable.</p>
+<p>New tasks for the voter are that must <strong>verify the consistency
+of input data</strong> within the different versions, and must be able
+to receive data in a identical format from every version, both
+implementing a communication protocol and/or a efficient data
+conversion.</p>
+<h4 id="n-version-self-check-programming">N-version self-check
+programming</h4>
+<p>This circuit is based on the <strong>acceptance tests</strong> rather
+than the comparison between equivalent version: the voter implements
+some sort of selection logic that takes as input only the results from
+the versions whose output passed the specific-version acceptance tests,
+tolerating up to <span class="math inline">\(N-1\)</span> faults.</p>
+<h3 id="design-diversity">Design diversity</h3>
+<p>This technique is based on the fact that the <strong>same
+specification can be implemented in different ways</strong>, and the
+different implementations can be used to check each other. The main idea
+is to use different algorithms, data structures and programming
+languages, and to use the same inputs to check the outputs.
+Unfortunately, as we said before, it’s not possible to assume that these
+versions will fail independently, and this is due to the fact that the
+same specification can be implemented in different ways, but the same
+design flaws can be present in the different implementations: it’s in
+fact true that, from empirical studies, that common faults are pretty
+common, but at the same time, implementing the diversity delivers actual
+improvements in the reliability.</p>
             </div>
     </div>
   </div>

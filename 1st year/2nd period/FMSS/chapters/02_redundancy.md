@@ -157,4 +157,39 @@ In order to implements all the previous methods, we have the necessity of reliab
 - **self-testing** circuitry: if, for every fault from the set, does exists a non-code output;
 - **fault-secure** circuitry: if, for every fault from the set, the circuit never produces an incorrect output for any input;
 - **totally self-checking** circuitry: if the circuit is both self-testing and fault-secure.
-- 
+
+## Time Redundancy
+
+To avoid the need (and the expense) of additional hardware, we can use another type of redundancy, called **time redundancy**: the main idea is to exchange the **expense of the hardware** with the **expense of the time**.
+
+### Repetition of the computation
+
+If we implement the time redundancy in this way, we have to **perform multiple time** the same computation: it appears obvious that **permanent faults cannot be detected**, given the fact that the latter lead the system to always have the same error, but instead it's effective against **transient faults**. We have also the problem to guaranteeing that the computation is performed in the same way and with the same data, and the non-negligible overhead.
+
+## Software Redundancy
+
+As we briefly said in the previous chapter, the software is subject to both **operational faults** and **design flaws**. In particular, the latter is due to **ambiguities** in the specifications, or in mistakes made during the implementation.  They're hard to visualize, and they're also closely related to a human factor: if, for example, only specific inputs trigger a fault, the number of failures depends on the number of times the inputs are used; it's also true that the **apparent reliability** of a software is more due to the number of the exercised design faults, rather than the actual number of design faults present in the software. Given these premises, and the fact that the software has a large cost of development, the main focuses of software reliability are made on the **fault prevention** and **testing strategies**, usually with a **multi-version** approach.
+
+### Software diversity
+
+Implementing two (or more) identical version of the software, these versions will always fail not in a independent way, leading to an inability to detect possible software faults. For this reason, the versions must be **diverse**: they obviously must be functionally equivalent, but their development must be carried out by different teams, using different tools and different algorithms. Developing $N$ different versions, the need of a decision mechanism is necessary, and this is usually implemented through a **voting mechanism**.
+
+#### Disadvantages and practical considerations
+
+When using software diversity, we have to deal with the higher cost for development and concurrent execution of the software, and the possibility to have **correlated errors**, due to specification mistakes that shouldn't be tolerated. A practical concern over the voting mechanism is that every version will have different compilers and formats for data types, that must be taking into account when implementing the voting mechanism.
+
+### N-version programming
+
+#### The voter
+
+Some considerations we made in the previous sections, when we talked about hardware redundancy, are also valid for software redundancy: the voter is still a **single point of failure**, and it's not replicated, in order to remain simple and verifiable.
+
+New tasks for the voter are that must **verify the consistency of input data** within the different versions, and must be able to receive data in a identical format from every version, both implementing a communication protocol and/or a efficient data conversion.
+
+#### N-version self-check programming
+
+This circuit is based on the **acceptance tests** rather than the comparison between equivalent version: the voter implements some sort of selection logic that takes as input only the results from the versions whose output passed the specific-version acceptance tests, tolerating up to $N-1$ faults.
+
+### Design diversity
+
+This technique is based on the fact that the **same specification can be implemented in different ways**, and the different implementations can be used to check each other. The main idea is to use different algorithms, data structures and programming languages, and to use the same inputs to check the outputs. Unfortunately, as we said before, it's not possible to assume that these versions will fail independently, and this is due to the fact that the same specification can be implemented in different ways, but the same design flaws can be present in the different implementations: it's in fact true that, from empirical studies, that common faults are pretty common, but at the same time, implementing the diversity delivers actual improvements in the reliability.
