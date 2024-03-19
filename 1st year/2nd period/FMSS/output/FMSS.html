@@ -215,7 +215,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -451,6 +451,31 @@ Loni</p></li>
         <li><a href="#design-diversity" id="toc-design-diversity">Design
         diversity</a></li>
         </ul></li>
+        </ul></li>
+        <li><a
+        href="#basic-building-blocks-in-fault-tolerant-distributed-systems"
+        id="toc-basic-building-blocks-in-fault-tolerant-distributed-systems">Basic
+        building blocks in Fault tolerant distributed systems</a>
+        <ul>
+        <li><a href="#atomic-actions" id="toc-atomic-actions">Atomic
+        actions</a>
+        <ul>
+        <li><a href="#atomic-actions-in-a-database"
+        id="toc-atomic-actions-in-a-database">Atomic actions in a
+        database</a></li>
+        <li><a href="#atomic-actions-in-a-distributed-system"
+        id="toc-atomic-actions-in-a-distributed-system">Atomic actions
+        in a distributed system</a></li>
+        <li><a href="#two-phase-commit"
+        id="toc-two-phase-commit">Two-phase commit</a></li>
+        <li><a href="#three-phase-commit"
+        id="toc-three-phase-commit">Three-phase commit</a></li>
+        <li><a href="#recovery-and-atomicity"
+        id="toc-recovery-and-atomicity">Recovery and atomicity</a></li>
+        <li><a href="#log-file" id="toc-log-file">Log file</a></li>
+        </ul></li>
+        <li><a href="#consensus-problem"
+        id="toc-consensus-problem">Consensus problem</a></li>
         </ul></li>
         </ul>
 
@@ -1631,6 +1656,147 @@ design flaws can be present in the different implementations: it’s in
 fact true that, from empirical studies, that common faults are pretty
 common, but at the same time, implementing the diversity delivers actual
 improvements in the reliability.</p>
+<h1
+id="basic-building-blocks-in-fault-tolerant-distributed-systems">Basic
+building blocks in Fault tolerant distributed systems</h1>
+<h2 id="atomic-actions">Atomic actions</h2>
+<p>We intend as atomic an action that is indivisible, that is, it is
+executed in its entirety or not at all. In a distributed system, an
+atomic action is generally executed at more than one node, so these
+nodes have to cooperate in order to guarantee the atomicity property: if
+one of the nodes fails, the action shouldn’t let its effects be visible
+to the entire system.</p>
+<h3 id="atomic-actions-in-a-database">Atomic actions in a database</h3>
+<p>In a database, an atomic action is a transaction, that can be
+composed by more than one operation such as read, write, update or
+deleted a record in the database.</p>
+<h4 id="commit">Commit</h4>
+<p>When a transaction is committed, all its effects are made visible to
+the entire system. This means that the transaction is finished and its
+effects are permanent. An example of a transaction is a bank transfer,
+where the money is removed from one account and added to another
+account, as we can see in the following example:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>t: <span class="cf">begin</span> <span class="kw">transaction</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UPDATE</span> <span class="kw">account</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SET</span> balance <span class="op">=</span> balance <span class="op">+</span> <span class="dv">500</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> account_number <span class="op">=</span> <span class="dv">45</span>;</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UPDATE</span> <span class="kw">account</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SET</span> balance <span class="op">=</span> balance <span class="op">-</span> <span class="dv">500</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> account_number <span class="op">=</span> <span class="dv">35</span>;</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>t: <span class="kw">commit</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span> <span class="kw">transaction</span></span></code></pre></div>
+<h4 id="abort-or-rollback">Abort or Rollback</h4>
+<p>When a transaction is aborted, all its effects are discarded and the
+system is restored to the state it was before the transaction started.
+An example of a transaction that is aborted is a bank transfer where the
+money is added to one account but not removed from the other account
+because of balance insufficiency, as we can see in the following
+example:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>t: <span class="cf">begin</span> <span class="kw">transaction</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UPDATE</span> <span class="kw">account</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SET</span> balance <span class="op">=</span> balance <span class="op">+</span> <span class="dv">500</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> account_number <span class="op">=</span> <span class="dv">45</span>;</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UPDATE</span> <span class="kw">account</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SET</span> balance <span class="op">=</span> balance <span class="op">-</span> <span class="dv">500</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> account_number <span class="op">=</span> <span class="dv">35</span>;</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> balance</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">INTO</span> V <span class="kw">FROM</span> <span class="kw">account</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> account_number <span class="op">=</span> <span class="dv">35</span>;</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">IF</span> V <span class="op">&gt;=</span><span class="dv">0</span> <span class="cf">THEN</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="kw">commit</span>;</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">ELSE</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        abort;</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">END</span> <span class="cf">IF</span>;</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>;</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span> <span class="kw">transaction</span></span></code></pre></div>
+<h3 id="atomic-actions-in-a-distributed-system">Atomic actions in a
+distributed system</h3>
+<p>Imagine now that the bank database is distributed, and the two
+accounts are stored in two different nodes. In this case, the
+transaction has to use data stored in different nodes: a possible
+rollback of the transaction must leave both nodes in a consistent state,
+that is, the state they were in before the transaction started. Using
+the previous codes as an example, the DBMS has to guarantee that if the
+transaction is aborted, the money is not added to the first account and
+the money is not removed from the second account, considering the fact
+that these information are stored in different nodes.</p>
+<h3 id="two-phase-commit">Two-phase commit</h3>
+<p>The two-phase commit is a protocol that guarantees that a transaction
+is either committed or aborted in a distributed system. We have some
+crucial elements to consider:</p>
+<ul>
+<li>the <strong>transaction manager TM</strong>, that is the entity that
+coordinates the transaction;</li>
+<li>some <strong>resource managers RM</strong>, that are the entities
+that manage the resources involved in the transaction.</li>
+<li>a <strong>log file</strong>, stored in persistent memory, that is
+used to recover the state of the transaction in case of failure;</li>
+<li>a <strong>timeout</strong>, that is the maximum time that the TM
+waits for a response from the RMs.</li>
+</ul>
+<p>A scheme of the two-phase commit is the following:</p>
+<figure>
+<img src="../images/03/twoPhase.png" width="400"
+alt="Two-phase commit" />
+<figcaption aria-hidden="true">Two-phase commit</figcaption>
+</figure>
+<p>In case of fail of the TM, we have an <strong>uncertain
+period</strong>, during which a RM with a ready state cannot terminate
+the transaction. Note that this mechanism is able to tolerates both loss
+of messages and crash of nodes, simply rolling back the transaction.</p>
+<h3 id="three-phase-commit">Three-phase commit</h3>
+<p>This protocol is an evolution of the previous one, where a
+<strong>pre commit</strong> phase is added. Assuming a permanent crash
+of the TM, a participant is able to substitute the coordinate, in order
+to terminate the transaction, with a <strong>global commit</strong> or a
+<strong>global abort</strong>.</p>
+<figure>
+<img src="../images/03/threePhase.png" width="400"
+alt="Three-phase commit" />
+<figcaption aria-hidden="true">Three-phase commit</figcaption>
+</figure>
+<h3 id="recovery-and-atomicity">Recovery and atomicity</h3>
+<p>Given a block <span class="math inline">\(B\)</span>, that can be a
+<strong>physical block</strong> (a disk block) or a <strong>buffer
+block</strong> (temporary storage in memory), the operations to move a
+block from a disk to a buffer are <strong>input(B)</strong> and
+<strong>output(B)</strong>. A transaction <span
+class="math inline">\(T_i\)</span> has its own private work-area, in
+which local copies of all accessed items are stored, performing the
+operations <strong>read_item(X)</strong> and
+<strong>write_item(X)</strong>. The system can perform the
+<strong>output</strong> of the operation, trough the
+<strong>output(<span class="math inline">\(B_X\)</span>)</strong>
+operation, that need not immediately follows the
+<strong>write_item(X)</strong> operation.</p>
+<p>In general, several outputs are required by a transaction, and the
+latter can be aborted after one of these operations have been made
+permanent; it’s also true that a transaction can be committed, and a
+failure can occur before all the outputs are made permanent. In order to
+guarantee the atomicity property, the system has to perform the
+<strong>output</strong> operation in a way that the transaction is
+either committed or aborted, and the <strong>output</strong> operation
+is either made permanent or not, using a <strong>log file</strong> to
+recover the state of the transaction in case of failure.</p>
+<h3 id="log-file">Log file</h3>
+<p>The log file is a file stored in persistent memory, that is used to
+recover the state of the transaction in case of failure. Before the
+commit of a transaction, system has to save into the log file all the
+records of the operations that have been made permanent, and after the
+commit of a transaction, system has to save into the log file a record
+that indicates the commit of the transaction, executing
+<strong>UNDO</strong> and <strong>REDO</strong> operations in case of
+failure, to restore the state of the transaction.</p>
+<h2 id="consensus-problem">Consensus problem</h2>
             </div>
     </div>
   </div>
