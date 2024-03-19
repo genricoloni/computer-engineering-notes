@@ -309,6 +309,14 @@ Loni</p></li>
         id="toc-practical-block-ciphers">Practical block
         ciphers</a></li>
         </ul></li>
+        <li><a href="#multiple-encryption"
+        id="toc-multiple-encryption">Multiple encryption</a>
+        <ul>
+        <li><a href="#double-des" id="toc-double-des">Double
+        DES</a></li>
+        <li><a href="#triple-des" id="toc-triple-des">Triple
+        DES</a></li>
+        </ul></li>
         </ul></li>
         </ul>
 
@@ -995,7 +1003,84 @@ class="math inline">\(P[k] = P[E_{k^*}(\text{plaintext}) =
 \text{ciphertext}] = 2^{-n}\)</span>, where <span
 class="math inline">\(k^*\)</span> is the correct key, so the number of
 keys that map the plaintext into the ciphertext is <span
-class="math inline">\(2^k \cdot 2^{-n} = 2^{k-n}\)</span>.</p>
+class="math inline">\(2^k \cdot 2^{-n} = 2^{k-n}\)</span>. In generalo,
+two pairs of plaintext-ciphertext are enough to perform an exhaustive
+search.</p>
+<h2 id="multiple-encryption">Multiple encryption</h2>
+<p>In 1981 a challenge was issued in order to find an efficient
+algorithm to recover DES keys, knowing a prefix of the plaintext: in
+fact no efficient way has been found, but become clear that a brute
+force attack could be performed, given the small space of keys. In 1992
+as exhaustive search was made in 3 months, but nowadays it’s possible to
+perform it in a few days, showing the need to ensure better security,
+and this lead to the concept of <strong>multiple
+encryption</strong>.</p>
+<h3 id="double-des">Double DES</h3>
+<p>We encrypt the plaintext twice, using the same algorithm: <span
+class="math inline">\(y = 2E((e_L, e_R), x) = E(e_L, E(e_R,
+x))\)</span>, with <span class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span> as plaintext and ciphertext, and <span
+class="math inline">\(e_L\)</span> and <span
+class="math inline">\(e_R\)</span> as the keys. The time to perform an
+encryption doubled, but the security doesn’t show an improvement, due to
+a <strong>meet-in-the-middle attack</strong>. This attack is, in fact, a
+known-plaintext attack, where the adversary has access to a set of
+plaintext-ciphertext pairs, and it’s performed in these steps:</p>
+<ul>
+<li>build a table <span class="math inline">\(T\)</span> containing
+<span class="math inline">\(z = E(e_L, x)\)</span> for all <span
+class="math inline">\(e_L\)</span> and <span
+class="math inline">\(x\)</span>;</li>
+<li>check whether <span class="math inline">\(z&#39; = D(e_R,
+y)\)</span> is in <span class="math inline">\(T\)</span>: if we found a
+match, then we can map <span class="math inline">\(x\)</span> into <span
+class="math inline">\(y\)</span> with <span
+class="math inline">\(e_L\)</span> such that <span
+class="math inline">\(T[e_L] = z&#39;\)</span></li>
+</ul>
+<figure>
+<img src="../images/02/meetInTheMiddle.png" width="500"
+alt="Meet-in-the-middle attack" />
+<figcaption aria-hidden="true">Meet-in-the-middle attack</figcaption>
+</figure>
+<p>For what concerns the complexity of this attack, we have to
+consider:</p>
+<ul>
+<li><strong>data complexity</strong>: it’s negligible, because few pairs
+of plaintext-ciphertext are enough to perform the attack, considering a
+negligible probability of false positives;</li>
+<li><strong>space complexity</strong>: it’s <span
+class="math inline">\(2^k\)</span>, because we have to store all the
+possible values of <span class="math inline">\(z\)</span>;</li>
+<li><strong>time complexity</strong>: it’s the sum to build and sort the
+table, and then the time to search for a match, so it’s approximately
+<span class="math inline">\(2^k + 2^k = 2^k\)</span>.</li>
+</ul>
+<p>As we can see, the double encryption doesn’t improve the security,
+because the time complexity is the same of a single encryption.</p>
+<h3 id="triple-des">Triple DES</h3>
+<p>The encryption scheme is <span class="math inline">\(y = 3E((e_1,
+e_2, e_3), x) = E(e_1, D(e_2, E(e_3, x)))\)</span>: note that if <span
+class="math inline">\(e_1 = e_2 = e_3\)</span>, then we’re back to
+single DES, which is good for backward compatibility. The time needed to
+perform an encryption is tripled respect to the single DES, but
+performing a meet-in-the-middle attack is not feasible: the time
+complexity is <span class="math inline">\(2^{118}\)</span>, because we
+have to try two keys on one side, which is <span
+class="math inline">\(2^{2k}\)</span></p>
+<figure>
+<img src="../images/02/tripleDes.png" width="500" alt="Triple DES" />
+<figcaption aria-hidden="true">Triple DES</figcaption>
+</figure>
+<p>Summarizing, 3DES is still used, even if slower than DES, because
+it’s more secure, but we have some withdrawals:</p>
+<ul>
+<li>there isn’t an efficient software implementation;</li>
+<li>it has short block size(64-bit), which is a drawback if you want to
+make a hash function with 3DES;</li>
+<li>keys longer than 256 bit are necessary, in order to let the
+algorithm secure against quantum computers computation.</li>
+</ul>
             </div>
     </div>
   </div>
