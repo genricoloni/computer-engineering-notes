@@ -1,0 +1,675 @@
+<!doctype html>
+<html  lang="en" >
+<head>
+    <style>
+		#TOC {
+			overflow-y: hidden !important; 
+			font-size: smaller !important;
+			/*margin-right: 20px;*/
+		}
+
+		p, h1, h2, h3, h4, h5, a, span, li, ul, ol, th, tr, table, figcaption {
+			font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif !important;
+		}
+
+		[class*="span"] {
+			margin-left: 0 !important;
+		}
+
+		.well {
+			min-height: 0px !important;
+			padding: 0px !important;
+			margin-bottom: 0px !important;
+			background-color: #FFFFFF  !important;
+			border: 0 !important;
+			-webkit-border-radius: 0 !important;
+			-moz-border-radius: 0 !important;
+			border-radius: 0 !important;
+			-webkit-box-shadow: none !important;
+			-moz-box-shadow: none !important;
+			box-shadow: none !important;
+		}
+
+		.navbar-inner {
+			background-color: #fefefe !important;
+			background-image: none !important;
+			background-repeat: no-repeat !important;
+			filter: none !important;
+			border: 0 !important;
+			-webkit-border-radius: 0px !important;
+			-moz-border-radius: 0px !important;
+			border-radius: 0px !important;
+			margin-bottom: 15pt !important;
+
+			-webkit-box-shadow: 0 1px 10px rgb(0 0 0 / 7%) !important;
+			-moz-box-shadow: 0 1px 10px rgba(0,0,0,.07) 1 !important;
+			box-shadow: 0 1px 10px rgb(0 0 0 / 7%) !important;
+		}
+		
+		
+		li > ul {
+			padding-left: 15px !important;
+		}
+
+		pre {
+			background-color: #f6f8fa !important;
+			border-radius: 3px !important;
+			/*font-size: 85% !important;*/
+			line-height: 1.45 !important;
+			overflow: auto !important;
+			padding: 16px !important;
+			font-family: Monaco, Menlo, Consolas, "Courier New", monospace !important;
+			border: 0 !important;
+		}
+		
+		code {
+			/*background-color: rgba(27,31,35,.05) !important;*/
+			border-radius: 3px !important;
+			border: 0 !important;
+			/*font-size: 85% !important;*/
+			margin: 0 !important;
+			padding: 0.2em 0.4em !important;
+			font-family: Monaco, Menlo, Consolas, "Courier New", monospace !important;
+		}
+
+		table th {
+			background-color: #f6f8fa !important;
+		}
+
+		
+		.math * {
+			font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif !important;
+		}
+
+		.katex-display>.katex>.katex-html {
+			font-size: 85% !important;
+			font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif !important;
+		}
+
+		/*distanzia*/
+		h1:not(:first-of-type){
+			margin-top: 50px !important;
+		}
+
+		/* fa comparire la barra del capitolo */
+		h1 {
+			border-bottom: 1px solid #e8e8e8fa !important;
+			font-size: 2.2em !important;
+		}
+
+		/*distanzia*/
+		h2 {
+			margin-top: 30px !important;
+			font-size: 1.6em !important;
+		}
+
+		/*distanzia*/
+		h3 {
+			margin-top: 20px !important;
+			font-size: 1.3em !important;
+		}
+
+		h4 {
+			font-size: 1em !important;
+		}
+
+		/* stile box */
+		.note, .tip, .caution, .warning, .attention, .error, .danger, .definition {
+			border-radius: 5pt;
+			padding-left: 10px;
+			padding-right: 10px;
+			padding-top: 1px;
+			padding-bottom: 1px;
+			line-height: normal;
+			color: #000000ab;
+			margin: 6pt 0pt 6pt 0pt;
+		}
+
+		.note code, .tip code, .caution code, .warning code, .attention code, .error code, .danger code, .definition code, .danger code {
+			background-color: #00000014;
+		}
+
+		.note {
+			background-color: #88d3f9;
+		}
+
+		.tip {
+			background-color: #87f0b8;
+		}
+
+		.caution, .warning, .attention {
+			background-color: #ffe162;
+		}
+
+		.error, .danger {
+			background-color: #ff7474;
+		}
+
+		.definition {
+			background-color: #f191ff;
+		}
+
+		.table {
+			border-top: 1px solid #ddd;
+			margin-top: 15px;
+		}
+
+
+	</style>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!--[if lt IE 9]>
+                <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+        <![endif]-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+
+    <!-- <link rel="stylesheet" type="text/css" href="template.css" /> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/template.css" />
+
+    <link href="https://vjs.zencdn.net/5.4.4/video-js.css" rel="stylesheet" />
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <!-- <script type='text/javascript' src='menu/js/jquery.cookie.js'></script> -->
+    <!-- <script type='text/javascript' src='menu/js/jquery.hoverIntent.minified.js'></script> -->
+    <!-- <script type='text/javascript' src='menu/js/jquery.dcjqaccordion.2.7.min.js'></script> -->
+
+    <!-- <link href="menu/css/skins/blue.css" rel="stylesheet" type="text/css" /> -->
+    <!-- <link href="menu/css/skins/graphite.css" rel="stylesheet" type="text/css" /> -->
+    <!-- <link href="menu/css/skins/grey.css" rel="stylesheet" type="text/css" /> -->
+  
+    <!-- <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+        
+  
+    <!-- <script src="script.js"></script> -->
+  
+    <!-- <script src="jquery.sticky-kit.js "></script> -->
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/js/jquery.cookie.js'></script>
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/js/jquery.hoverIntent.minified.js'></script>
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/js/jquery.dcjqaccordion.2.7.min.js'></script>
+
+    <link href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/css/skins/blue.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/css/skins/graphite.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/menu/css/skins/grey.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/ryangrose/easy-pandoc-templates@948e28e5/css/elegant_bootstrap.css" rel="stylesheet" type="text/css" />
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+    <script src="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/script.js"></script>
+  
+    <script src="https://cdn.jsdelivr.net/gh/diversen/pandoc-bootstrap-adaptive-template@959c3622/jquery.sticky-kit.js"></script>
+    <meta name="generator" content="pandoc" />
+  <meta name="author" content="Giovanni Enrico Loni" />
+  <title>Intelligent Systems</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  
+</head>
+<body>
+
+    
+    <div class="navbar navbar-static-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <span class="doc-title">Intelligent Systems</span>
+        <ul class="nav pull-right doc-info">
+                    <li><p class="navbar-text">Giovanni Enrico
+Loni</p></li>
+                            </ul>
+      </div>
+    </div>
+  </div>
+    <div class="container">
+    <div class="row">
+            <div id="TOC" class="span3">
+        <div class="well toc">
+
+        <ul>
+        <li><a href="#introduction-to-models-and-data"
+        id="toc-introduction-to-models-and-data">Introduction to Models
+        and Data</a>
+        <ul>
+        <li><a href="#introduction"
+        id="toc-introduction">Introduction</a>
+        <ul>
+        <li><a href="#exploration"
+        id="toc-exploration">Exploration</a></li>
+        <li><a href="#modeling" id="toc-modeling">Modeling</a></li>
+        <li><a href="#evaluation"
+        id="toc-evaluation">Evaluation</a></li>
+        <li><a href="#remarks" id="toc-remarks">Remarks</a></li>
+        </ul></li>
+        <li><a href="#data-and-transactions"
+        id="toc-data-and-transactions">Data and transactions</a>
+        <ul>
+        <li><a href="#data-objects" id="toc-data-objects">Data
+        objects</a></li>
+        <li><a href="#attribute-types"
+        id="toc-attribute-types">Attribute types</a></li>
+        <li><a href="#distance-of-numeric-attributes"
+        id="toc-distance-of-numeric-attributes">Distance of numeric
+        attributes</a></li>
+        </ul></li>
+        <li><a href="#working-with-models"
+        id="toc-working-with-models">Working with models</a>
+        <ul>
+        <li><a href="#training-and-generalization"
+        id="toc-training-and-generalization">Training and
+        generalization</a></li>
+        <li><a href="#data-sampling" id="toc-data-sampling">Data
+        sampling</a></li>
+        <li><a href="#overfitting"
+        id="toc-overfitting">Overfitting</a></li>
+        <li><a href="#using-the-model" id="toc-using-the-model">Using
+        the model</a></li>
+        <li><a href="#training-and-testing"
+        id="toc-training-and-testing">Training and testing</a></li>
+        </ul></li>
+        <li><a href="#useful-techniques"
+        id="toc-useful-techniques">Useful techniques</a>
+        <ul>
+        <li><a href="#k-fold-cross-validation"
+        id="toc-k-fold-cross-validation">K-fold
+        cross-validation</a></li>
+        <li><a href="#stratified-cross-validation-and-leave-one-out"
+        id="toc-stratified-cross-validation-and-leave-one-out">Stratified
+        cross-validation and leave-one-out</a></li>
+        <li><a href="#bagging" id="toc-bagging">Bagging</a></li>
+        <li><a href="#boosting" id="toc-boosting">Boosting</a></li>
+        </ul></li>
+        </ul></li>
+        </ul>
+
+        </div>
+      </div>
+            <div class="span9">
+
+      
+      <h1 id="introduction-to-models-and-data">Introduction to Models
+and Data</h1>
+<h2 id="introduction">Introduction</h2>
+<p>When we talk about Artificial Intelligence, we’re talking about
+<strong>building a model</strong>, starting from the available data,
+that provides some <strong>knowledge</strong> about the world: this
+knowledge must be <strong>readable</strong>,
+<strong>interpretable</strong> and <strong>tangible</strong>, with a
+practical use in various fields. Each IA algorithm on the following
+operational pillars:</p>
+<ul>
+<li><strong>exploration</strong>;</li>
+<li><strong>modeling</strong>,</li>
+<li><strong>evaluation</strong>.</li>
+</ul>
+<h3 id="exploration">Exploration</h3>
+<p>In this first step, data are crucial, serving as the main focus of
+the algorithm to begin its analysis and the <strong>hypothesis
+generation</strong>. The data, stored in databases, represent the
+reality, and the effectiveness of the AI algorithm is based on the
+ability to <strong>utilize data</strong>, to inform strategic decision
+trough a process called <strong>business intelligence</strong>.
+Obviously, to have an effective algorithm, we require data that are
+logically consistent with themselves, and that are
+<strong>representative</strong> of the reality: to achieve that, a good
+strategy could be to gather data from different sources; this could be
+challenging, but it’s a necessary step to have a good model. Lastly,
+it’s crucial to understand how to <strong>leverage data</strong>, both
+for validation and the testing phases of the model.</p>
+<h3 id="modeling">Modeling</h3>
+<p>In this phase, the figure of the <strong>knowledge engineer</strong>
+appears: it has a good understanding of the data, the principles over
+them and their defining parameters. The aim of this phase is to
+<strong>estimate</strong> the parameters of the model, using statistics
+and machine learning techniques. It’ also important to <strong>define
+the model</strong>: based on the goal of the analysis, different
+possibilities are available.</p>
+<h4 id="descriptive-models">Descriptive models</h4>
+<p>These models are typically identified by <strong>clustering</strong>
+and <strong>association rules mining</strong> algorithms; they’re used
+to <strong>describe the organizational structure and the data
+distribution</strong>, and the main goal is a <strong>deeper
+understanding</strong> of the data and its knowledge.</p>
+<h4 id="predictive-models">Predictive models</h4>
+<p>These models are usually implemented for
+<strong>classification</strong> and <strong>regression</strong>
+problems, and they’re used to <strong>predict</strong> the future
+behavior of the data, based on the past one. This is made by exploiting
+<strong>parameters</strong> and <strong>mechanisms</strong> within the
+data, predicting how they will behave in the future.</p>
+<h4 id="unsupervised-learning">Unsupervised learning</h4>
+<p>This is a type of learning where the algorithm is given a set of data
+and must find patterns and relationships within it, without any prior
+knowledge, such as labels; it’s related to the descriptive models and
+it’s used for <strong>building a model</strong>.</p>
+<h4 id="supervised-learning">Supervised learning</h4>
+<p>Typical of predictive models, where the data are labeled, and it’s a
+method used to <strong>train the model</strong>.</p>
+<h3 id="evaluation">Evaluation</h3>
+<p>In this phase, we want want to <strong>evaluate the validity</strong>
+of the model. When we’re dealing with predictive models, performances
+are assessed by appropriate <strong>accuracy metrics</strong>; if
+instead we’re dealing with descriptive ones, we have to evaluate the
+<strong>quality</strong> of the model trough <strong>model-specific
+metrics</strong>. Part of this phase is also the <strong>comparison
+between models</strong>, made by knowledge engineers, trough statistical
+tests and analysis of the results. At the end of this step, we can both
+decide to <strong>deploy</strong> the model, or to refine it in order to
+obtain better results.</p>
+<h3 id="remarks">Remarks</h3>
+<ul>
+<li>Achieving a good model is a <strong>complex process</strong>, that
+requires a meticulous approach to all the steps, such as leading to a
+multiple execution of the same step for multiple times;</li>
+<li>the knowledge of the application domain can aids during the modeling
+phase, adding some <strong>domain-specific knowledge</strong> to the
+model that could be not clear by simply analyzing the data;</li>
+<li>the process of <strong>knowledge elicitation</strong>, where the
+knowledge engineer has to <strong>extract the knowledge</strong> from
+the domain expert, is crucial to have a good model;</li>
+</ul>
+<h2 id="data-and-transactions">Data and transactions</h2>
+<p>Before going deep into the AI models, we have to understand what are
+the data, and define a common way to refer to them. <em>Data</em> is
+usually a general term that refers to the <strong>raw facts</strong>,
+but in fact we call <strong>data set</strong> the collection of
+<strong>data objects</strong>, which are the information that represent
+an <strong>entity</strong>.</p>
+<blockquote>
+<p>Example: in a database of students, the data set is the collection of
+all the students, and the data objects are the single students.</p>
+</blockquote>
+<h3 id="data-objects">Data objects</h3>
+<p>Data objects are also called <strong>samples</strong>,
+<strong>instances</strong> or <strong>records</strong>, and they’re
+defined by <strong>atributes</strong>: we can image a samples as a
+<strong>row of a table</strong>, and the attributes as the
+<strong>columns</strong>. The attributes are also called
+<strong>features</strong>, they’re the <strong>characteristics</strong>
+of the data object and they can be expressed with different types.</p>
+<h3 id="attribute-types">Attribute types</h3>
+<p>The attributes can be of different types, such as:</p>
+<ul>
+<li><strong>nominal</strong>;</li>
+<li><strong>binary</strong>;</li>
+<li><strong>numeric</strong>, and we can distinguish between
+<strong>interval</strong> and <strong>ratio</strong>.</li>
+</ul>
+<h4 id="nominal-attributes">Nominal attributes</h4>
+<p>Intuitively, we define a nominal attribute as a
+<strong>category</strong>, a <strong>name</strong> or a *name of a
+thing**:</p>
+<blockquote>
+<p>Example: possible hair colors are blonde, brown, black, red, etc.</p>
+</blockquote>
+<p>Dealing with nominal attributes, we can define the
+<strong>distance</strong> between two attributes <span
+class="math inline">\(d(i, j)\)</span> as <span
+class="math inline">\(d(i,j) = \frac{p - m}{p}\)</span> where <span
+class="math inline">\(p\)</span> is the number of attributes and <span
+class="math inline">\(m\)</span> is the number of matching
+attributes.</p>
+<blockquote>
+<p>Example: given the variables <em>eye color</em> and <em>hair
+color</em> and two elements $i = $ {green, blonde} and $j = $ {gree,
+black}, we have <span class="math inline">\(d(i,j) = \frac{2-1}{2} =
+0.5\)</span>.</p>
+</blockquote>
+<h4 id="binary-attributes">Binary attributes</h4>
+<p>These are a particular case of nominal attributes, where we have only
+two possible values, usually 0 and 1. If the possible outcomes are
+equally important, they’re called <strong>symmetric</strong>; if instead
+one of the two outcomes is more important, they’re called
+<strong>asymmetric</strong>, and we’ll use the convention to assign the
+value 1 to the most important outcome.</p>
+<h4 id="ordinal-attributes">Ordinal attributes</h4>
+<p>These are attributes that have a <strong>natural order</strong>, but
+with a <strong>not defined distance</strong> between them. They’re used
+to represent <strong>rankings</strong> or <strong>grades</strong>.</p>
+<blockquote>
+<p>Example: <em>size = {small, medium, large}</em>.</p>
+</blockquote>
+<p>Notice the <strong>importance</strong> of the order, and for this
+reason we can treat them as <strong>interval-scaled</strong> attributes,
+by mapping them into a set of <strong>integer values</strong>, and this
+could be done with this algorithm:</p>
+<ol type="1">
+<li>assign a number to each value, starting from 1;</li>
+<li>convert the values into a number between 0 and 1 using this formula:
+<span class="math inline">\(v = \frac{x_i - 1}{x_M-1}\)</span>, where
+<span class="math inline">\(x_i\)</span> is the value of the attribute
+and <span class="math inline">\(x_M\)</span> is the maximum value.</li>
+</ol>
+<p>In this way, we can compute the <strong>distance</strong> using the
+same methods of the interval-scaled attributes.</p>
+<h4 id="interval-scaled-attributes">Interval-scaled attributes</h4>
+<p>They are some sort of <strong>quantity</strong>, measured in a scale
+of equal-sized units. Values have an order, but they lacks on the
+definition of a <strong>zero point</strong>.</p>
+<blockquote>
+<p>Example: <em>temperature</em> measured in Celsius, where the 0
+doesn’t mean the absence of temperature.</p>
+</blockquote>
+<h4 id="ratio-scaled-attributes">Ratio-scaled attributes</h4>
+<p>They’re similar to the interval-scaled attributes, but they have a
+<strong>true zero point</strong> (usually <strong>naturally
+defined</strong>) and this allows us to compute the
+<strong>ratio</strong> between two values.</p>
+<blockquote>
+<p>Example: <em>weight</em> measured in kilograms, where the 0 means the
+absence of weight.</p>
+</blockquote>
+<h3 id="distance-of-numeric-attributes">Distance of numeric
+attributes</h3>
+<p>A popular measurement for the distance between two numeric attributes
+is the <strong>Minkowski distance</strong>, defined as <span
+class="math inline">\(d(i,j) = \sqrt[h]{\sum_{k=1}^{n} |x_{ik} -
+x_{jk}|^h}\)</span>. When <span class="math inline">\(h = 1\)</span>, we
+have the <strong>Manhattan distance</strong>, when <span
+class="math inline">\(h = 2\)</span> we have the <strong>Euclidean
+distance</strong>.</p>
+<h2 id="working-with-models">Working with models</h2>
+<p>When operating with models, we have to <strong>extract</strong> the
+knowledge from the data; an example is the <strong>data mining</strong>
+process, in which we have to <strong>extract patterns</strong> and
+knowledge from massive data sets. In general, this process can be
+summarized as follows:</p>
+<figure>
+<img src="../images/01/extractionProcess.png"
+alt="The knowledge extraction process" />
+<figcaption aria-hidden="true">The knowledge extraction
+process</figcaption>
+</figure>
+<h3 id="training-and-generalization">Training and generalization</h3>
+<p>We start knowing that <strong>training data contain the
+knowledge</strong> that we want to extract: any AI algorithm is
+dependent on these data, and the aim is to create a model that
+<strong>mirror the data</strong> as close as possible, both for
+predictive and descriptive models. Now appears clear that the
+<strong>quality of the data</strong> is crucial in order to made the
+extraction process effective. When we build a system, we must include a
+<strong>training phase</strong>, where the data are used to
+<strong>estimate the parameters</strong> of the model: the effectiveness
+of this phase is evaluated by the <strong>capacity of the model to
+generalize</strong> the knowledge, that is,classify correctly new data
+that are not part of the training set.</p>
+<h3 id="data-sampling">Data sampling</h3>
+<p>Given a set of data, not all the records are used to create the
+model, and this for two main reasons:</p>
+<ul>
+<li>for certain datasets, there are too much data available, and this
+could lead to very long training times;</li>
+<li>part of the data have to be used in the evaluation phase, to test
+the model.</li>
+</ul>
+<p>A sampling strategy is used to select the data that will be used in
+the training phase, considering the fact that our model should have a
+good <strong>generalization capacity</strong>.</p>
+<h3 id="overfitting">Overfitting</h3>
+<p>In statistics, the <strong>overfitting</strong> problem arises when
+the model has <strong>to many parameters</strong> relative to the amount
+of data, leading to a model that is <strong>too complex</strong>: we
+should avoid this situation, because <strong>simpler models have a
+better generalization capacity</strong>. The overfitting problem is
+usually solved by <strong>reducing the number of parameters</strong> of
+the model, or by <strong>increasing the amount of data</strong>.</p>
+<h3 id="using-the-model">Using the model</h3>
+<p>Once the model is created, it’s ready to be used, following its
+purpose.</p>
+<h4 id="usage-of-predictive-models">Usage of predictive models</h4>
+<p><strong>Predictive model</strong> can be used, where the functions
+are like <strong>boxes</strong> with different <strong>opacity</strong>
+(black, which is a neural network, grey, which is a rule-based system,
+or white), that based on their structure and complexity can produce
+outputs from the given input. The output of these models are obtained by
+mechanisms, called <strong>inference engines</strong>, that use the
+parameters obtained in the training.</p>
+<h4 id="usage-of-descriptive-models">Usage of descriptive models</h4>
+<p>These models use their parameters to <strong>describe</strong> the
+characteristics of the data, such as <strong>centroid</strong> or
+<strong>clusters</strong>, to represent similar data objects; we can use
+these models to categorize new data objects, assigning them to the most
+similar cluster. The accuracy of that classification, when data aren’t
+labeled, is evaluated by the <strong>domain expert</strong>.</p>
+<h3 id="training-and-testing">Training and testing</h3>
+<p>Only a portion of the data (that have to be <strong>labeled</strong>
+in order to create a predictive model), known as <strong>training
+set</strong>, is used to train the model, while the remaining part, the
+<strong>testing set</strong>, is used to evaluate the model. The testing
+set is used to evaluate the <strong>generalization capacity</strong> of
+the model, and it’s crucial to have a good model. Labeled data allow us
+to evaluate the model, computing values such as <strong>average
+error</strong> or <strong>accuracy</strong>.</p>
+<p>Dealing with classification models, we instead use
+<strong>misclassification rate</strong>, while for <strong>regression
+models</strong> we use the <strong>error metrics</strong>.</p>
+<figure>
+<img src="../images/01/modelEvaulation.png" width="400"
+alt="Model evaluation" />
+<figcaption aria-hidden="true">Model evaluation</figcaption>
+</figure>
+<p>The training and test set have to be carefully, in order to ensure
+randomness and to avoid <strong>bias</strong> towards a particular
+class. In general:</p>
+<ul>
+<li>we must assure the <strong>independence</strong> of the training and
+test set;</li>
+<li>the ratio between sets is unbalanced, with the training set that is
+usually larger than the test set.</li>
+</ul>
+<h2 id="useful-techniques">Useful techniques</h2>
+<h3 id="k-fold-cross-validation">K-fold cross-validation</h3>
+<p>This is one the most robust, and also used, approach used to
+<strong>evaluate a model</strong>. Remember the fact that this is only
+an evaluating procedure: it doesn’t gave any clue about how to improve
+the model!. The technique is employed to <strong>reduce the model
+dependence</strong> on data for both identification and evaluation.</p>
+<p>Suppose to have a dataset, splittable in <span
+class="math inline">\(N\)</span> instancies, the dataset is divided in
+<span class="math inline">\(K\)</span> random partitions, also called
+<strong>folds</strong>. The model is then trained and evaluated <span
+class="math inline">\(K\)</span> times, using for each iteration <span
+class="math inline">\(K-1\)</span> folds for training and the remaining
+one for testing: this results in having <span
+class="math inline">\(K\)</span> different models, each one evaluated
+against a different test set, to assess the model’s generalization
+capacity. The output of the procedure is <span
+class="math inline">\(K\)</span> different values of
+<strong>error</strong>, or <strong>accuracy</strong>, corresponding to
+the <span class="math inline">\(K\)</span> different models: the average
+of these values gives the <strong>cross-validation error</strong>.</p>
+<p>Some general consideration about the standard deviation can be made:
+if the <strong>standard deviation</strong> of the error is high, this
+means that the model is <strong>sensitive</strong> to the data used for
+training; on the other hand, if the <strong>standard deviation</strong>
+is low, this means that the model appears to be
+<strong>insensitive</strong> to the data used for training.</p>
+<p>It’s important to remember that <strong>we cannot compare results
+obtained with different evaluation techniques</strong>: the
+<strong>cross-validation error</strong> is only a measure of the model’s
+generalization capacity, and it’s not a measure of the model’s quality.
+Lastly, remember that the <strong>cross-validation error</strong> isn’t
+suitable in every situation, and it’s not always the best choice.</p>
+<h4 id="example-of-k-fold-cross-validation">Example of K-fold
+cross-validation</h4>
+<p>The following figure shows an example of a 5-fold cross-validation,
+where the dataset is divided into 4 folds:</p>
+<figure>
+<img src="../images/01/crossEvaluation.png" width="400"
+alt="K-fold cross-validation" />
+<figcaption aria-hidden="true">K-fold cross-validation</figcaption>
+</figure>
+<p>Every color represents a different fold, and we can clearly see the
+creation of 4 different models, where each of them is created using 3
+different folds for training and the remaining one for testing.</p>
+<p>In output, we have 4 different statistics, that are used to evaluate
+the model’s generalization capacity.</p>
+<h3 id="stratified-cross-validation-and-leave-one-out">Stratified
+cross-validation and leave-one-out</h3>
+<p>Stratified CV is an extension of the standard cross-validation, and
+it’s often applied when we’re dealing with classification problems.</p>
+<p>In this technique, the subsets are partitioned in a way such that the
+<strong>initial distribution of instancies</strong> of every class is
+<strong>preserved</strong> in every fold. In case where the partitions
+<span class="math inline">\(K\)</span> are equal to the number of
+instancies <span class="math inline">\(N\)</span> (the number of
+available instancies), the strategy is to <strong>leave one instance
+out</strong>.</p>
+<p>Then, <span class="math inline">\(N - 1\)</span> instancies are
+iteratively used to train the model, and the generalization capacity is
+evaluated for each of them. In the end, <strong>average error</strong>
+is computed, considering the <span class="math inline">\(N\)</span>
+results of the test set (which is the single instance left out).</p>
+<h3 id="bagging">Bagging</h3>
+<p>This technique is used to <strong>reduce the overtraining</strong>:
+we train a set of <span class="math inline">\(T\)</span> models, such
+that they are of different types but aiming to solve the same problem.
+Each of them is trained on a <strong>unique training set</strong>, drawn
+from the total data available, using the <strong>bootstrap
+sampling</strong>. The latter let, for the same instance, to appears
+multiple times in a single training set, while other instances could not
+appear at all.</p>
+<p>For each model <span class="math inline">\(n_i\)</span>, the number
+of training samples <span class="math inline">\(N_i\)</span> is such
+that <span class="math inline">\(N_i \leq N\)</span>, where <span
+class="math inline">\(N\)</span> is the total number of instances
+available. After the training phase of all the <span
+class="math inline">\(T\)</span> models, we can combine the outcomes to
+classify new instances:</p>
+<ul>
+<li>each model predicts the class of the new instance;</li>
+<li>the final class will be the one that appears most frequently, using
+the principle of <strong>majority voting</strong>.</li>
+</ul>
+<h3 id="boosting">Boosting</h3>
+<p>Boosting is in fact an <strong>ensemble technique</strong>, which
+have the aim to <strong>create a strong model</strong> from a set of
+weak models. The idea is to build a model using <strong>the entire
+training set</strong>, and then creating a <strong>second model</strong>
+that attempts to <strong>correct the errors</strong> of the first one.
+Models can be created and added sequentially, and new models focus on
+the instances that were <strong>misclassified</strong> by the previous
+ones.</p>
+<p>This technique wants to give more importance to the instances that
+are <strong>hard to classify</strong>; it also differs from the bagging
+technique because the models aren’t trained in parallel (which results
+in a independent training), but they’re trained
+<strong>sequentially</strong>, where the new model is trained based on
+the performance of the previous one.</p>
+<p>The final model is made by taking the weighted vote, or average, of
+the models created during the boosting process, where the weights are
+assigned based on the individual performance of the models, having the
+best models a higher weight.</p>
+<figure>
+<img src="../images/01/comparison.png" width="400"
+alt="Visual comparison between bagging and boosting" />
+<figcaption aria-hidden="true">Visual comparison between bagging and
+boosting</figcaption>
+</figure>
+            </div>
+    </div>
+  </div>
+  <script src="https://vjs.zencdn.net/5.4.4/video.js"></script>
+
+</body>
+</html>
