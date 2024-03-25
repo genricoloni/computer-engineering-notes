@@ -199,3 +199,33 @@ This technique wants to give more importance to the instances that are **hard to
 The final model is made by taking the weighted vote, or average, of the models created during the boosting process, where the weights are assigned based on the individual performance of the models, having the best models a higher weight.
 
 ![Visual comparison between bagging and boosting](../images/01/comparison.png){width=400px}
+
+## Essential Statistical Concepts
+
+In order to deal correctly with data, it is important to understand some basic statistical and analysis concepts. In this section, we will cover some fundamental concepts that will help you to understand the data exploration process.
+
+### Dispersion of data
+
+Dispersion is a measure of how much the data points in a dataset differ from the mean. We'll use the **$k\text{-th}$ percentile** to measure the dispersion of data that are numerically sorted. We say that *value $x_i$ has the property that $k$ percent of the data points are less than or equal to $x_i$*. From the previous we obtain that the **median** is the $50\text{-th}$ percentile, and we also define **quartiles** $Q_1$ and $Q_3$ as the $25\text{-th}$ and $75\text{-th}$ percentiles, respectively. The **interquartile range (IQR)** is defined as $Q_3 - Q_1$.
+
+### Box plot
+
+A box plot is a graphical representation of the dispersion of data. It is composed of a box that represents the interquartile range, and two whiskers that represent the range of the data. The box plot also shows the median as a line inside the box, as we can see in the following figure.
+
+![Box plot](../images/02/boxPlot.png){width=400px}
+
+### Histogram analysis
+
+A histogram is a graphical representation of the distribution of data. It is composed of bars that represent the frequency of data points in a given range, where the bars are called **bins**. The main purpose of a histogram is to show the distribution of data, and it is useful to identify patterns in the data. An example of a histogram is shown in the following figure.
+
+![Histogram](../images/02/histogram.png){width=400px}
+
+### Scatter plot
+
+A scatter plot is a graphical representation of the relationship between two variables. It is composed of points that represent the values of the two variables, where the x-axis represents one variable and the y-axis represents the other. The main purpose of a scatter plot is to show the relationship between the two variables, and it is useful to identify patterns in the data. An example of a scatter plot is shown in the following figure.
+
+![Scatter plot](../images/02/sactterPlot.png){width=400px}
+
+### $X^2$ (Chi-squared) test
+
+The $\chi^2$ test is a statistical test that is used to determine if two categorical variable, that are independent by hypothesis, $A$ and $B$ are somehow related in a given population. The **correlation coefficient**, also called **Pearson's correlation coefficient**, is a measure of the strength and direction of the linear relationship between two variables. The correlation coefficient ranges from -1 to 1, where -1 indicates a perfect negative linear relationship, 0 indicates no linear relationship, and 1 indicates a perfect positive linear relationship, and it's calculated as $r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2 \sum_{i=1}^{n} (y_i - \bar{y})^2}}$.

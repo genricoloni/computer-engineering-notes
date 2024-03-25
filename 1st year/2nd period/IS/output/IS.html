@@ -279,6 +279,70 @@ Loni</p></li>
         <li><a href="#bagging" id="toc-bagging">Bagging</a></li>
         <li><a href="#boosting" id="toc-boosting">Boosting</a></li>
         </ul></li>
+        <li><a href="#essential-statistical-concepts"
+        id="toc-essential-statistical-concepts">Essential Statistical
+        Concepts</a>
+        <ul>
+        <li><a href="#dispersion-of-data"
+        id="toc-dispersion-of-data">Dispersion of data</a></li>
+        <li><a href="#box-plot" id="toc-box-plot">Box plot</a></li>
+        <li><a href="#histogram-analysis"
+        id="toc-histogram-analysis">Histogram analysis</a></li>
+        <li><a href="#scatter-plot" id="toc-scatter-plot">Scatter
+        plot</a></li>
+        <li><a href="#x2-chi-squared-test"
+        id="toc-x2-chi-squared-test"><span
+        class="math inline">\(X^2\)</span> (Chi-squared) test</a></li>
+        </ul></li>
+        </ul></li>
+        <li><a
+        href="#data-exploration-and-preprocessing---data-mining-process"
+        id="toc-data-exploration-and-preprocessing---data-mining-process">Data
+        exploration and preprocessing - Data mining process</a>
+        <ul>
+        <li><a href="#data-cleaning" id="toc-data-cleaning">Data
+        cleaning</a>
+        <ul>
+        <li><a href="#incomplete-data"
+        id="toc-incomplete-data">Incomplete data</a></li>
+        <li><a href="#noisy-data" id="toc-noisy-data">Noisy
+        data</a></li>
+        </ul></li>
+        <li><a href="#data-discrepancy-detection"
+        id="toc-data-discrepancy-detection">Data discrepancy
+        detection</a></li>
+        <li><a href="#data-redundancy" id="toc-data-redundancy">Data
+        redundancy</a></li>
+        <li><a href="#data-reduction" id="toc-data-reduction">Data
+        reduction</a>
+        <ul>
+        <li><a href="#dimensionality-reduction"
+        id="toc-dimensionality-reduction">Dimensionality
+        reduction</a></li>
+        <li><a href="#numerosity-reduction"
+        id="toc-numerosity-reduction">Numerosity reduction</a></li>
+        </ul></li>
+        <li><a href="#advices-for-attribute-selection"
+        id="toc-advices-for-attribute-selection">Advices for attribute
+        selection</a></li>
+        <li><a href="#heuristic-search-in-attribute-selection"
+        id="toc-heuristic-search-in-attribute-selection">Heuristic
+        search in Attribute Selection</a>
+        <ul>
+        <li><a href="#decision-tree-induction"
+        id="toc-decision-tree-induction">Decision tree
+        induction</a></li>
+        <li><a href="#backward-elimination"
+        id="toc-backward-elimination">Backward elimination</a></li>
+        <li><a href="#forward-selection"
+        id="toc-forward-selection">Forward selection</a></li>
+        </ul></li>
+        <li><a href="#data-transformation"
+        id="toc-data-transformation">Data transformation</a>
+        <ul>
+        <li><a href="#normalization"
+        id="toc-normalization">Normalization</a></li>
+        </ul></li>
         </ul></li>
         </ul>
 
@@ -666,6 +730,424 @@ alt="Visual comparison between bagging and boosting" />
 <figcaption aria-hidden="true">Visual comparison between bagging and
 boosting</figcaption>
 </figure>
+<h2 id="essential-statistical-concepts">Essential Statistical
+Concepts</h2>
+<p>In order to deal correctly with data, it is important to understand
+some basic statistical and analysis concepts. In this section, we will
+cover some fundamental concepts that will help you to understand the
+data exploration process.</p>
+<h3 id="dispersion-of-data">Dispersion of data</h3>
+<p>Dispersion is a measure of how much the data points in a dataset
+differ from the mean. We’ll use the <strong><span
+class="math inline">\(k\text{-th}\)</span> percentile</strong> to
+measure the dispersion of data that are numerically sorted. We say that
+<em>value <span class="math inline">\(x_i\)</span> has the property that
+<span class="math inline">\(k\)</span> percent of the data points are
+less than or equal to <span class="math inline">\(x_i\)</span></em>.
+From the previous we obtain that the <strong>median</strong> is the
+<span class="math inline">\(50\text{-th}\)</span> percentile, and we
+also define <strong>quartiles</strong> <span
+class="math inline">\(Q_1\)</span> and <span
+class="math inline">\(Q_3\)</span> as the <span
+class="math inline">\(25\text{-th}\)</span> and <span
+class="math inline">\(75\text{-th}\)</span> percentiles, respectively.
+The <strong>interquartile range (IQR)</strong> is defined as <span
+class="math inline">\(Q_3 - Q_1\)</span>.</p>
+<h3 id="box-plot">Box plot</h3>
+<p>A box plot is a graphical representation of the dispersion of data.
+It is composed of a box that represents the interquartile range, and two
+whiskers that represent the range of the data. The box plot also shows
+the median as a line inside the box, as we can see in the following
+figure.</p>
+<figure>
+<img src="../images/02/boxPlot.png" width="400" alt="Box plot" />
+<figcaption aria-hidden="true">Box plot</figcaption>
+</figure>
+<h3 id="histogram-analysis">Histogram analysis</h3>
+<p>A histogram is a graphical representation of the distribution of
+data. It is composed of bars that represent the frequency of data points
+in a given range, where the bars are called <strong>bins</strong>. The
+main purpose of a histogram is to show the distribution of data, and it
+is useful to identify patterns in the data. An example of a histogram is
+shown in the following figure.</p>
+<figure>
+<img src="../images/02/histogram.png" width="400" alt="Histogram" />
+<figcaption aria-hidden="true">Histogram</figcaption>
+</figure>
+<h3 id="scatter-plot">Scatter plot</h3>
+<p>A scatter plot is a graphical representation of the relationship
+between two variables. It is composed of points that represent the
+values of the two variables, where the x-axis represents one variable
+and the y-axis represents the other. The main purpose of a scatter plot
+is to show the relationship between the two variables, and it is useful
+to identify patterns in the data. An example of a scatter plot is shown
+in the following figure.</p>
+<figure>
+<img src="../images/02/sactterPlot.png" width="400"
+alt="Scatter plot" />
+<figcaption aria-hidden="true">Scatter plot</figcaption>
+</figure>
+<h3 id="x2-chi-squared-test"><span class="math inline">\(X^2\)</span>
+(Chi-squared) test</h3>
+<p>The <span class="math inline">\(\chi^2\)</span> test is a statistical
+test that is used to determine if two categorical variable, that are
+independent by hypothesis, <span class="math inline">\(A\)</span> and
+<span class="math inline">\(B\)</span> are somehow related in a given
+population. The <strong>correlation coefficient</strong>, also called
+<strong>Pearson’s correlation coefficient</strong>, is a measure of the
+strength and direction of the linear relationship between two variables.
+The correlation coefficient ranges from -1 to 1, where -1 indicates a
+perfect negative linear relationship, 0 indicates no linear
+relationship, and 1 indicates a perfect positive linear relationship,
+and it’s calculated as <span class="math inline">\(r =
+\frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i -
+\bar{y})}{\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2 \sum_{i=1}^{n} (y_i -
+\bar{y})^2}}\)</span>.</p>
+<h1 id="data-exploration-and-preprocessing---data-mining-process">Data
+exploration and preprocessing - Data mining process</h1>
+<p>The data mining process is a systematic approach to extract knowledge
+from data. It is composed of several steps that are executed in a
+sequence, which are shown in the following figure.</p>
+<figure>
+<img src="../images/02/dataMining.png" width="400"
+alt="Data mining process" />
+<figcaption aria-hidden="true">Data mining process</figcaption>
+</figure>
+<h2 id="data-cleaning">Data cleaning</h2>
+<p>Data that are extracted from the real world are
+<strong>dirty</strong>. Different classes of <em>dirtiness</em> exist,
+and they differ in the way they affect the data, and how they can be
+detected and corrected.</p>
+<h3 id="incomplete-data">Incomplete data</h3>
+<p>Those are data that lack one or more attribute values: this might be
+due to several reasons, such as the data collection process, equipment
+failures, or human errors. In this case, missing data <strong>may need
+to be inferred</strong>:</p>
+<ul>
+<li><strong>Ignore the tuple</strong>: this is usually done when class
+label is missing, but it’s not an effective method when the percentage
+of missing values varies from attribute to attribute;</li>
+<li><strong>Fill in the missing value manually</strong>: this is usually
+done when the percentage of missing values is small. Infeasible when the
+number of missing values is large;</li>
+<li><strong>automatic filling in of missing values</strong>: this can be
+done using:
+<ul>
+<li>a <strong>global constant</strong>, such as “unknown” or even a new
+class;</li>
+<li>the <strong>attribute mean</strong> (or median, or mode);</li>
+<li>the <strong>attribute mean</strong> for all samples belonging to the
+<strong>same class</strong>;</li>
+<li>the <strong>most probable value</strong> (e.g., using a decision
+tree);</li>
+</ul></li>
+</ul>
+<h3 id="noisy-data">Noisy data</h3>
+<p>We define the noise as <em>random error or variance in a measured
+variable</em>. This can be due to several reasons, such as data
+collection errors, data transmission errors, or data entry errors. We
+can deal with noisy data considering the source of the data that are
+usually affected by noise, and the nature of the noise. Typical data
+affected by noise are those from ambient intelligence, sensor networks,
+and data streams: here the true signal amplitude (the y-value) change
+<strong>rather smoothly</strong>, compared to the x-value. We can
+operate a process called <strong>smoothing</strong> to remove the noise
+from the data: data points of a signal are modified so that individual
+points that are higher than the adjacent points are reduced, and those
+that are lower are increased, naturally preserving the shape of the
+signal, while reducing the noise and being naturally smoothed.</p>
+<blockquote>
+<p>Example: the simplest smoothing algorithm is the <strong>moving
+average</strong>. We can use the <strong>rectangular sliding-average
+smooth</strong>, that simply replace the point <span
+class="math inline">\(i\)</span> with the mean of the <span
+class="math inline">\(m\)</span> points around it, where <span
+class="math inline">\(m\)</span> is called <strong>smooth
+width</strong>. The formula for a 3-point rectangular sliding-average
+smooth is <span class="math inline">\(y_i = \frac{1}{3} (x_{i-1} + x_i +
+x_{i+1})\)</span>.</p>
+</blockquote>
+<h2 id="data-discrepancy-detection">Data discrepancy detection</h2>
+<p>Data discrepancy detection is the process of identifying and
+correcting discrepancies in the data. Different methods can be used to
+detect discrepancies, such as:</p>
+<ul>
+<li>checking the <strong>metadata</strong> of the data;</li>
+<li>check the <strong>field overload</strong>, typically results when
+developers squeeze new attribute definitions into unused portions of
+existing fields;</li>
+<li>check the <strong>uniqueness rule</strong>: each value of a certain
+attribute must be different from all the others;</li>
+<li>check the <strong>consecutive rule</strong>: there cannot be missing
+values between the lowest and the highest value of an attribute;</li>
+<li>check the <strong>null rule</strong>: specifies the conditions under
+which an attribute value can be null;</li>
+<li>use commercial tools for both <strong>data scrubbing</strong> and
+<strong>data auditing</strong>.</li>
+</ul>
+<h2 id="data-redundancy">Data redundancy</h2>
+<p>Redundancy may appears when an integration of multiple databases is
+performed:</p>
+<ul>
+<li>an attribute, or an object, may have different names in different
+databases, also known as <strong>object identification
+problem</strong>;</li>
+<li>an attribute can be a <strong>derived attribute</strong>, that is,
+it can be computed from other attributes;</li>
+</ul>
+<p>Redundant attributes can be also detected trough <strong>correlation
+analysis</strong>; in general, extra care must be taken when dealing
+during a data integration process, to reduce or entirely remove
+redundancy.</p>
+<h2 id="data-reduction">Data reduction</h2>
+<p>Data reduction strategies are used to get a reduced representation of
+the data set, while maintaining the same analytical power. This could be
+done by several reason, such as no enough data storage, or to reduce the
+time needed to perform the analysis. Two are the main strategies to
+reduce data: <strong>dimensionality reduction</strong> and
+<strong>numerosity reduction</strong>.</p>
+<h3 id="dimensionality-reduction">Dimensionality reduction</h3>
+<p>We start defining the dimensionality as the <em>number of attributes
+in the data set</em>: adding dimensions to data, they become
+increasingly <strong>sparse</strong>, and this lead to the <strong>curse
+of dimensionality</strong>. This is a problem that arises when the data
+set has a large number of dimensions, and it is difficult to analyze and
+visualize the data: when dimensions increase, analysis such as density,
+critical in clustering and outlier detection, become less powerful, and
+this because the combinations of subspaces grow exponentially with the
+number of dimensions.</p>
+<figure>
+<img
+src="https://www.kdnuggets.com/wp-content/uploads/curse-dimensionality-2.png"
+width="400" alt="Visualization od the curse of dimensionality" />
+<figcaption aria-hidden="true">Visualization od the <em>curse of
+dimensionality</em></figcaption>
+</figure>
+<p>Understood the problem, we can now define the <strong>dimensionality
+reduction</strong> as the process of reducing the number of dimensions
+in the data set. Note that the process also helps to <strong>reduce the
+noise</strong> in the data, and <strong>remove redundant
+information</strong>. The main techniques to reduce the dimensionality
+are divided in two main classes: the supervised ones, such as
+<strong>PCA</strong> or <strong>Wavelet Transform</strong>, and the
+unsupervised ones, that are in matter of fact kind of optimization
+problems, such as <strong>feature selection</strong> or <strong>feature
+extraction</strong>.</p>
+<h4 id="principal-component-analysis-pca">Principal Component Analysis
+(PCA)</h4>
+<p>The aim of this process is to project relevant attributes in a
+different space, with a <em>hopefully</em> reduced space than the
+original one. The projection should capture the largest amount of
+variation in data, and this is done by finding the
+<strong>eigenvectors</strong> of the <strong>covariance matrix</strong>
+of the data. Using this technique we have to deal with the <strong>loss
+of the feature meaning</strong>, that is explained in the further
+example.</p>
+<blockquote>
+<p>Example: loss of feature meaning. Having a dataset containing data
+about the weather, such as temperature, humidity, and wind speed, we can
+apply PCA to reduce the dimensionality of the data. Reducing the dataset
+dimensionality, we’re going to lose some features, that will be replaced
+by a <strong>linear combination</strong> of the original features. This
+means that the new features will be a mix of the original ones, and they
+will not have a clear meaning.</p>
+</blockquote>
+<h4 id="attribute-and-feature-selection">Attribute and feature
+selection</h4>
+<p>This selection involves a search trough all possible combinations of
+attributes, in order to find which subset of attributes is the most
+relevant for the analysis, leading in fact to an optimization problem.
+The main used algorithms are:</p>
+<ul>
+<li><strong>evaluator algorithms</strong>: they evaluate the goodness of
+a subset of attributes using a <strong>quality function</strong>;</li>
+<li><strong>search algorithms</strong>: they search for the best subset
+of attributes using a <strong>search strategy</strong>, exploiting
+heuristics to reduce the search space.</li>
+</ul>
+<h4 id="metrics-for-feature-importance">Metrics for feature
+importance</h4>
+<p>We know that features aren’t independent when we’re using them to
+predict a result; however, we can use some metrics to understand which
+features are more important than others. The most used metrics are the
+<strong>correlation</strong>, the <strong>information gain</strong>, and
+the <strong>Gini index</strong>, that show how much data entropy exists
+between a given feature and the result.</p>
+<p>Dealing with <strong>multiple feature evaluation</strong>, we use the
+<strong>mRMR</strong> approach: <em>maximal Relevance, Minimal
+Redundancy</em>. This approach is based on a filter feature measurement
+criterion, which computes <strong>redundancy</strong> between features
+in the subset, and <strong>correlation</strong> between features, and
+class based on the <strong>mutual information</strong>, in order to
+estimate the capability of making a good prediction for a given group of
+features.</p>
+<h4 id="filter-and-wrapper-methods">Filter and wrapper methods</h4>
+<p>These are common optimization methods used to select the best subset
+of features.</p>
+<figure>
+<img src="../images/02/wrapper.png" width="400"
+alt="Filter and wrapper methods" />
+<figcaption aria-hidden="true">Filter and wrapper methods</figcaption>
+</figure>
+<p>The <strong>search strategy</strong> is common on both methods, and
+it’s based on heuristics: it identifies a subset which goes as input in
+different modules, based on the method used. Using the <strong>filter
+method</strong>, the subset is evaluated using a <strong>objective
+function</strong>, that returns to the search module the goodness of the
+subset, and other possibly useful statistics. The <strong>wrapper
+method</strong> instead uses a <strong>predictive model</strong> to
+evaluate the subset, and this model is trained on the subset, and then
+tested on a validation set.</p>
+<p>Take care of the model used in the wrapper method: we’re using a
+classifier to obtain parameters for another classifier! The one used
+during this evaluation phase should be very simple, using few (and
+possibly different) parameters, compared to the one used in the final
+model.</p>
+<p>In both cases, we can stop the search when the <strong>quality
+function</strong>, or the <strong>predictive model</strong>, reaches a
+certain given stop condition.</p>
+<h4 id="ranking-method">Ranking method</h4>
+<p>This is the fastest method to select the best subset of features, but
+also the one with the worst results. We can see the phases of the
+ranking method in the following figure.</p>
+<figure>
+<img src="../images/02/ranking.png" width="400" alt="Ranking method" />
+<figcaption aria-hidden="true">Ranking method</figcaption>
+</figure>
+<p>Examples of threshold can be, for instance, the <strong>number of
+features</strong> to select, or a minimum <strong>quality
+function</strong> value.</p>
+<h3 id="numerosity-reduction">Numerosity reduction</h3>
+<p>The aim of this process is to reduce the number of data instances,
+while maintaining the same analytical power. The first operation we can
+make is the <strong>sampling</strong>: we can select a subset of the
+data, and use it for the analysis; this is typically done when dealing
+with skewed data. Another methods are available: they’re called
+<strong>mining algorithms</strong>, and they should be potentially
+<strong>sub-linear</strong> in the size of the data set. The key idea to
+have in mind is choose a representative subset of the data: operating a
+random selection could lead to a non-representative subset, and this
+could lead to a wrong analysis. To achieve a good results, different
+sampling methods can be used:</p>
+<ul>
+<li><strong>random sampling</strong>: each data instance has the same
+probability to be selected;</li>
+<li><strong>sampling without replacement</strong>: each data instance
+can be selected only once;</li>
+<li><strong>sampling with replacement</strong>: each data instance can
+be selected multiple times;</li>
+<li><strong>stratified sampling</strong>: the data set is divided into
+strata, and then a random sample is selected from each stratum.</li>
+</ul>
+<p>The latter is particularly useful when dealing with skewed data,
+because it ensure that even the smallest stratum is represented in the
+sample.</p>
+<h2 id="advices-for-attribute-selection">Advices for attribute
+selection</h2>
+<p>The most important thing to understand is that <strong>we never want
+to touch the training set</strong>. Suppose to have a dataset, and a
+certain reduction is being applied to it. We consider the training set
+as a <em>part of the future</em>, because our model should never see the
+test set during the training phase. If we included the test set during
+the analysis for the attribute selection, we’re somehow
+<strong>including the test set inside the model</strong>, and this is a
+<strong>bad practice</strong>. We’re, in fact, introducing a bias in the
+model, using <em>future data</em> that are impossible to obtain in the
+real world. Given that rationale, we’ll refer at the following figure,
+that shows the correct way to perform the attribute selection, as the
+<strong>golden rule</strong>.</p>
+<figure>
+<img src="../images/02/attributeSelection.png" width="400"
+alt="Golden rule for attribute selection" />
+<figcaption aria-hidden="true">Golden rule for attribute
+selection</figcaption>
+</figure>
+<h2 id="heuristic-search-in-attribute-selection">Heuristic search in
+Attribute Selection</h2>
+<h3 id="decision-tree-induction">Decision tree induction</h3>
+<p>The decision tree induction is an automatic way to perform a search;
+to explain the concept, we can consider the following example.</p>
+<figure>
+<img src="../images/02/decisionTree.png" width="400"
+alt="Decision tree induction" />
+<figcaption aria-hidden="true">Decision tree induction</figcaption>
+</figure>
+<p>Take an initial set of attributes <span class="math inline">\(\{A_1,
+A_2, A_3, A_4, A_5, A_6\}\)</span>, and compute metrics on these
+attributes (e.g., the <strong>information gain</strong>, usually chosen
+based on the problem we’re dealing with), and we choose an attribute
+based on that metric. Then we start to build our tree from the root: it
+will have a condition based on the chosen attribute, and the branches
+will develop themselves based on other attributes. The aim of the
+technique is to find the <strong>splitting point</strong> as the point
+such that we split the attribute set in two parts, and we chose the one
+that represents better the data. The process is repeated until we reach
+a stopping condition, that could be the <strong>maximum depth</strong>
+of the tree, or the <strong>minimum number of samples</strong> in a
+leaf. Following the example, the reduced attribute set will be <span
+class="math inline">\(\{A_1, A_4, A_5\}\)</span>.</p>
+<h3 id="backward-elimination">Backward elimination</h3>
+<p>This is a <strong>greedy</strong> algorithm, that starts with the
+full set of attributes, and then removes one attribute at a time, based
+on a certain criterion such as the <strong>information gain</strong>.
+The process is repeated until a stopping condition is reached, such as
+the <strong>minimum number of attributes</strong>.</p>
+<h3 id="forward-selection">Forward selection</h3>
+<p>This is another <strong>greedy</strong> algorithm, that starts with
+an empty set of attributes, and then adds one attribute at a time, based
+on a certain criterion. The pseudo-code for the algorithm is the
+following:</p>
+<ol type="1">
+<li>initialize: set <span class="math inline">\(F = \{f_i | i = 1,
+\ldots, N\}\)</span> the initial set of the features, and <span
+class="math inline">\(S = \emptyset\)</span>;</li>
+<li>calculate, for each attribute, the importance metric <span
+class="math inline">\(M(f_i, Y)\)</span> with respect to the input <span
+class="math inline">\(Y\)</span>;</li>
+<li>select the first feature <span class="math inline">\(f_i\)</span>
+that maximizes <span class="math inline">\(M(f_i, Y)\)</span>, and set
+<span class="math inline">\(F = F \setminus \{f_i\}\)</span>, and <span
+class="math inline">\(S = S \cup \{f_i\}\)</span>;</li>
+<li><strong>greedy selection</strong>: repeat the process until a
+stopping condition is reached, such as the <strong>minimum number of
+attributes</strong>.
+<ol type="1">
+<li>calculate the importance metric <span class="math inline">\(M(f_i
+\cup S, Y)\)</span> for each attribute <span class="math inline">\(f_i
+\in F\)</span>;</li>
+<li>select the next feature <span class="math inline">\(f_i\)</span>
+that maximizes <span class="math inline">\(M(f_i \cup S, Y)\)</span>,
+and set <span class="math inline">\(F = F \setminus \{f_i\}\)</span>,
+and <span class="math inline">\(S = S \cup \{f_i\}\)</span>.</li>
+</ol></li>
+<li>output the set <span class="math inline">\(S\)</span>.</li>
+</ol>
+<h2 id="data-transformation">Data transformation</h2>
+<p>Data transformation is the process of <strong>changing the format,
+the structure or the values of the data</strong>. These techniques are
+usually applied to ensure <strong>more efficient data analysis</strong>
+and better <strong>knowledge extraction</strong>.</p>
+<h3 id="normalization">Normalization</h3>
+<p>The aim of this process is to scale the data in a certain range,
+usually <span class="math inline">\([0, 1]\)</span>, or <span
+class="math inline">\([-1, 1]\)</span>. This is done to avoid that some
+attributes have a <strong>higher weight</strong> in the analysis,
+compared to others. The most used normalization techniques are:</p>
+<ul>
+<li><strong>min-max normalization</strong>: the data are scaled in the
+range <span class="math inline">\([\text{new-min}_A,
+\text{new-max}_A]\)</span>, using the formula <span
+class="math inline">\(x&#39; = \frac{v - \text{min}_A}{\text{max}_A -
+\text{min}_A}\cdot (\text{new-max}_A - \text{new-min}_A) +
+\text{new-min}_A\)</span>;</li>
+<li><strong>z-score normalization</strong>: the data are scaled using
+the formula <span class="math inline">\(x&#39; = \frac{v -
+\mu_A}{\sigma_A}\)</span>, where <span
+class="math inline">\(\mu_A\)</span> is the mean of the attribute <span
+class="math inline">\(A\)</span>, and <span
+class="math inline">\(\sigma_A\)</span> is the standard deviation of the
+attribute <span class="math inline">\(A\)</span>.</li>
+</ul>
             </div>
     </div>
   </div>
