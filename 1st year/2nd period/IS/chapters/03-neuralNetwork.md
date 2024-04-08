@@ -142,3 +142,56 @@ We can clearly see that data are not evenly distribuited around the straight lin
 ![An example of non-linear fitting](../images/03/tanh.png){width=400px}
 
 This approach can be used to approximate even more complex functions, simply adding more neurons to the hidden layer. However, we need to consider the negative aspect of this approach: too **many neurons** in a single hidden layer, or simply too **many hidden layers**, can have a **negative impact on the network performance**. The best practice is to start with a network with a reasonable minimum number of hidden neurons, and then increase the number of neurons only if the network doesn't perform well. Remember that a network with a hidden layer that contains enough neurons can approximate any continuous function.
+
+## Feedforward Neural Networks 
+
+In a FNN with Multi-Layer Perceptrons (MLP), the neurons are organized in layers, and the connections are such that neurons in a layer are connected only with neurons in the next layer. The first layer is called **input layer**, the last layer is called **output layer**, and the layers in between are called **hidden layers**. These networks let us to learn highly complex decisions surface, that are not separated by a straight line.
+
+### Back propagation
+
+Training phase for hidden layers can be tedious, because we don't have any *desired value* for the hidden neurons. The solution is to use the **back propagation** algorithm, which consists in forward activation of the network, and then in the backward propagation of the error. Each perceptron implements the **sigmoid** as a threshold function, whose formula is $\sigma(x) = \frac{1}{1 + e^{-\vec{w}\cdot\vec{{x}}}}$, and the error is calculated as $E = \frac{1}{2} \sum_{i=1}^{n} \sum_{k \in \text{outputs}(t_i - y_i)^2}$.
+
+The goal of the algorithm is to **minimize the error between each desired output and the actual one**, computed by the neural network $o_k$. The error is propagated back to the hidden layer, and the weights are updated by using the delta rule. We can write a pseudo-code for the back propagation algorithm as follows:
+
+1. define the function backProp(D, $\eta$, $n_{in}$, $n_{hid}$, $n_{out}$), where:
+   1. $D$ is the training set;
+   2. $\eta$ is the learning rate;
+   3. $n_{in}$, $n_{hid}$ and $n_{out}$ are the number of neurons in the input, hidden and output layers;
+2. create a network with $n_{in}$ input neurons, $n_{hid}$ hidden neurons and $n_{out}$ output neurons;
+3. initialize the weights with small random values $\in \R$
+4. until the stopping criterion is met:
+   1. for each training sample $(x_i, t_i) \in D$:
+      1. propagate the input forward to compute the output $o_k$ of each neuron;
+      2. propagate the error backward to compute the error of each neuron:
+         1. for each output neuron $k$:
+            1. compute the error $\delta_k = f'(o(x))(t_k - o_k) \rightarrow \delta_k = o_k(1-o_k)\cdot(t_k - o_k)$
+            2. for each hidden unit $h$, calculate its error term $\delta_h = o_h(1-o_h)\sum_{k \in \text{outputs}} w_{kh} \delta_k$
+            3. update the weights $w_{ij} = w_{ij} + \eta \cdot \delta_j \cdot x_i$
+         2. $x_{ij} is the input of the j-th neuron in the i-th layer;
+
+The stopping criterion can be the number of iterations, or the fact that the error doesn't change significantly.
+
+### Guidelines for training samples
+
+The training sample must represents the entire set of data the network will work on: an high number of training samples reduce the risk of undersampling, and if the samples are not enough, the network may not be able to generalize the problem. As we can image, there not exists a fixed rule that assess how many samples are needed, but the heuristic guide us in having 5 to 10 training samples for each weight in the network.
+
+### Early stopping
+
+In order to prevent the network from overfitting, we need a third, independent, set of data called **validation set**. The idea is to train the network on the training set, and to validate it on the validation set, by plotting some error function. A typical behavior of the MSE for training and validation sets is shown in the following image:
+
+![MSE for validation and training set](../images/03/MSE.png){width=400px}
+
+Both errors typical fall quickly at the beginning, but the validation error starts to rise again, while the training error continues to fall. This phenomena shows that the network has stopped learning what is useful for the validation set, and it's starting to learn the noise in the training set. This overfitting harms the ability of the network to generalize the problem, and the best practice is to stop the training when the validation error starts to rise. To achieve the best generalization, training phase should be stopped when the validation error is at its minimum: this is called **early stopping**.
+
+### Network's size
+
+A larger network with many weights can model more complex functions, having an adequate number of training samples, but in the other hand, having too much weights can be a disadvantage, in case the network use them to **memorize the training set**. On the other hand, a small network won't be able to learn the problem at all: the key is to find a network large enough to learn the problem, but small enough to generalize it well; a good choice is a network with the minimum number of weights needed to process correctly the training set, starting with a small amount of hidden neurons, and increasing them monitoring the generalization ability after each epoch.
+
+### Preventing overfitting
+
+These are some techniques to prevent overfitting:
+
+- **early stopping**: stop the training when the validation error starts to rise;
+- **gather more data**: more data means less risk of overfitting;
+- **data augmentation**: add noise to the training set, or rotate the images, to increase the number of training samples;
+- **reduce the network size**: a smaller network is less likely to overfit.
