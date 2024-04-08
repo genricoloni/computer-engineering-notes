@@ -365,6 +365,34 @@ Loni</p></li>
         id="toc-structure-of-an-ann">Structure of an ANN</a></li>
         <li><a href="#artificial-neuron"
         id="toc-artificial-neuron">Artificial Neuron</a></li>
+        <li><a href="#activation-functions"
+        id="toc-activation-functions">Activation functions</a></li>
+        <li><a href="#network-topology"
+        id="toc-network-topology">Network topology</a></li>
+        </ul></li>
+        <li><a href="#network-training"
+        id="toc-network-training">Network training</a>
+        <ul>
+        <li><a href="#delta-rule" id="toc-delta-rule">Delta
+        rule</a></li>
+        <li><a href="#momentum" id="toc-momentum">Momentum</a></li>
+        <li><a href="#learning-algorithms"
+        id="toc-learning-algorithms">Learning algorithms</a></li>
+        </ul></li>
+        <li><a href="#perceptron" id="toc-perceptron">Perceptron</a>
+        <ul>
+        <li><a href="#perceptron-learning-algorithm"
+        id="toc-perceptron-learning-algorithm">Perceptron learning
+        algorithm</a></li>
+        <li><a href="#decision-boundary"
+        id="toc-decision-boundary">Decision boundary</a></li>
+        <li><a href="#xor-problem-with-perceptron"
+        id="toc-xor-problem-with-perceptron">XOR problem with
+        perceptron</a></li>
+        <li><a href="#hidden-layers" id="toc-hidden-layers">Hidden
+        layers</a></li>
+        <li><a href="#improving-the-fitting"
+        id="toc-improving-the-fitting">Improving the fitting</a></li>
         </ul></li>
         </ul></li>
         </ul>
@@ -1205,12 +1233,301 @@ terms of network inputs and outputs.</p>
 <h3 id="artificial-neuron">Artificial Neuron</h3>
 <p>The scheme of an artificial neuron is shown in the following
 image:</p>
+<p><img
+src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/ArtificialNeuronModel_english.png/400px-ArtificialNeuronModel_english.png"
+width="400" alt="Artificial Neuron" />{width=400px}</p>
+<p>Note that the artificial neuron has a set of <strong>inputs</strong>
+<span class="math inline">\(x_1, x_2, \ldots, x_n\)</span> and a set of
+<strong>weights</strong> <span class="math inline">\(w_1, w_2, \ldots,
+w_n\)</span>, which are real number such that, if positive, they are
+excitatory, and if negative, they are inhibitory; these weights are
+related to the corresponding inputs. The neuron computes the
+<strong>weighted sum</strong> of the inputs and weights as a linear
+combination <span class="math inline">\(a = \sum_{i=1}^{n} w_i \cdot
+x_i\)</span>, that goes into an <strong>activation function</strong>
+<span class="math inline">\(\phi(a)\)</span>. The output of the neuron
+can be a real number, both non-limited or limited to a certain range, or
+even a discrete value. Lastly, there also is a binary threshold function
+such that, if the output is above a certain threshold <span
+class="math inline">\(\theta_i\)</span>, the neuron will fire. In fact,
+the latter is a generalization of a <strong>step function</strong> for a
+given threshold. Typically, the threshold is also subtracted from the
+weighted sum, in order to have the function <span
+class="math inline">\(y = f(\sum_{i=1}^{n} w_i \cdot x_i - \theta_i) =
+f(\sum_{i=0}^{n}w_i \cdot x_i)\)</span> <strong>centered in
+zero</strong>. If a threshold assumes a negative value, is called
+<strong>bias</strong>, and it’s considered as a weight connected to a
+unit that always outputs 1 (note that in the previous equation we added
+the index 0 to the sum, which is the bias).</p>
+<h3 id="activation-functions">Activation functions</h3>
+<p>In the following image, we can see some examples of activation
+functions:</p>
 <figure>
-<img
-src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/ArtificialNeuronModel_english.png/300px-ArtificialNeuronModel_english.png"
-width="400" alt="Artificial Neuron" />
-<figcaption aria-hidden="true">Artificial Neuron</figcaption>
+<img src="../images/03/activationFunctions.png" width="400"
+alt="Activation functions" />
+<figcaption aria-hidden="true">Activation functions</figcaption>
 </figure>
+<h3 id="network-topology">Network topology</h3>
+<p>The topology depends on <strong>how neurons are connected which each
+other</strong>: if they’re arranged in a <strong>hierarchical</strong>
+way, such that the neurons are connected only with <strong>adjacent
+layers</strong>, we have a <strong>feedforward network</strong>. If the
+neurons are connected with <strong>non-adjacent layers</strong>, we have
+a <strong>recurrent network</strong>. We can see an example of these two
+types of networks in the following image:</p>
+<figure>
+<img src="../images/03/hierarchy.png" width="400"
+alt="Feedforward and Recurrent Networks" />
+<figcaption aria-hidden="true">Feedforward and Recurrent
+Networks</figcaption>
+</figure>
+<p>Note how the firsts neurons are connected only with the second layer
+in the feedforward network, while in the recurrent network they this
+rule is not respected; in particular, in this case, the network is
+implementing a sort of <em>memory</em>, with a structure that resembles
+a <strong>flip-flop</strong>.</p>
+<h2 id="network-training">Network training</h2>
+<p>When we want to use a neural network to deal with classification and
+regression problems, we resort to a <strong>supervised learning</strong>
+process, which modifies the weights of the network by applying a set of
+<strong>labeled training examples</strong>: each sample consists of an
+input and the corresponding target output. During the training phase,
+the network is fed with the input, and the output is compared with the
+target output, then the weights are adjusted in order to
+<strong>minimize the error</strong>. The training process is repeated
+until there are no significant changes in the weights.</p>
+<h3 id="delta-rule">Delta rule</h3>
+<p>The <strong>delta rule</strong> is a simple algorithm that modifies
+the weights of the network in order to minimize the error. The rule is
+based on the <strong>gradient descent</strong> method, which is a method
+to find a local minimum of a function. The delta rule says that the
+adjustment to be made is <span class="math inline">\(\Delta w_i = \eta
+\cdot \delta \cdot x_i\)</span>, where <span
+class="math inline">\(\eta\)</span> is the <strong>learning
+rate</strong>, and <span class="math inline">\(\delta\)</span> is
+defined as <span class="math inline">\(\delta = t - y\)</span>, <span
+class="math inline">\(t\)</span> is the target output, <span
+class="math inline">\(y\)</span> is the actual output, and <span
+class="math inline">\(x_i\)</span> is the input. Note that this is a
+<strong>recursive rule</strong>, and the formula can be rewritten as
+<span class="math inline">\(w_i (n+1) = w_i (n) + \Delta
+w_i(n)\)</span>.</p>
+<p>We define the <strong>error for the k-th sample</strong> as <span
+class="math inline">\(E_k = \frac{1}{2} \sum_{i=1}^{n} (t_i -
+y_i)^2\)</span>, where <span class="math inline">\(t_i\)</span> is the
+target output and <span class="math inline">\(y_i\)</span> is the actual
+output. The <strong>total error</strong> is defined as <span
+class="math inline">\(E = \sum_{k=1}^{m} E_k\)</span>, where <span
+class="math inline">\(m\)</span> is the number of samples.</p>
+<h4 id="main-idea">Main idea</h4>
+<p>TO understand the main idea behind the delta rule, we have to give a
+mathematical interpretation of the error function, that is the fact that
+it lies in the same space of the weights. This is crucial because, after
+the start where the weights are randomly assigned, the algorithm adjusts
+them in a direction <strong>towards a lower overall error</strong>: in
+other words, the weights are modified in the direction of the
+<strong>steep descent</strong> of the error surface, and we’ll prove the
+convergence of the algorithm in the next section.</p>
+<h4 id="proof-of-convergence">Proof of convergence</h4>
+<p>For the proof, we start rewriting the delta rule as <span
+class="math inline">\(\Delta w_{ij} = -G = - \frac{\partial E}{\partial
+w_{ij}}\)</span>, and we can visually interpret this in the following
+image:</p>
+<figure>
+<img src="../images/03/function.png" width="400"
+alt="Visualization of the delta rule" />
+<figcaption aria-hidden="true">Visualization of the delta
+rule</figcaption>
+</figure>
+<p>Iterating the rule, we move <em>downhill</em> in <span
+class="math inline">\(E\)</span>, until we reach a minimum <span
+class="math inline">\(G=0\)</span>.</p>
+<p>Now we write the actual output of the network as <span
+class="math inline">\(y_i = \sum_ix_iw_{ij}\)</span>, so as a linear
+combinations of the inputs and weights. We can now compute the partial
+derivative, applying the <em>chain rule</em>, and we obtain <span
+class="math inline">\(\frac{\partial E}{\partial w_{ij}} =
+\frac{\partial E}{\partial y_i}\cdot \frac{\partial y_i}{\partial
+w_{ij}}\)</span>. Then, we write <span class="math inline">\(- \delta =
+\frac{\partial E}{\partial y_i}\)</span>, and we can compute the partial
+derivative of the output with respect to the weights as <span
+class="math inline">\(\frac{\partial y_i}{\partial w_{ij}} =
+x_i\)</span>. So, we can rewrite the delta rule, adding the
+<strong>learning rate</strong> <span
+class="math inline">\(\eta\)</span>, as <span
+class="math inline">\(\Delta w_{ij} = \eta \cdot \delta \cdot
+x_i\)</span>, and we can prove that the algorithm converges to a
+minimum.</p>
+<p>The definition of <span class="math inline">\(\delta\)</span> came
+out by calculating the partial derivative of the error with respect to
+the output, considering a single instance: <span
+class="math inline">\(\frac{\partial E}{\partial y_i} =
+\frac{\partial}{\partial y_i} \frac{1}{2} (t_i - y_i)^2 = - (t_i - y_i)
+= - \delta\)</span>.</p>
+<h4 id="the-learning-rate">The learning rate</h4>
+<p>The learning rate <span class="math inline">\(\eta\)</span> is a
+crucial parameter in the delta rule, because it determines the
+<strong>step size</strong> of the algorithm. If the learning rate is too
+high, the algorithm may oscillate around the minimum, and if it’s too
+low, the algorithm may take too long to converge. In real cases, its
+value is determined experimentally, and it can vary overtime, getting
+smaller as the training progresses.</p>
+<h3 id="momentum">Momentum</h3>
+<p>In real-world problems, it can happens that the error surface is not
+smooth, and the algorithm may get stuck in a local minimum. To overcome
+this issue, we can introduce a <strong>momentum</strong> <span
+class="math inline">\(m\)</span> term in the delta rule, such that the
+new formula is <span class="math inline">\(\Delta w_{ij}(n+1) = \eta
+\cdot \delta \cdot x_i + m \cdot \Delta w_{ij}(n)\)</span>. The momentum
+term is a fraction of the previous weight update, and it’s domain is
+<span class="math inline">\(]0,1[\)</span>, and the actual value is
+determined by trial and error.</p>
+<h3 id="learning-algorithms">Learning algorithms</h3>
+<p>We divide the learning algorithms in three categories:</p>
+<ul>
+<li><strong>online learning</strong>, where the weights are updated
+after each sample;</li>
+<li><strong>batch learning</strong> (or <em>offline</em>), where the
+gradient is computed for all the samples, and the weights are updated at
+the end of the process;</li>
+<li><strong>mini-batch learning</strong>, where the gradient is computed
+for a subset of the samples, and the weights are updated at the end of
+the process.</li>
+</ul>
+<p>The last two methods provide both a more precise estimation of the
+gradient vector, and possibly a faster computation, given the fact that
+these processes can be parallelized; on the other hand, the online
+learning is more flexible, because it doesn’t need a fixed training set,
+requires less memory and, lastly, it has the ability to escape from
+local minima under certain conditions.</p>
+<h2 id="perceptron">Perceptron</h2>
+<p>A perceptron is a <strong>single neuro</strong>n with an hard limiter
+as activation function, such as sign or step function , and it’s used to
+solve <strong>binary classification</strong> problems. It can be trained
+to correctly classify training examples from classes <span
+class="math inline">\(C_1\)</span> abd <span
+class="math inline">\(C_2\)</span> by assigning inputs to <span
+class="math inline">\(C_1\)</span> if the output is positive, and to
+<span class="math inline">\(C_2\)</span> if the output is negative.</p>
+<p>The classification is made by using a <strong>straight line</strong>
+in the input space, that represents the <strong>decision
+boundary</strong> between the two classes, which are the regions that
+are separated by the line.</p>
+<figure>
+<img src="../images/03/perceptron1.png" width="400" alt="Perceptron" />
+<figcaption aria-hidden="true">Perceptron</figcaption>
+</figure>
+<h3 id="perceptron-learning-algorithm">Perceptron learning
+algorithm</h3>
+<p>A pseudo-code of the perceptron learning algorithm is the
+following:</p>
+<ol type="1">
+<li>Initialize the weights to 0 or small random values;</li>
+<li>choose an appropriate learning rate <span
+class="math inline">\(\eta\)</span>;</li>
+<li>until the stopping criterion is met (such as the number of
+iterations or the fact that weights don’t change significantly):
+<ol type="1">
+<li>for each training sample <span class="math inline">\((x_i,
+t_i)\)</span>:
+<ol type="1">
+<li>compute the output <span class="math inline">\(y_i =
+f(w,x)\)</span>;</li>
+<li>if <span class="math inline">\(y_i = t_i\)</span>, continue;</li>
+<li>if <span class="math inline">\(y_i \neq t_i\)</span>, update the
+weights as <span class="math inline">\(w = w + \eta \cdot (t_i - y_i)
+\cdot x_i\)</span>, where <span class="math inline">\(t_i\)</span> is
+the target output.</li>
+</ol></li>
+</ol></li>
+</ol>
+<h3 id="decision-boundary">Decision boundary</h3>
+<p>We can make a mathematical consideration about the points that lie in
+the decision boundary: they all have the same inner product with the
+weight vector. From this, we can say that they have the <strong>same
+projection</strong> on the weight vector, so they must lie on a line
+that is <strong>orthogonal</strong> to the weight vector. Look at these
+two images:</p>
+<figure>
+<img src="../images/03/boundaries.png" width="400"
+alt="Decision boundary" />
+<figcaption aria-hidden="true">Decision boundary</figcaption>
+</figure>
+<p>The red dashed line is the decision boundary, so note that both
+points <span class="math inline">\(p_1\)</span> and <span
+class="math inline">\(p_2\)</span> are incorrectly classified. What
+happens if we choose one of the as training sample to update the
+weights?</p>
+<ul>
+<li>choosing <span class="math inline">\(p_1\)</span>, it has target
+<span class="math inline">\(t=1\)</span>, so weights are slightly
+updated in the direction of <span
+class="math inline">\(p_1\)</span>;</li>
+<li>choosing <span class="math inline">\(p_2\)</span>, it has target
+<span class="math inline">\(t=-1\)</span>, so weights are slightly
+updated in the direction of <span
+class="math inline">\(p_2\)</span>.</li>
+</ul>
+<p>Note that in both cases, the new boundary is better than the previous
+one, and this because <strong>the perceptron learning algorithm is a
+linear algorithm is guaranteed to converge in a finite number of steps,
+if the problem us linearly separable</strong>.</p>
+<h3 id="xor-problem-with-perceptron">XOR problem with perceptron</h3>
+<p>The XOR problem is a problem that can’t be solved by a single
+perceptron, because the classes are not linearly separable. In fact, the
+XOR problem is a <strong>non-linear</strong> problem, and it can be
+solved by adding a <strong>hidden layer</strong> to the network, or by
+using a specific activation function.</p>
+<p>If we want to resolve the problem by using two separating lines,
+we’ll need <strong>two perceptrons</strong> to represents the two lines,
+and a third neuron to combine the outputs of the first two neurons.
+We’ll obviously need a <strong>threshold</strong> for each neuron, and
+the output of the third neuron will be the final output of the
+network.</p>
+<figure>
+<img src="../images/03/XOR1.png" width="400"
+alt="Network with hidden layer" />
+<figcaption aria-hidden="true">Network with hidden layer</figcaption>
+</figure>
+<p>The effect of the first layer on the weights is such that now the
+problem that goes into the second layer is linearly separable, and the
+second layer will be able to solve the problem.</p>
+<h3 id="hidden-layers">Hidden layers</h3>
+<p>In general, we observe that adding a hidden layer to the network, the
+network itself became able to model regions with a number of sides at
+most equal to the number of neurons in the hidden layer. In fact, the
+hidden layer is able to model <strong>non-linear</strong> regions, and
+the output layer is able to combine the results of the hidden layer to
+solve the problem. If we instead add a second hidden layer, the network
+will be able to model regions that are arbitrarily complex.</p>
+<h3 id="improving-the-fitting">Improving the fitting</h3>
+<p>Observe the following image:</p>
+<figure>
+<img src="../images/03/linearFit.png" width="400"
+alt="An example of linear fitting" />
+<figcaption aria-hidden="true">An example of linear fitting</figcaption>
+</figure>
+<p>We can clearly see that data are not evenly distribuited around the
+straight line, so we can achieve a better approximation by using a
+<strong>hidden layer</strong>, consisting in a single neuron with
+<strong>tanh</strong> as activation function. The result is shown in the
+following image:</p>
+<figure>
+<img src="../images/03/tanh.png" width="400"
+alt="An example of non-linear fitting" />
+<figcaption aria-hidden="true">An example of non-linear
+fitting</figcaption>
+</figure>
+<p>This approach can be used to approximate even more complex functions,
+simply adding more neurons to the hidden layer. However, we need to
+consider the negative aspect of this approach: too <strong>many
+neurons</strong> in a single hidden layer, or simply too <strong>many
+hidden layers</strong>, can have a <strong>negative impact on the
+network performance</strong>. The best practice is to start with a
+network with a reasonable minimum number of hidden neurons, and then
+increase the number of neurons only if the network doesn’t perform well.
+Remember that a network with a hidden layer that contains enough neurons
+can approximate any continuous function.</p>
             </div>
     </div>
   </div>
