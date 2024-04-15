@@ -91,3 +91,72 @@ In general, several outputs are required by a transaction, and the latter can be
 The log file is a file stored in persistent memory, that is used to recover the state of the transaction in case of failure. Before the commit of a transaction, system has to save into the log file all the records of the operations that have been made permanent, and after the commit of a transaction, system has to save into the log file a record that indicates the commit of the transaction, executing **UNDO** and **REDO** operations in case of failure, to restore the state of the transaction.
 
 ## Consensus problem
+
+The consensus problem describes **how a set of distributed systems can agree on a value**, despite failures; to help its description, the *Byzantines Generals* metaphor is used. In this scenario, generals must agree on an attack plan or a retreat, but not all of them are loyal: we have the presence of traitors among them, who may lie in order to influence the plan to take an advantage to the enemies. Each general observes the enemy abd communicates their observations to the others: traitors may lie in order to support their own plan, or even misrepresent the observations of the loyal generals, making it difficult to reach an agreement.
+
+### The Byzantine Generals problem
+
+As we just said, generals can be loyal or traitors, and they reach the consensus when:
+
+1. all loyal generals agree on the same plan;
+2. a small number of traitors cannot cause the loyal generals to adopt a bad plan.
+
+#### Assumptions
+
+The general assumptions of the Byzantine Generals problem are:
+
+- let $n$ be the number of generals;
+- the opinion of a general is either **attack** or **retreat**, described by the function $v(i)$;
+- each general $i$ share their value $v(i)$ to each other general;
+- each general final decision is obtained by a majority vote among the opinions shared by the generals.
+
+#### Role of the traitors
+
+We have **absence of traitors** when the generals have the same value $v(1), v(2), ..., v(n)$, a situation that results in taking the same decision. On the contrary we have **presence of traitors** when the generals have different values, and the traitors can influence the decision of the loyal generals. In particular, in presence of traitors:
+
+- to satisfy the first condition, the loyal generals have to agree on the same value. In other words, every general must apply the majority function to the same set of values $v(1), v(2), ..., v(n)$;
+- to satisfy the second condition, for each general $i$, if they are loyal, the the value they $v(i)$ they sent must be used by every loyal general as the value of general $i$.
+
+#### Interactive consistency
+
+Interactive consistency is a concept where a commanding general $C$ and $n-1$ lieutenants $L_1, ... L_{n-1}$ must agree of a action plan. Then, we have two situations:
+
+- *$IC_1$*: all loyal lieutenants obey the order of the commanding general;
+- *$IC_2$*: the decision of loyal lieutenants must be the same as the decision of the commanding general, if they're loyal.
+
+In simple terms, the Interactive consistency ensures that all loyal lieutenants follow the same command issued by the general, maintaining consistency in the decision.
+
+#### Case study: 3 generals and 1 lieutenant traitor
+
+FIrst of all, note that **there are no solutions** for this case. Let's now observe the scheme of the generals:
+
+![Byzantine Generals](../images/03/byzantine1.png){ width=400px}
+
+In this situation, whit two different commands, we assume that $L_1$ must obey the command of $C$:
+
+- if $L_1$ decides to attack, both $IC_1$ and $IC_2$ are satisfied;
+- if $L_1$ decides to retreat, $IC_1$ is satisfied, but $IC_2$ is not.
+
+From the latter, we can get the following rule: **if $L_i$ receives different commands, they will always takes the decision received by $C$**.
+
+#### Case study: 3 generals and 1 general traitor
+
+The situation is the same as the previous one, and the same inferred rule is applied:
+
+![Byzantine Generals](../images/03/byzantine2.png){ width=400px}
+
+- $L_1$ must obey to $G$, and decides to attack;
+- $L_2$ must obey to $G$, and decides to retreat.
+
+In this case, the $IC_1$ is violated, because the lieutenants have different decisions, but the $IC_2$ is satisfied. In general, **four generals are required to cope with one traitor**.
+
+#### Generalization of the Byzantine Generals problem
+
+A general scheme for the Byzantine Problem is the following:
+
+![Byzantine Generals](../images/03/byzantine3.png){ width=400px}
+
+In case there isn't any traitor, each $L_i$ will receives three copies of the same order they've already received from $C$.
+
+### Oral message algorithm
+
