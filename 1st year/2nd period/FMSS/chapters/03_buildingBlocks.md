@@ -160,3 +160,88 @@ In case there isn't any traitor, each $L_i$ will receives three copies of the sa
 
 ### Oral message algorithm
 
+In this section, we'll go through the oral message algorithm, that is a solution to the consensus problem. The algorithm is based on the following assumptions:
+
+- the system is **synchronous**;
+- any two processes can communicate with each other, and the **communication is reliable and instantaneous**;
+- the **receiver** can identify the **sender** of the message;
+- every message sent by a non-faulty process is **eventually delivered**;
+- the **absence of messages** can be detected.
+
+This algorithm is able to solves the Byzantine problem for $n \ge (3m+1)$ general, and includes a majority vote on the values received from the lieutenants: note that, if a traitor doesn't send any message, we assume that the message is *retreat*; consider also the fact that the majority vote returns *retreat* if a majority is not reached.
+
+#### The algorithm for $OM(0)$
+
+1. The commander C sends their value to every lieutenant $L_i$, with $i \in \{1, ..., n-1\}$;
+2. Each lieutenant eses the received value.
+
+#### The algorithm for $OM(m)$, with $m>0$
+
+1. $C$ sends their value to every lieutenant $L_i$, with $i \in \{1, ..., n-1\}$;
+2. Let $v_i$ the value received by $L_i$ from $C$: $L_i$ acts as $C$ in $OM(m-1)$ to send $V_i$ to each of the $n-2$ lieutenants;
+3. For each $i$, with $j \ne i$, let $v_j$ be the value that goes from $L_j$ to $L_i$ in the previous step;
+4. Perform a majority vote among values $\{v_1, ..., v_{n-1}\}$
+
+The algorithm is **recursive**, and it invokes $n-1$ calls for $OM(m-1)$, $n-2$ calls for $OM(m-2)$ and so on.
+
+### Consideration about the algorithm
+
+Solution for consensus problem are highly costly, requiring a minimum of $3m+1$ nodes and $m+1$ rounds, with message sizes $O(n^{m+1})$ growing at each round. Different metrics are used to evaluate algorithms, including the number of faulty processors, the number of rounds, and the message size; some of these algorithms have been proven optimal for specific aspects.
+
+### Signed messages
+
+The problem is made challenging due to the ability of the traitors to lie: in order to address this aspect, a solution involving signed messages has been proposed, enabling generals to send unforgeable and authenticated messages. This is a huge simplification of the problem, that relies on the following assumptions:
+
+- the **signature cannot be forged**, and any alteration of a signed message can be detected;
+- the authenticity verification can be made by everyone.
+
+However, no assumptions on the signature of traitor generals have been made.
+
+#### The choice algorithm
+
+Let $V$ be a set of orders, with a function `choice(V)` that obtain a single order from a set. The function will returns:
+
+- *retreat* if $V$ is empty;
+- $v$ if $V$ is composed only by a single element $v$;
+- *retreat* if $V$ consists of more than one element.
+
+General $0$ is the commander, and for each $i$, $V_i$ is the set of properly signed orders that Lieutenants $L_i$ received so far.
+
+#### Signed algorithm $SM(m)$
+
+The algorithm ensures that at most $m$ lieutenants can send an order to their subordinates. The algorithm is based on the following steps:
+
+1. at the start, all lieutenants have an empty set $V_i$;
+2. $C$ signs and sends their value to every lieutenant $L_i$, except for the last one;
+3. each $L_i$ collects and verifies the received signed messages, appending their signatures if necessary, and broadcast the updated message to other lieutenants;
+4. when no more messages are received, each lieutenant applies the `choice` function to the set of received messages.
+
+Some key observations about the algorithm:
+
+- lieutenants will discard any messages that have been already received;
+- if $L_I$ is the $m$-th lieutenant that adds their signature to the message, the message is not broadcasted anymore;
+- time-outs techniques can be used to detect the absence of messages.
+
+There is an algorithm, that has been formally proved, that states: **for any $m$, the algorithm $SM(m)$ solves the Byzantine Generals problem for $n \ge 2m+1$ generals and m traitors**.
+
+### Impossibility results
+
+In **asynchronous distributed systems**, where no timing assumptions are made, making them easier to port application and handle variable workloads, the consensus problem **cannot be deterministically solved**, and this because it's difficult to distinguish between a slow process and a failed one, and deciding to stop  a single process in a inopportune moment can lead to a failure of the consensus algorithm. In order to circumvent this issue, different strategies can be used, such as:
+
+- **loosely synchronized systems**, where different processors allocated to a task are executing the same iteration, so they don't need tight synchronization;
+- **median clock algorithm**; each clock observes every other clocks, and sets its time to the median value of the observed clocks.
+
+### CLock synchronization
+
+Let's observe the following figure:
+
+![Clock synchronization](../images/03/clocksyn.png){ width=400px}
+
+Without loss of generality, we can state that clock($A$) $ < $ clock($B$) $, and assume $C$ as faulty. Assume that $A$ and $B$ observe the same value of C: we have a **non Byzantine failure**, with processes that may obtain different values from the faulty process.
+
+Another case can be shown with the following hypothesis:
+
+- clock($A$) $= 10  < $ clock($B$) $ = 20$;
+- assume a Byzantine failure of $C$.
+
+If $A$ sees a values for clock $C$ that is slightly lower than its own value, and $B$ sees a value for clock $C$ that is slightly higher than its own value, both $A$ and $B$ will see their own value as the median value, and the algorithm will fail, and this because **the median computed by two different processes will be the same if the set of clock values they obtain is the same**.

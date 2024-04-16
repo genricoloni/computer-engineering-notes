@@ -475,7 +475,23 @@ Loni</p></li>
         <li><a href="#log-file" id="toc-log-file">Log file</a></li>
         </ul></li>
         <li><a href="#consensus-problem"
-        id="toc-consensus-problem">Consensus problem</a></li>
+        id="toc-consensus-problem">Consensus problem</a>
+        <ul>
+        <li><a href="#the-byzantine-generals-problem"
+        id="toc-the-byzantine-generals-problem">The Byzantine Generals
+        problem</a></li>
+        <li><a href="#oral-message-algorithm"
+        id="toc-oral-message-algorithm">Oral message algorithm</a></li>
+        <li><a href="#consideration-about-the-algorithm"
+        id="toc-consideration-about-the-algorithm">Consideration about
+        the algorithm</a></li>
+        <li><a href="#signed-messages" id="toc-signed-messages">Signed
+        messages</a></li>
+        <li><a href="#impossibility-results"
+        id="toc-impossibility-results">Impossibility results</a></li>
+        <li><a href="#clock-synchronization"
+        id="toc-clock-synchronization">CLock synchronization</a></li>
+        </ul></li>
         </ul></li>
         </ul>
 
@@ -1797,6 +1813,306 @@ that indicates the commit of the transaction, executing
 <strong>UNDO</strong> and <strong>REDO</strong> operations in case of
 failure, to restore the state of the transaction.</p>
 <h2 id="consensus-problem">Consensus problem</h2>
+<p>The consensus problem describes <strong>how a set of distributed
+systems can agree on a value</strong>, despite failures; to help its
+description, the <em>Byzantines Generals</em> metaphor is used. In this
+scenario, generals must agree on an attack plan or a retreat, but not
+all of them are loyal: we have the presence of traitors among them, who
+may lie in order to influence the plan to take an advantage to the
+enemies. Each general observes the enemy abd communicates their
+observations to the others: traitors may lie in order to support their
+own plan, or even misrepresent the observations of the loyal generals,
+making it difficult to reach an agreement.</p>
+<h3 id="the-byzantine-generals-problem">The Byzantine Generals
+problem</h3>
+<p>As we just said, generals can be loyal or traitors, and they reach
+the consensus when:</p>
+<ol type="1">
+<li>all loyal generals agree on the same plan;</li>
+<li>a small number of traitors cannot cause the loyal generals to adopt
+a bad plan.</li>
+</ol>
+<h4 id="assumptions">Assumptions</h4>
+<p>The general assumptions of the Byzantine Generals problem are:</p>
+<ul>
+<li>let <span class="math inline">\(n\)</span> be the number of
+generals;</li>
+<li>the opinion of a general is either <strong>attack</strong> or
+<strong>retreat</strong>, described by the function <span
+class="math inline">\(v(i)\)</span>;</li>
+<li>each general <span class="math inline">\(i\)</span> share their
+value <span class="math inline">\(v(i)\)</span> to each other
+general;</li>
+<li>each general final decision is obtained by a majority vote among the
+opinions shared by the generals.</li>
+</ul>
+<h4 id="role-of-the-traitors">Role of the traitors</h4>
+<p>We have <strong>absence of traitors</strong> when the generals have
+the same value <span class="math inline">\(v(1), v(2), ...,
+v(n)\)</span>, a situation that results in taking the same decision. On
+the contrary we have <strong>presence of traitors</strong> when the
+generals have different values, and the traitors can influence the
+decision of the loyal generals. In particular, in presence of
+traitors:</p>
+<ul>
+<li>to satisfy the first condition, the loyal generals have to agree on
+the same value. In other words, every general must apply the majority
+function to the same set of values <span class="math inline">\(v(1),
+v(2), ..., v(n)\)</span>;</li>
+<li>to satisfy the second condition, for each general <span
+class="math inline">\(i\)</span>, if they are loyal, the the value they
+<span class="math inline">\(v(i)\)</span> they sent must be used by
+every loyal general as the value of general <span
+class="math inline">\(i\)</span>.</li>
+</ul>
+<h4 id="interactive-consistency">Interactive consistency</h4>
+<p>Interactive consistency is a concept where a commanding general <span
+class="math inline">\(C\)</span> and <span
+class="math inline">\(n-1\)</span> lieutenants <span
+class="math inline">\(L_1, ... L_{n-1}\)</span> must agree of a action
+plan. Then, we have two situations:</p>
+<ul>
+<li><em><span class="math inline">\(IC_1\)</span></em>: all loyal
+lieutenants obey the order of the commanding general;</li>
+<li><em><span class="math inline">\(IC_2\)</span></em>: the decision of
+loyal lieutenants must be the same as the decision of the commanding
+general, if they’re loyal.</li>
+</ul>
+<p>In simple terms, the Interactive consistency ensures that all loyal
+lieutenants follow the same command issued by the general, maintaining
+consistency in the decision.</p>
+<h4 id="case-study-3-generals-and-1-lieutenant-traitor">Case study: 3
+generals and 1 lieutenant traitor</h4>
+<p>FIrst of all, note that <strong>there are no solutions</strong> for
+this case. Let’s now observe the scheme of the generals:</p>
+<figure>
+<img src="../images/03/byzantine1.png" width="400"
+alt="Byzantine Generals" />
+<figcaption aria-hidden="true">Byzantine Generals</figcaption>
+</figure>
+<p>In this situation, whit two different commands, we assume that <span
+class="math inline">\(L_1\)</span> must obey the command of <span
+class="math inline">\(C\)</span>:</p>
+<ul>
+<li>if <span class="math inline">\(L_1\)</span> decides to attack, both
+<span class="math inline">\(IC_1\)</span> and <span
+class="math inline">\(IC_2\)</span> are satisfied;</li>
+<li>if <span class="math inline">\(L_1\)</span> decides to retreat,
+<span class="math inline">\(IC_1\)</span> is satisfied, but <span
+class="math inline">\(IC_2\)</span> is not.</li>
+</ul>
+<p>From the latter, we can get the following rule: <strong>if <span
+class="math inline">\(L_i\)</span> receives different commands, they
+will always takes the decision received by <span
+class="math inline">\(C\)</span></strong>.</p>
+<h4 id="case-study-3-generals-and-1-general-traitor">Case study: 3
+generals and 1 general traitor</h4>
+<p>The situation is the same as the previous one, and the same inferred
+rule is applied:</p>
+<figure>
+<img src="../images/03/byzantine2.png" width="400"
+alt="Byzantine Generals" />
+<figcaption aria-hidden="true">Byzantine Generals</figcaption>
+</figure>
+<ul>
+<li><span class="math inline">\(L_1\)</span> must obey to <span
+class="math inline">\(G\)</span>, and decides to attack;</li>
+<li><span class="math inline">\(L_2\)</span> must obey to <span
+class="math inline">\(G\)</span>, and decides to retreat.</li>
+</ul>
+<p>In this case, the <span class="math inline">\(IC_1\)</span> is
+violated, because the lieutenants have different decisions, but the
+<span class="math inline">\(IC_2\)</span> is satisfied. In general,
+<strong>four generals are required to cope with one
+traitor</strong>.</p>
+<h4 id="generalization-of-the-byzantine-generals-problem">Generalization
+of the Byzantine Generals problem</h4>
+<p>A general scheme for the Byzantine Problem is the following:</p>
+<figure>
+<img src="../images/03/byzantine3.png" width="400"
+alt="Byzantine Generals" />
+<figcaption aria-hidden="true">Byzantine Generals</figcaption>
+</figure>
+<p>In case there isn’t any traitor, each <span
+class="math inline">\(L_i\)</span> will receives three copies of the
+same order they’ve already received from <span
+class="math inline">\(C\)</span>.</p>
+<h3 id="oral-message-algorithm">Oral message algorithm</h3>
+<p>In this section, we’ll go through the oral message algorithm, that is
+a solution to the consensus problem. The algorithm is based on the
+following assumptions:</p>
+<ul>
+<li>the system is <strong>synchronous</strong>;</li>
+<li>any two processes can communicate with each other, and the
+<strong>communication is reliable and instantaneous</strong>;</li>
+<li>the <strong>receiver</strong> can identify the
+<strong>sender</strong> of the message;</li>
+<li>every message sent by a non-faulty process is <strong>eventually
+delivered</strong>;</li>
+<li>the <strong>absence of messages</strong> can be detected.</li>
+</ul>
+<p>This algorithm is able to solves the Byzantine problem for <span
+class="math inline">\(n \ge (3m+1)\)</span> general, and includes a
+majority vote on the values received from the lieutenants: note that, if
+a traitor doesn’t send any message, we assume that the message is
+<em>retreat</em>; consider also the fact that the majority vote returns
+<em>retreat</em> if a majority is not reached.</p>
+<h4 id="the-algorithm-for-om0">The algorithm for <span
+class="math inline">\(OM(0)\)</span></h4>
+<ol type="1">
+<li>The commander C sends their value to every lieutenant <span
+class="math inline">\(L_i\)</span>, with <span class="math inline">\(i
+\in \{1, ..., n-1\}\)</span>;</li>
+<li>Each lieutenant eses the received value.</li>
+</ol>
+<h4 id="the-algorithm-for-omm-with-m0">The algorithm for <span
+class="math inline">\(OM(m)\)</span>, with <span
+class="math inline">\(m&gt;0\)</span></h4>
+<ol type="1">
+<li><span class="math inline">\(C\)</span> sends their value to every
+lieutenant <span class="math inline">\(L_i\)</span>, with <span
+class="math inline">\(i \in \{1, ..., n-1\}\)</span>;</li>
+<li>Let <span class="math inline">\(v_i\)</span> the value received by
+<span class="math inline">\(L_i\)</span> from <span
+class="math inline">\(C\)</span>: <span
+class="math inline">\(L_i\)</span> acts as <span
+class="math inline">\(C\)</span> in <span
+class="math inline">\(OM(m-1)\)</span> to send <span
+class="math inline">\(V_i\)</span> to each of the <span
+class="math inline">\(n-2\)</span> lieutenants;</li>
+<li>For each <span class="math inline">\(i\)</span>, with <span
+class="math inline">\(j \ne i\)</span>, let <span
+class="math inline">\(v_j\)</span> be the value that goes from <span
+class="math inline">\(L_j\)</span> to <span
+class="math inline">\(L_i\)</span> in the previous step;</li>
+<li>Perform a majority vote among values <span
+class="math inline">\(\{v_1, ..., v_{n-1}\}\)</span></li>
+</ol>
+<p>The algorithm is <strong>recursive</strong>, and it invokes <span
+class="math inline">\(n-1\)</span> calls for <span
+class="math inline">\(OM(m-1)\)</span>, <span
+class="math inline">\(n-2\)</span> calls for <span
+class="math inline">\(OM(m-2)\)</span> and so on.</p>
+<h3 id="consideration-about-the-algorithm">Consideration about the
+algorithm</h3>
+<p>Solution for consensus problem are highly costly, requiring a minimum
+of <span class="math inline">\(3m+1\)</span> nodes and <span
+class="math inline">\(m+1\)</span> rounds, with message sizes <span
+class="math inline">\(O(n^{m+1})\)</span> growing at each round.
+Different metrics are used to evaluate algorithms, including the number
+of faulty processors, the number of rounds, and the message size; some
+of these algorithms have been proven optimal for specific aspects.</p>
+<h3 id="signed-messages">Signed messages</h3>
+<p>The problem is made challenging due to the ability of the traitors to
+lie: in order to address this aspect, a solution involving signed
+messages has been proposed, enabling generals to send unforgeable and
+authenticated messages. This is a huge simplification of the problem,
+that relies on the following assumptions:</p>
+<ul>
+<li>the <strong>signature cannot be forged</strong>, and any alteration
+of a signed message can be detected;</li>
+<li>the authenticity verification can be made by everyone.</li>
+</ul>
+<p>However, no assumptions on the signature of traitor generals have
+been made.</p>
+<h4 id="the-choice-algorithm">The choice algorithm</h4>
+<p>Let <span class="math inline">\(V\)</span> be a set of orders, with a
+function <code>choice(V)</code> that obtain a single order from a set.
+The function will returns:</p>
+<ul>
+<li><em>retreat</em> if <span class="math inline">\(V\)</span> is
+empty;</li>
+<li><span class="math inline">\(v\)</span> if <span
+class="math inline">\(V\)</span> is composed only by a single element
+<span class="math inline">\(v\)</span>;</li>
+<li><em>retreat</em> if <span class="math inline">\(V\)</span> consists
+of more than one element.</li>
+</ul>
+<p>General <span class="math inline">\(0\)</span> is the commander, and
+for each <span class="math inline">\(i\)</span>, <span
+class="math inline">\(V_i\)</span> is the set of properly signed orders
+that Lieutenants <span class="math inline">\(L_i\)</span> received so
+far.</p>
+<h4 id="signed-algorithm-smm">Signed algorithm <span
+class="math inline">\(SM(m)\)</span></h4>
+<p>The algorithm ensures that at most <span
+class="math inline">\(m\)</span> lieutenants can send an order to their
+subordinates. The algorithm is based on the following steps:</p>
+<ol type="1">
+<li>at the start, all lieutenants have an empty set <span
+class="math inline">\(V_i\)</span>;</li>
+<li><span class="math inline">\(C\)</span> signs and sends their value
+to every lieutenant <span class="math inline">\(L_i\)</span>, except for
+the last one;</li>
+<li>each <span class="math inline">\(L_i\)</span> collects and verifies
+the received signed messages, appending their signatures if necessary,
+and broadcast the updated message to other lieutenants;</li>
+<li>when no more messages are received, each lieutenant applies the
+<code>choice</code> function to the set of received messages.</li>
+</ol>
+<p>Some key observations about the algorithm:</p>
+<ul>
+<li>lieutenants will discard any messages that have been already
+received;</li>
+<li>if <span class="math inline">\(L_I\)</span> is the <span
+class="math inline">\(m\)</span>-th lieutenant that adds their signature
+to the message, the message is not broadcasted anymore;</li>
+<li>time-outs techniques can be used to detect the absence of
+messages.</li>
+</ul>
+<p>There is an algorithm, that has been formally proved, that states:
+<strong>for any <span class="math inline">\(m\)</span>, the algorithm
+<span class="math inline">\(SM(m)\)</span> solves the Byzantine Generals
+problem for <span class="math inline">\(n \ge 2m+1\)</span> generals and
+m traitors</strong>.</p>
+<h3 id="impossibility-results">Impossibility results</h3>
+<p>In <strong>asynchronous distributed systems</strong>, where no timing
+assumptions are made, making them easier to port application and handle
+variable workloads, the consensus problem <strong>cannot be
+deterministically solved</strong>, and this because it’s difficult to
+distinguish between a slow process and a failed one, and deciding to
+stop a single process in a inopportune moment can lead to a failure of
+the consensus algorithm. In order to circumvent this issue, different
+strategies can be used, such as:</p>
+<ul>
+<li><strong>loosely synchronized systems</strong>, where different
+processors allocated to a task are executing the same iteration, so they
+don’t need tight synchronization;</li>
+<li><strong>median clock algorithm</strong>; each clock observes every
+other clocks, and sets its time to the median value of the observed
+clocks.</li>
+</ul>
+<h3 id="clock-synchronization">CLock synchronization</h3>
+<p>Let’s observe the following figure:</p>
+<figure>
+<img src="../images/03/clocksyn.png" width="400"
+alt="Clock synchronization" />
+<figcaption aria-hidden="true">Clock synchronization</figcaption>
+</figure>
+<p>Without loss of generality, we can state that clock(<span
+class="math inline">\(A\)</span>) $ &lt; $ clock(<span
+class="math inline">\(B\)</span>) $, and assume <span
+class="math inline">\(C\)</span> as faulty. Assume that <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> observe the same value of C: we have a
+<strong>non Byzantine failure</strong>, with processes that may obtain
+different values from the faulty process.</p>
+<p>Another case can be shown with the following hypothesis:</p>
+<ul>
+<li>clock(<span class="math inline">\(A\)</span>) $= 10 &lt; $
+clock(<span class="math inline">\(B\)</span>) $ = 20$;</li>
+<li>assume a Byzantine failure of <span
+class="math inline">\(C\)</span>.</li>
+</ul>
+<p>If <span class="math inline">\(A\)</span> sees a values for clock
+<span class="math inline">\(C\)</span> that is slightly lower than its
+own value, and <span class="math inline">\(B\)</span> sees a value for
+clock <span class="math inline">\(C\)</span> that is slightly higher
+than its own value, both <span class="math inline">\(A\)</span> and
+<span class="math inline">\(B\)</span> will see their own value as the
+median value, and the algorithm will fail, and this because <strong>the
+median computed by two different processes will be the same if the set
+of clock values they obtain is the same</strong>.</p>
             </div>
     </div>
   </div>
