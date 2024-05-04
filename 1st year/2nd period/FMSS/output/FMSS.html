@@ -493,6 +493,47 @@ Loni</p></li>
         id="toc-clock-synchronization">CLock synchronization</a></li>
         </ul></li>
         </ul></li>
+        <li><a href="#dependability-evaluation"
+        id="toc-dependability-evaluation">Dependability Evaluation</a>
+        <ul>
+        <li><a href="#introduction-1"
+        id="toc-introduction-1">Introduction</a>
+        <ul>
+        <li><a href="#definitions"
+        id="toc-definitions">Definitions</a></li>
+        <li><a href="#hardware-reliability"
+        id="toc-hardware-reliability">Hardware reliability</a></li>
+        <li><a href="#time-to-failure-of-a-component"
+        id="toc-time-to-failure-of-a-component">Time-to-failure of a
+        component</a></li>
+        <li><a href="#distribution-model-for-permanent-faults"
+        id="toc-distribution-model-for-permanent-faults">Distribution
+        model for permanent faults</a></li>
+        </ul></li>
+        <li><a href="#model-based-dependability-evaluation"
+        id="toc-model-based-dependability-evaluation">Model-based
+        dependability evaluation</a></li>
+        <li><a href="#combinatorial-stochastic-models"
+        id="toc-combinatorial-stochastic-models">Combinatorial
+        (stochastic) models</a>
+        <ul>
+        <li><a href="#series-models" id="toc-series-models">Series
+        models</a></li>
+        <li><a href="#parallel-models" id="toc-parallel-models">Parallel
+        models</a></li>
+        <li><a href="#example-tmr-vs-simplex-system"
+        id="toc-example-tmr-vs-simplex-system">Example: TMR vs Simplex
+        system</a></li>
+        <li><a href="#non-seriesparallel-systems"
+        id="toc-non-seriesparallel-systems">Non-series/parallel
+        systems</a></li>
+        </ul></li>
+        <li><a href="#fault-trees" id="toc-fault-trees">Fault Trees</a>
+        <ul>
+        <li><a href="#logical-gates" id="toc-logical-gates">Logical
+        gates</a></li>
+        </ul></li>
+        </ul></li>
         </ul>
 
         </div>
@@ -2113,6 +2154,368 @@ than its own value, both <span class="math inline">\(A\)</span> and
 median value, and the algorithm will fail, and this because <strong>the
 median computed by two different processes will be the same if the set
 of clock values they obtain is the same</strong>.</p>
+<h1 id="dependability-evaluation">Dependability Evaluation</h1>
+<h2 id="introduction-1">Introduction</h2>
+<p>As we stated in the previous chapters, faults cause errors and
+failures in the systems. however, these faults aren’t unpredictable:
+their occurrences can be modeled trough the use of probability theory.
+Parameters such as the Mean Time To Failure (MTTF) and the Mean Time To
+Repair (MTTR) are, in fact, <strong>random variables</strong> that can
+be modeled through probability distributions.</p>
+<h3 id="definitions">Definitions</h3>
+<ul>
+<li><strong>Reliability <span
+class="math inline">\(R(t)\)</span></strong> is a function of time, and
+it’s the conditional probability that the system performs correctly
+trough the time interval <span class="math inline">\([0,t]\)</span>,
+given that the system was performing correctly at the the instant <span
+class="math inline">\(t_0\)</span>. From the definitions, we can state
+that <span class="math inline">\(R(0) = 1\)</span> and <span
+class="math inline">\(R(\infty) = 0\)</span>;</li>
+<li><strong>Unreliability <span
+class="math inline">\(Q(t)\)</span></strong>, define as <span
+class="math inline">\(Q(t) = 1 - R(t)\)</span>;</li>
+<li><strong>Availability <span
+class="math inline">\(A(t)\)</span></strong> is a time function which
+represents the probability that the system is operating correctly and
+it’s available to perform its functions at time <span
+class="math inline">\(t\)</span>.</li>
+<li><strong>failure density function <span
+class="math inline">\(f(t)\)</span></strong> represents the number of
+failures occurred in <span class="math inline">\(\Delta t\)</span>. From
+a mathematical point of view, it’s defined as <span
+class="math inline">\(f(t) = \frac{dQ(t)}{dt}=
+\frac{-dR(t)}{dt}\)</span>;</li>
+<li><strong>failure rate function <span
+class="math inline">\(\lambda(t)\)</span></strong>, defined by the
+number of failures during <span class="math inline">\(\Delta t\)</span>
+in relation to the number of correct components at time <span
+class="math inline">\(t\)</span>, and we can write its equations in this
+way: <span class="math inline">\(\lambda(t) = \frac{f(t)}{R(t)} =
+-\frac{dR(t)}{dt}\cdot\frac{1}{R(t)}\)</span></li>
+</ul>
+<h3 id="hardware-reliability">Hardware reliability</h3>
+<p>The hardware reliability is usually described using the
+<strong>failure rate distribution</strong>, that follows different
+behaviors depending on the lifetime of the components. An average
+behavior is the <strong>bathtub curve</strong>, which is divided into
+three phases:</p>
+<figure>
+<img src="../images/04/bathub.png" width="400" alt="Bathtub curve" />
+<figcaption aria-hidden="true">Bathtub curve</figcaption>
+</figure>
+<p>The <strong>early life phase</strong> is characterized by a high
+failure rate, due to the presence of <strong>infant mortality</strong>,
+caused by failures of weaker components (e.g. due to manufacturing
+defects). The <strong>useful life phase</strong> is characterized by a
+constant failure rate, which is the most common behavior of the
+components, and the failure rate is described as <strong>failure every
+<span class="math inline">\(x\)</span> hours</strong> (e.g. <span
+class="math inline">\(\lambda = \frac{1}{2000}\)</span>, which means a
+failure every 2000 hours). The <strong>wear-out phase</strong> is
+characterized by an increasing failure rate, due to the aging of the
+components and their usage.</p>
+<p>Knowing that the failure rate is constant, we can easily get the
+reliability function:</p>
+<p><span class="math display">\[\lambda(t) =  \lambda =
+\frac{f(t)}{R(t)}=-\frac{dR(t)}{dt}\cdot\frac{1}{R(t)} \rightarrow R(t)
+= e^{-\lambda t}\]</span></p>
+<p>We can also recover the equation for the probability function:</p>
+<p><span class="math display">\[f(t) = \frac{dQ(t)}{dt} =
+\frac{-dR(t)}{dt} = \lambda e^{-\lambda t}\]</span></p>
+<blockquote>
+<p>The exponential relation between reliability and time is known as
+<strong>exponential failure law</strong>.</p>
+</blockquote>
+<h3 id="time-to-failure-of-a-component">Time-to-failure of a
+component</h3>
+<p>The time-to-failure of a component is a random variable that can be
+modeled using a <strong>random variable <span
+class="math inline">\(X\)</span></strong>, defining:</p>
+<ul>
+<li><span class="math inline">\(F_X(t) = P(X \leq t)\)</span> as the
+<strong>cumulative distribution function</strong> (CDF) of the random
+variable <span class="math inline">\(X\)</span>, that represents the
+<strong>unreliability</strong> of the component;</li>
+<li><strong>reliability function</strong>, defined as <span
+class="math inline">\(R_X(t) = 1 - F_X(t) = P(X &gt; t)\)</span>, and it
+represents the <strong>probability to not observe failures before time
+<span class="math inline">\(t\)</span></strong>.</li>
+<li>the <strong>mean time to failure</strong> (MTTF) is defined as <span
+class="math inline">\(E[X] = \int_0^\infty tf(t)dt = \int_0^\infty
+t\lambda e^{-\lambda t}dt = \frac{1}{\lambda}\)</span>.</li>
+</ul>
+<p>Taking as example a constant failure rate <span
+class="math inline">\(\lambda = \frac{1}{2000}\)</span>, the MTTF is
+<span class="math inline">\(2000\)</span> hours: speaking in terms of
+probability, <span class="math inline">\(\lambda\)</span> means that
+we’ll have <span class="math inline">\(0.0005\)</span> failures per
+hour, and the MTTF shows that the time needed for the first failure is
+<span class="math inline">\(2000\)</span> hours. A well-known unity is
+the <strong>FIT</strong> (Failure In Time), which is the number of
+failures in <span class="math inline">\(10^9\)</span> hours. All these
+data are usually available on handbooks and datasheets of the
+components.</p>
+<h3 id="distribution-model-for-permanent-faults">Distribution model for
+permanent faults</h3>
+<p>The <strong>MIL-HDBK-217</strong> is a standard that provides a model
+for the reliability of electronic components, and it’s based on the
+<strong>exponential failure law</strong>. The model is based on the
+<strong>constant failure rate</strong> <span
+class="math inline">\(\lambda\)</span>, and it’s defined as:</p>
+<p><span class="math display">\[\lambda = \tau_L\cdot \tau_Q\cdot
+(C_1\cdot \tau_V\cdot \tau_T + C_2\cdot \tau_E)\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\tau_L\)</span> is the <strong>learning
+factor</strong>, based on the experience of the manufacturer;</li>
+<li><span class="math inline">\(\tau_Q\)</span> is the <strong>quality
+factor</strong>, based on the quality of the components;</li>
+<li><span class="math inline">\(\tau_V\)</span> is the <strong>voltage
+factor</strong>, based on the voltage applied to the component;</li>
+<li><span class="math inline">\(\tau_T\)</span> is the
+<strong>temperature factor</strong>, based on the temperature of the
+ambient in which the component is placed, and the type of
+semiconductor;</li>
+<li><span class="math inline">\(\tau_E\)</span> is the
+<strong>environment factor</strong>, based on the environment in which
+the component is placed;</li>
+<li><span class="math inline">\(C_1\)</span> and <span
+class="math inline">\(C_2\)</span> are <strong>complexity
+factors</strong>, based on number of components and the complexity of
+the circuit.</li>
+</ul>
+<p><span class="math display">\[\qquad\]</span></p>
+<h2 id="model-based-dependability-evaluation">Model-based dependability
+evaluation</h2>
+<p>A model is an <strong>abstraction</strong> of a real system, that
+highlights the most important aspects of the system that are going to be
+analyzed. Two main types of models are used in dependability
+evaluation:</p>
+<ul>
+<li><strong>Stochastic models</strong>, that are based on probability
+theory and are used to model the behavior of the system in terms of
+<strong>random variables</strong>, such as Reliability Block Diagrams
+(RBDs) and Fault Trees (FTs);</li>
+<li><strong>State-space models</strong>, that are based on the state of
+the system and are used to model the behavior of the system in terms of
+<strong>states</strong>, such as Markov Chains and Petri Nets.</li>
+</ul>
+<p>In this chapter, we’ll present the both types of models.</p>
+<h2 id="combinatorial-stochastic-models">Combinatorial (stochastic)
+models</h2>
+<p>These models offer simple and intuitive methods for the construction
+of the system model, and for their solution. It’s fundamental to keep in
+mind some assumptions that will be used in the following sections:</p>
+<ul>
+<li><strong>Components are independent</strong>: the failure of a
+component doesn’t affect the failure of the others;</li>
+<li>each component has a <strong>constant failure rate</strong> <span
+class="math inline">\(\lambda\)</span>;</li>
+<li>the system model is based on the actual structure of the
+system;</li>
+</ul>
+<p>It’s also importa to remember that these models aren’t ideal when
+dealing with systems that shows complex dependencies among components,
+and for systems that are repairable.</p>
+<h3 id="series-models">Series models</h3>
+<p>A simple schema for these systems is the following:</p>
+<figure>
+<img src="../images/04/serie.png" width="400" alt="Series model" />
+<figcaption aria-hidden="true">Series model</figcaption>
+</figure>
+<p>The system is composed by <span class="math inline">\(n\)</span>
+components, and the system is working if all the components are working.
+The reliability of the system is the product of the reliability of the
+components.</p>
+<p>Given <span class="math inline">\(R_i(t)\)</span> the reliability of
+the <span class="math inline">\(i\)</span>-th component, the reliability
+of the system is:</p>
+<p><span class="math display">\[R(t) = R_1(t)\cdot R_2(t)\cdot \ldots
+\cdot R_n(t) = \prod_{i=1}^n R_i(t)\]</span></p>
+<p>If every component has a constant failure rate <span
+class="math inline">\(\lambda\)</span>, the reliability of the system
+is:</p>
+<p><span class="math display">\[R(t) = e^{-\lambda_1 t}\cdot
+e^{-\lambda_2 t}\cdot \ldots \cdot e^{-\lambda_n t} = e^{-(\lambda_1 +
+\lambda_2 + \ldots + \lambda_n)t} = e^{-\sum_{i=1}^n \lambda_i
+t}\]</span></p>
+<p>The unreliability of the system is:</p>
+<p><span class="math display">\[Q(t) = 1 - R(t) = 1 - \prod_{i=1}^n
+R_i(t) = 1 - \prod_{i=1}^n (1 - Q_i(t))\]</span></p>
+<p>If the system doesn’t contain any redundancy, and the components are
+independent, then:</p>
+<ul>
+<li>the <strong>system reliability</strong> is the product of the
+<strong>component reliabilities</strong>, and it’s an
+<strong>exponential function</strong>;</li>
+<li>the <strong>failure rate <span
+class="math inline">\(\lambda\)</span></strong> of the system is the sum
+of the <strong>failure rates <span
+class="math inline">\(\lambda_i\)</span></strong> of the
+components.</li>
+</ul>
+<h3 id="parallel-models">Parallel models</h3>
+<p>A simple schema for these systems is the following:</p>
+<figure>
+<img src="../images/04/parallel.png" width="400" alt="Parallel model" />
+<figcaption aria-hidden="true">Parallel model</figcaption>
+</figure>
+<p>The system is composed by <span class="math inline">\(n\)</span>
+components, and the system is working if at least one of the components
+is working.</p>
+<p>The unreliability of the system is <span class="math inline">\(Q(t) =
+\prod_{i=1}^n Q_i(t)\)</span>, and the reliability of the system is
+<span class="math inline">\(R(t) = 1 - Q(t) = 1 - \prod_{i=1}^n Q_i(t) =
+1 - \prod_{i=1}^n (1 - R_i(t))\)</span>.</p>
+<p>We can generalize this system to a <strong>M-of-N</strong> system, in
+which the system is working if at least <span
+class="math inline">\(M\)</span> components are working. The reliability
+of these systems is:</p>
+<p><span class="math display">\[R(t) = \sum_{i=M}^N \binom{N}{i}
+R_i(t)^{N-1} (1 - R_i(t))^{i}\]</span></p>
+<p>If the system has redundancy, and if components are independent, then
+the <strong>system reliability</strong> is the
+<strong>reliability</strong> of a series/parallel combinatorial
+model.</p>
+<h3 id="example-tmr-vs-simplex-system">Example: TMR vs Simplex
+system</h3>
+<p>Take as example a simple system with only one component <span
+class="math inline">\(s\)</span>, and a TMR system with three
+components.</p>
+<p>The component <span class="math inline">\(s\)</span> has a failure
+rate <span class="math inline">\(\lambda\)</span>, with <span
+class="math inline">\(R_s = e^{-\lambda t}\)</span> which us also the
+reliability of the system.</p>
+<p>In the TMR system, we assume the reliability of the voter <span
+class="math inline">\(R_v(t) = 1\)</span>, and the reliability of the
+TMR is</p>
+<p><span class="math display">\[R_{TMR} = \sum_{i=0}^1
+\binom{3}{i}(e^{-\lambda t})^{3-i}(1-e^{-\lambda t})^i = (e^{-\lambda
+t})^3 + 3(e^{-\lambda t})^2(1-e^{-\lambda t})\]</span></p>
+<p>So it’s clear that the TMR system is more reliable than the simplex
+system, if <span class="math inline">\(R_m &gt; 0.5\)</span>.</p>
+<p>The behavior of the reliability of these two systems is shown in the
+following graph:</p>
+<figure>
+<img src="../images/04/graph1.png" width="400"
+alt="TMR vs Simplex - Taken from Siewiorek et al. 1998" />
+<figcaption aria-hidden="true">TMR vs Simplex - Taken from Siewiorek et
+al. 1998</figcaption>
+</figure>
+<p>Focusing on the MTTF, we can get with ease that, for the simplex
+system, the MTTF is <span
+class="math inline">\(\frac{1}{\lambda}\)</span>, while for the TMR
+system is <span class="math inline">\(\frac{3}{2\lambda} -
+\frac{2}{3\lambda} = \frac{5}{6\lambda}\)</span>, which is lower than
+the MTTF of the simplex system.</p>
+<p>In conclusion, we can state that:</p>
+<ul>
+<li>the <strong>TMR system</strong> is worst than the <strong>simplex
+system</strong> in terms of <strong>MTTF</strong>;</li>
+<li>the <strong>TMR system</strong> is better than the <strong>simplex
+system</strong> in terms of <strong>reliability</strong>, for the first
+6000 hours;</li>
+<li>the <strong>TMR system</strong> with a reliability above <span
+class="math inline">\(0.8\)</span> lasts <span
+class="math inline">\(66%\)</span> longer than the <strong>simplex
+system</strong>.</li>
+</ul>
+<figure>
+<img src="../images/04/graph2.png" width="400"
+alt="TMR vs Simplex - Taken from Siewiorek et al. 1998" />
+<figcaption aria-hidden="true">TMR vs Simplex - Taken from Siewiorek et
+al. 1998</figcaption>
+</figure>
+<p>The <em>S-shaped</em> curve is typical of the <strong>redundant
+systems</strong>: above the <strong>knee point</strong>, the system is
+more reliable than the simplex system, while below the <strong>knee
+point</strong>, the system doesn’t get any advantage from the
+redundancy.</p>
+<h3 id="non-seriesparallel-systems">Non-series/parallel systems</h3>
+<p>Have a look at the following system:</p>
+<figure>
+<img src="../images/04/mixed.png" width="400"
+alt="Non-series/parallel system - Taken from Siewiork et al. 1992" />
+<figcaption aria-hidden="true">Non-series/parallel system - Taken from
+Siewiork et al. 1992</figcaption>
+</figure>
+<p>The system will operate correctly if exists a path from the input to
+the output that doesn’t contain any faulty component. The reliability is
+computed expanding around one module <span
+class="math inline">\(m\)</span>:</p>
+<p><span class="math display">\[R_{sys} = R_B \cdot P(\text{system
+works} | B) + (1 - R_B) \cdot P(\text{system works} |
+\overline{B})\]</span></p>
+<p>We can visualize this expansion trough the following figure:</p>
+<figure>
+<img src="../images/04/expanded.png" width="400"
+alt="Non-series/parallel system - Taken from Siewiork et al. 1992" />
+<figcaption aria-hidden="true">Non-series/parallel system - Taken from
+Siewiork et al. 1992</figcaption>
+</figure>
+<p>We can also parallelize the system, reaching the following schema
+where all the possible paths are in parallel:</p>
+<figure>
+<img src="../images/04/parallelized.png" width="400"
+alt="Non-series/parallel system - Taken from Siewiork et al. 1992" />
+<figcaption aria-hidden="true">Non-series/parallel system - Taken from
+Siewiork et al. 1992</figcaption>
+</figure>
+<h4 id="upper-bound-of-the-system-reliability">Upper bound of the system
+reliability</h4>
+<p>Then we define the <strong>upper bound</strong> as <span
+class="math inline">\(R_{sys} \leq 1 - \prod_{i=1}^n (1-R_{\text{path
+i}})\)</span>; we cannot compute the exact value of the reliability of
+the system, because <strong>paths are not independent</strong>, meaning
+that the failure of a single module can affect the reliability of more
+than one path. The upper bound of the system we took as example is <span
+class="math inline">\(R_{sys} \leq 1 - (1 - R_AR_BR_CR_D)\cdot(1 -
+R_AR_ER_D)\cdot(1-R_FR_CR_D)\)</span></p>
+<h4 id="lower-bound-of-the-system-reliability">Lower bound of the system
+reliability</h4>
+<p>The <strong>lower bound</strong> is the <strong>minimal cut
+set</strong> of the system, which is the list of components such that
+the removal of any component from this set, will cause the system to
+change its state from working to failed.</p>
+<p>In the example, the minimal cut sets are <span
+class="math inline">\(\{D\}, \{A,F\}, \{E,C\},\{A,C\},
+\{B,E,F\}\)</span>, and the lower bound can be computed as <span
+class="math inline">\(R_{sys} \geq\prod_{i=1}^n R_{\text{cut set
+i}}\)</span>, which lead to <span class="math inline">\(R_{sys} \geq
+(1-(1-R))\cdot(1-(1-R)^2)^3\cdot(1-(1-R)^3)\)</span></p>
+<h2 id="fault-trees">Fault Trees</h2>
+<p>Fault Trees are a graphical representation of the system, that shows
+the possible paths that lead to the failure of the system. The system is
+represented as a <strong>root node</strong>, which represents the
+<strong>top event</strong> in terms of status (e.g. system failure), and
+the <strong>leaves</strong> of the tree represent the <strong>basic
+events</strong> that can lead to the top event. The analysis of the tree
+is based on evaluating the <strong>probability of occurrence of the top
+event</strong>, in terms of the <strong>probability of occurrence of the
+basic events</strong>.</p>
+<figure>
+<img src="../images/04/faultTree.png" width="400" alt="Fault Tree" />
+<figcaption aria-hidden="true">Fault Tree</figcaption>
+</figure>
+<h3 id="logical-gates">Logical gates</h3>
+<p>The basic events are connected through <strong>logical
+gates</strong>, that are used to combine the basic events in order to
+get the top event. The most common gates are:</p>
+<ul>
+<li><strong>AND gate</strong>: the top event occurs if all the basic
+events occur;</li>
+<li><strong>OR gate</strong>: the top event occurs if at least one of
+the basic events occurs;</li>
+<li><strong>K-of-N gate</strong>: the top event occurs if at least <span
+class="math inline">\(K\)</span> of the <span
+class="math inline">\(N\)</span> basic events occur.</li>
+</ul>
+<p>Conventionally, the logical value <strong>true</strong> corresponds
+to a <strong>failure</strong>, while the logical value
+<strong>false</strong> corresponds to a <strong>success</strong>: the
+system is working if the top event is <strong>false</strong>, otherwise
+the system is failed.</p>
             </div>
     </div>
   </div>

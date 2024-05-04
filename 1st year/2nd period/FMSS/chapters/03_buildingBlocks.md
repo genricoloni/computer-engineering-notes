@@ -235,7 +235,7 @@ In **asynchronous distributed systems**, where no timing assumptions are made, m
 
 Let's observe the following figure:
 
-![Clock synchronization](../images/03/clocksyn.png){ width=400px}
+![Clock synchronization](../images/03/clocksyn.png){width=400px}
 
 Without loss of generality, we can state that clock($A$) $ < $ clock($B$) $, and assume $C$ as faulty. Assume that $A$ and $B$ observe the same value of C: we have a **non Byzantine failure**, with processes that may obtain different values from the faulty process.
 

@@ -2,3 +2,4 @@
 01_concepts.md
 02_redundancy.md
 03_buildingBlocks.md
+04_DepEval.md
