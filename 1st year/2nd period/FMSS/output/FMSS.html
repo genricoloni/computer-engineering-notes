@@ -527,11 +527,24 @@ Loni</p></li>
         <li><a href="#non-seriesparallel-systems"
         id="toc-non-seriesparallel-systems">Non-series/parallel
         systems</a></li>
+        <li><a href="#fault-trees" id="toc-fault-trees">Fault
+        Trees</a></li>
+        <li><a href="#failure-mode-and-effect-analysis"
+        id="toc-failure-mode-and-effect-analysis">Failure Mode and
+        Effect Analysis</a></li>
+        <li><a href="#fmea-with-fault-trees"
+        id="toc-fmea-with-fault-trees">FMEA with Fault Trees</a></li>
         </ul></li>
-        <li><a href="#fault-trees" id="toc-fault-trees">Fault Trees</a>
+        <li><a href="#state-based-models"
+        id="toc-state-based-models">State-based models</a>
         <ul>
-        <li><a href="#logical-gates" id="toc-logical-gates">Logical
-        gates</a></li>
+        <li><a href="#representing-the-system-state"
+        id="toc-representing-the-system-state">Representing the system
+        state</a></li>
+        <li><a href="#random-process" id="toc-random-process">Random
+        process</a></li>
+        <li><a href="#markov-chains" id="toc-markov-chains">Markov
+        Chains</a></li>
         </ul></li>
         </ul></li>
         </ul>
@@ -2484,7 +2497,7 @@ class="math inline">\(\{D\}, \{A,F\}, \{E,C\},\{A,C\},
 class="math inline">\(R_{sys} \geq\prod_{i=1}^n R_{\text{cut set
 i}}\)</span>, which lead to <span class="math inline">\(R_{sys} \geq
 (1-(1-R))\cdot(1-(1-R)^2)^3\cdot(1-(1-R)^3)\)</span></p>
-<h2 id="fault-trees">Fault Trees</h2>
+<h3 id="fault-trees">Fault Trees</h3>
 <p>Fault Trees are a graphical representation of the system, that shows
 the possible paths that lead to the failure of the system. The system is
 represented as a <strong>root node</strong>, which represents the
@@ -2498,7 +2511,7 @@ basic events</strong>.</p>
 <img src="../images/04/faultTree.png" width="400" alt="Fault Tree" />
 <figcaption aria-hidden="true">Fault Tree</figcaption>
 </figure>
-<h3 id="logical-gates">Logical gates</h3>
+<h4 id="logical-gates">Logical gates</h4>
 <p>The basic events are connected through <strong>logical
 gates</strong>, that are used to combine the basic events in order to
 get the top event. The most common gates are:</p>
@@ -2516,6 +2529,267 @@ to a <strong>failure</strong>, while the logical value
 <strong>false</strong> corresponds to a <strong>success</strong>: the
 system is working if the top event is <strong>false</strong>, otherwise
 the system is failed.</p>
+<h4 id="minimal-cut-sets">Minimal Cut Sets</h4>
+<p>A cut is identified as a set of events such that, according to the
+logic showed in the tree, leads to the top event. Let’s take as example
+the following tree:</p>
+<figure>
+<img src="../images/04/tree.png" width="400" alt="Fault Tree example" />
+<figcaption aria-hidden="true">Fault Tree example</figcaption>
+</figure>
+<p>The cut sets are <span class="math inline">\(\{1\}, \{2\}, \{G1\},
+\{5\}\)</span>, and the minimal cut sets are <span
+class="math inline">\(\{1\}, \{2\}, \{3,4\}, \{5\}\)</span>. To estimate
+the probability of the root event, the probabilities of the occurrence
+of every set are computed and combined.</p>
+<p>For this purpose, we can define <span
+class="math inline">\(Q_s(t)\)</span> as the probability that all the
+components in the minimal cut set <span class="math inline">\(s\)</span>
+are faulty, and it’s computed as <span class="math inline">\(Q_s(t) =
+\prod_{i \in s} Q_i(t)\)</span>, having <span
+class="math inline">\(Q_i(t)\)</span> the probability that the component
+<span class="math inline">\(i\)</span> is faulty. The numerical solution
+for the Fault Tree is performed by computing the probability of
+occurrence for each cut, and then combining those probabilities, to
+estimate the probability of the top event.</p>
+<h4 id="multiple-appearances-of-the-same-component">Multiple appearances
+of the same component</h4>
+<p>In the case of multiple appearances of the same component, the
+independent event assumption is violated; however, we can still compute
+the probability of the top event: if a component <span
+class="math inline">\(C\)</span> appears multiple times in the Fault
+Tree, then:</p>
+<p><span class="math display">\[Q_s(t) = Q_{s|C \text{ is
+faulty}}(t)\cdot Q_C(t) + Q_{s|C \text{ is working}}(t)\cdot (1 -
+Q_C(t))\]</span></p>
+<p>where <span class="math inline">\(Q_{s|C \text{ is
+faulty}}(t)\)</span> is the system reliability when the component <span
+class="math inline">\(C\)</span> is faulty, and <span
+class="math inline">\(Q_{s|C \text{ is working}}(t)\)</span> is the
+system reliability when the component <span
+class="math inline">\(C\)</span> is working.</p>
+<h4 id="fault-tree-analysis">Fault Tree analysis</h4>
+<p>Use of Fault Tree involves defining the top event, which is the
+undesired outcome, and then identifying the basic events that can lead
+to the top event, as a cut set. The analysis of a Fault Tree includes
+also the need of determining the failure probability of basic events, of
+the minimal cut sets, and the single points of failures for the system,
+that corresponds to a cut set with only one component.</p>
+<h3 id="failure-mode-and-effect-analysis">Failure Mode and Effect
+Analysis</h3>
+<p>The <strong>FMEA</strong> is a failure analysis technique used to
+identify the risk of a failure in a system, or a component also; it
+involves analyzing the vulnerability of a system to a single failure,
+and required knowledge on how these potential failures can combine with
+each other, which are the consequences of these failures and possible
+actions to be taken in order to prevent these failures.</p>
+<p>The technique is based on the <strong>Risk Priority Number
+(RPN)</strong>, which is computed considering the
+<strong>severity</strong> of the failure, the
+<strong>occurrence</strong> of the failure, and the
+<strong>detectability</strong> of the failure.</p>
+<h4 id="the-fmea-table">The FMEA table</h4>
+<p>To ensure dependability, a system’s functionality must be identified,
+along with its potential failures and failures modes. A table is
+created: it should be created detailing each failure mode, its potential
+effects on components and system, and a severity ranking from 1 to
+10.</p>
+<p>For each cause of failure, a list of the current process controls is
+created, with details on tests, procedures, or mechanism that might
+prevent the cause from happening, reducing the probability that it will
+occur, or detect the failure before it causes a problem, before the
+customer is affected; a <strong>rank dection rating</strong> is also
+computed, from 1 to 10.</p>
+<p>In the following figure, an example of an FMEA table for an ATM
+system is shown:</p>
+<figure>
+<img src="../images/04/FMEA-table.png" width="400" alt="FMEA table" />
+<figcaption aria-hidden="true">FMEA table</figcaption>
+</figure>
+<h4 id="the-rpn">The RPN</h4>
+<p>The <strong>Risk Priority Number (RPN)</strong> is computed as the
+product of the <strong>severity</strong>, <strong>occurrence</strong>,
+and <strong>detection</strong> rankings, and it’s used to prioritize the
+failures that need to be addressed first. The RPN is computed as <span
+class="math inline">\(RPN = S \cdot O \cdot D\)</span>, and the higher
+the RPN, the higher the priority of the failure.</p>
+<p>In conclusion, FMEA helps ranking potential failures and identify
+recommended actions, such as additional controls, to improve the
+system’s detection and prevention capabilities. It enables the
+association of a cause, such as a simple component failure, with its
+effect on the system, and helps in identifying the most critical
+failures that need to be addressed first.</p>
+<h3 id="fmea-with-fault-trees">FMEA with Fault Trees</h3>
+<p>The FMEA can be used in combination with Fault Trees to identify the
+most critical failures that need to be addressed first: the first is
+used to analyzes the vulnerability of the system due to a single
+failure, while the latter describes scenarios where an event occurs due
+to the combination of multiple failures.</p>
+<h2 id="state-based-models">State-based models</h2>
+<p>These models are used for dependability evaluation of systems that
+can be described in terms of states, considering that the reliability of
+these systems depends on the <strong>frequency</strong> and
+<strong>duration</strong> of the faults in the system. This approach is
+different from, as example, the series/parallel models, because the
+state-based enumerates all the possible states of the system, and can be
+employed for evaluating both reliability and availability, providing a
+more detailed analysis of the system.</p>
+<p>State-based models are used in dependability evaluation to
+characterize the changes of the system’s state over time: each state
+represents a different combination of both failed and working
+components, and the transitions between states are caused by the
+occurrence of faults in the system. Obviously, probabilities of failures
+and repairs are key factors in the analysis of these models, in order to
+characterize states and transitions over time.</p>
+<h3 id="representing-the-system-state">Representing the system
+state</h3>
+<p>The most used graphical representation for state-based models are
+<strong>graphs</strong>, where nodes represent states of the system, and
+edges represent transitions between states: in particular, labels on the
+edges represent the number of working and failed components in the
+system, and the probabilities of transitions. Consider the following
+example:</p>
+<figure>
+<img src="../images/04/singleComponent.png" width="400"
+alt="State-based model" />
+<figcaption aria-hidden="true">State-based model</figcaption>
+</figure>
+<p>The system is composed by a single component, and the states are
+represented by the number of failed components in the system. The
+transitions between states depends on <span
+class="math inline">\(p_f\)</span>, which is the <strong>probability of
+failure</strong>, while <span class="math inline">\(p_r\)</span> is the
+<strong>probability of repair</strong>.</p>
+<p>We can distinguish between <strong>reliability model</strong> and
+<strong>availability model</strong>: the first is used to evaluate the
+probability that the system is in a working state at time <span
+class="math inline">\(t\)</span>, while the availability model is used
+to evaluate the probability that the system is in a working state and is
+available to perform its functions at time <span
+class="math inline">\(t\)</span>.</p>
+<h3 id="random-process">Random process</h3>
+<p>In probability theory, a random process is a <strong>collection of
+random variables</strong> indexed by time, representing the evolution of
+a system over time, such as the toss of a coin. Following the same
+logic, when we talk about dependability measures, we refer to variables
+that represent system’s value of the state that changes randomly over
+time.</p>
+<p>We lastly define the <strong>state space</strong> of the system as
+the set of all possible states of the system.</p>
+<h3 id="markov-chains">Markov Chains</h3>
+<p>A <strong>Markov Chain</strong> is a state-based model that describes
+the evolution of a system over time, where the probability of the system
+to be in a certain state at time <span class="math inline">\(t\)</span>
+depends only on the state of the system at time <span
+class="math inline">\(t-1\)</span>. This property is called is called
+<strong>Markov property</strong>, and processes that satisfy this
+property are called <strong>Markov processes</strong>.</p>
+<h4 id="insights-on-markov-property">Insights on Markov property</h4>
+<p>The equation that describes the Markov property is:</p>
+<p><span class="math display">\[P(X_{t+1} = j | X_t = i, X_{t-1} =
+i_{t-1}, \ldots, X_0 = i_0) = P(X_{t+1} = j | X_t = i)\]</span></p>
+<p>which means that state of the process at time <span
+class="math inline">\(t+1\)</span> depends only on the state of the
+process at time <span class="math inline">\(t\)</span>, <strong>being
+independent from all previous states</strong>. This is also the basic
+assumption of the Markov Chain model.</p>
+<h4 id="transition-probabilities">Transition probabilities</h4>
+<p>We define <strong>transition probability</strong> as the probability
+of the system to move from state <span class="math inline">\(i\)</span>
+to state <span class="math inline">\(j\)</span> in one time unit, and
+it’s denoted as <span class="math inline">\(p_{ij}\)</span>, and the
+<strong>Steady-State transition Probability</strong> as those transition
+probabilities such that, for any pair of states <span
+class="math inline">\(i\)</span> and <span
+class="math inline">\(j\)</span>, the probability of the system to be in
+state <span class="math inline">\(j\)</span> at time <span
+class="math inline">\(t+1\)</span> is the same as the probability of the
+system to be in state <span class="math inline">\(j\)</span> at time
+<span class="math inline">\(t\)</span>; in other words, the transition
+probabilities are constant over time.</p>
+<h4 id="definition-of-a-markov-chain">Definition of a Markov Chain</h4>
+<p>A stochastic process is a Markov Chain if it satisfies the Markov
+property, and if the transition probabilities are constant over time. A
+Markov chain is called <strong>homogeneous</strong> if the transition
+probabilities are constant over time, so if it satisfies the property of
+steady-state transition probabilities; otherwise, it’s called
+<strong>non-homogeneous</strong>.</p>
+<h4 id="transition-matrix">Transition matrix</h4>
+<p>A Markov chain is <strong>finite-state</strong> if the number of
+states is finite; in this case transitions are representable as a
+matrix, called <strong>transition matrix</strong>.</p>
+<figure>
+<img src="../images/04/transitionMatrix.png" width="400"
+alt="Transition matrix" />
+<figcaption aria-hidden="true">Transition matrix</figcaption>
+</figure>
+<p>Notations represent:</p>
+<ul>
+<li><span class="math inline">\(n\)</span> as the number of states;</li>
+<li><span class="math inline">\(i\)</span> and <span
+class="math inline">\(j\)</span> as the states of the system;</li>
+<li><span class="math inline">\(p_{ij}\)</span> as the probability of
+moving from state <span class="math inline">\(i\)</span> to state <span
+class="math inline">\(j\)</span> in one time unit;</li>
+</ul>
+<p>The transition matrix satisfies the following property: &gt; let
+<span class="math inline">\(u = [1, 1, \ldots, 1]^T\)</span> be a vector
+of ones, then <span class="math inline">\(P\cdot u = u\)</span>.</p>
+<p>This follows by the condition that the sum of the elements in each
+row of the matrix is equal to 1, and represents the probability to
+moving from a state <span class="math inline">\(i\)</span> into any
+other state.</p>
+<p>Non-negative matrices where the property <span
+class="math inline">\(P\cdot u = u\)</span> holds are called
+<strong>stochastic matrices</strong>.</p>
+<p>The matrix can be associated with ease to a graph, where the nodes
+represent the states of the system, and the edges represent the
+transitions between states.</p>
+<h4 id="theorem-for-discrete-time-markov-chains">Theorem for
+Discrete-Time Markov Chains</h4>
+<p>For each pair of states <span class="math inline">\(i\)</span> and
+<span class="math inline">\(j\)</span>, with <span
+class="math inline">\(n\geq 0\)</span>, then <span
+class="math inline">\(P\{X_{n+1} = j | X_n = i\} = P\{X_n = j | X_0 =
+i\} \forall t \geq 0\)</span>.</p>
+<p>From this theorem, we can derive every steady-state probability of
+the system after <span class="math inline">\(n\)</span> transitions:</p>
+<p><span class="math display">\[ p_{ij}^{(n)} = P\{X_n = j | X_0 = i\}
+\]</span></p>
+<p>In particular, we define:</p>
+<ul>
+<li><span class="math inline">\(p_{ij}^{(0)} = P\{X_0 = j | X_0 = i\} =
+\delta_{ij}\)</span>, where <span
+class="math inline">\(\delta_{ij}\)</span> is the <strong>Kronecker
+delta</strong>;</li>
+<li><span class="math inline">\(p_{ij}^{(1)} = P\{X_1 = j | X_0 = i\} =
+p_{ij}\)</span>;</li>
+<li><span class="math inline">\(p_{ij}^{(n)} = P\{X_n = j | X_0 =
+i\}\)</span>.</li>
+</ul>
+<p>Following properties are also valid:</p>
+<ul>
+<li><span class="math inline">\(0 \leq p_{ij}^{(n)} \leq 1 \forall
+i,j\)</span>;</li>
+<li><span class="math inline">\(\sum_{j=1}^n p_{ij}^{(n)} = \sum_{j=1}^n
+P\{X_n = j | X_0 = i\} = 1 \forall i\)</span>.</li>
+</ul>
+<h4 id="chapman-kolmogorov-theorem">Chapman-Kolmogorov theorem</h4>
+<p>This theorem states that <strong>for each pairs of states <span
+class="math inline">\(i\)</span> and <span
+class="math inline">\(j\)</span>, and for each <span
+class="math inline">\(n,m \geq 1\)</span>, then <span
+class="math inline">\(p_{ij}^{(n+m)} = \sum_{k=1}^n
+p_{ik}^{(n)}p_{kj}^{(m)}\)</span></strong>.</p>
+<p>Knowing that <span class="math inline">\(P^{(0)} = I\)</span>, where
+<span class="math inline">\(I\)</span> is the identity matrix, <span
+class="math inline">\(P^{(1)} = P\)</span>, and <span
+class="math inline">\(P^{(n)} = P^n\)</span>, we can prove that <span
+class="math inline">\(P^{(n+m)} = P^n\cdot P^m\)</span>. Since <span
+class="math inline">\(P^{(k)} = P^{(k-1)}\cdot P^{(1)} = P^{(k-1)}\cdot
+P\)</span>, we can state that <span class="math inline">\(P^{(n)} =
+P^n\)</span>, with <span class="math inline">\(P^{(n)}\)</span> being a
+stochastic matrix.</p>
             </div>
     </div>
   </div>
