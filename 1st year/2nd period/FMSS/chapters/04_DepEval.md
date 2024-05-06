@@ -324,3 +324,72 @@ Following properties are also valid:
 This theorem states that **for each pairs of states $i$ and $j$, and for each $n,m \geq 1$, then $p_{ij}^{(n+m)} = \sum_{k=1}^n p_{ik}^{(n)}p_{kj}^{(m)}$**.
 
 Knowing that $P^{(0)} = I$, where $I$ is the identity matrix, $P^{(1)} = P$, and $P^{(n)} = P^n$, we can prove that $P^{(n+m)} = P^n\cdot P^m$. Since $P^{(k)} = P^{(k-1)}\cdot P^{(1)} = P^{(k-1)}\cdot P$, we can state that $P^{(n)} = P^n$, with $P^{(n)}$ being a stochastic matrix.
+
+#### Sojourn time
+
+Given a random variable $T_i$, then we define:
+
+$$P\{T_i = n\} = p_{ii}^{(n-1)}(1-p_{ii})$$
+
+as the probability that, when system enters in state $i$, it will stay in state $i$ for $n$ transitions. The proposed formula recall the **geometric distribution**, of parameter $p_{ii}$, with a mean value of $\frac{1}{1-p_{ii}}$.
+
+#### Probability distribution at time $t$
+
+We're able to compute the probability to be in a given state after a certain number of transitions: for this reason, a **state occupancy vector** at time $t$ is defined, as $\pi(t) = [\pi_0(t), \pi_1(t), \ldots, \pi_n(t)]$, where $\pi_i(t)$ is the probability that $\pi \{X_t = i\}$ or, in other words, that system is in state $i$ at time $t$. We also have the **initial state occupancy vector** $\pi(0)$, which is the probability that the system is in state $i$ at time $0$: from these two vectors we can define any state occupancy vector for any time $\in [0,t]$.
+
+A Markov process can be specified in terms of the **state occupancy vector $\pi(t)$**, and the **transition matrix $P$**, such that $\pi(t) = \pi(0)\cdot P^t$.
+
+#### Classification of states
+
+A state $j$ is called **accessible** from a state $i$ if there exists a sequence of transitions that leads from state $i$ to state $j$ or, simply, if $p_{ij_{(t)}} > 0$ for some $t \geq 0$, and it's denoted as $i \rightarrow j$.
+
+A Markov chain is said to be **irreducible** if, for each pair of states $i$ and $j$:
+
+- state $i$ is accessible from state $j$ in a finite number of transitions;
+- state $j$ is accessible from state $i$ in a finite number of transitions.
+
+An **irreducible** Markov chain is a chain containing only equivalence class of communicating states.
+
+A state can also be:
+
+- **recurrent**, if $\forall i,j$ $i\rightarrow j$ implies $j\rightarrow i$, which means that the process will move again to state $i$ with probability 1;
+- **transient**, if $\exist j \ne i$ such that $i\rightarrow j$ but $j\nrightarrow i$, which means that the process will never return to state $i$.
+- **absorbing**, if $p_{ii} = 1$, implying the fact that it's also a recurrent one.
+
+Given a recurrent state, let $d$ the **GCM** of all integers $m$ such that $P_{ii}^{(m)} > 0$:
+
+- a recurrent state is **periodic** if $d > 1$;
+- a recurrent state is **aperiodic** if $d = 1$. In other words, if it's possible to move to the same state in one step, then $d=1$.
+- a state is aperiodic also if $p_{ii} > i$.
+
+#### Steady-state behavior
+
+We now enunciate a theorem that states the steady-state behavior of a Markov Chain:
+
+> For **irreducible** and **aperiodic** Markov Chains, $\forall j$, $\lim_{t\to\infty} \pi_j(t)$ exists and is independent from the initial state $\pi(0)$.
+
+The steady-state behavior of the Markov Chain is given by the **fixpoint** of equation $\pi(t) = \pi(t-1)\cdot P$, whit $\sum_j \pi_j = 1$.
+
+For an irreducible Markov Chain with periodic states, the actual periodic state oscillates periodically, and the limiting behavior does not exists due to the probability of the periodic state itself. We calculate the **time-average state space distribution** as $\Pi = \lim_{t\to\infty} \frac{1}{t}\sum_{\tau=1}^{t} \pi^{(i)}(\tau)$.
+
+### Continuous-Time Markov Chains
+
+In a continuous-time Markov Chain, state transitions can occur at any time, with an assigned transition rate. In this context, the Markov property assumes that the time spent in a state doesn't affect the probability distribution of the next step, or the remaining time in the same state before the next transition.
+
+The notation used is to denote the transition rate is $\{X_t\}$, with $t \in T \subseteq \mathbb{R}$, and the transition rate from state $i$ to state $j$ is denoted as $q_{ij}$, with $q_{ii} = -\sum_{j\ne i} q_{ij}$. We consider steady-state transition probability for each $t_i \in T$, and for all $\tau \ge 0$:
+
+$$P\{X_{t+\tau} = j | X_t = i\} = P\{X_{\tau} = j | X_0 = i\}$$
+
+#### Time spent in a state
+
+The time spent in a state is denoted as $T_i$, and it's a random variable that follows an **exponential distribution**, whose parameter $e^{(-ai)}$ used to characterize the behavior of the Markov Chain. In this way, the Markov Chain is able to **naturally fits** the exponential distribution, and the **memoryless property** of the exponential distribution is a direct consequence of the Markov property, leading to an **exponential distribution of inter-arrival of failures**.
+
+Depending on the value of the transition rate, we can classify the states as:
+
+- **absorbing**, if $ai = 0$;
+- **instantaneous**, if $ai = \infty$;
+- **stable** otherwise.
+
+#### Specification of a Continuous-Time Markov Chain
+
+A CTMC can be described by using its **occupancy vector** $\pi(t)$, which represents the probability that the system is in state $i$ at time $t$, and the **transition rate matrix** $Q$, which represents the transition rates between states. The latter is defined as $q_{ij}$being the rate of moving from state $i$ to state $j$, and $q_{ii} = -\sum_{j\ne i} q_{ij}$, under the assumption that $i \ne j$. The matrix $Q$ is a **stochastic matrix**, where the sum of the elements in each row is equal to 0.
