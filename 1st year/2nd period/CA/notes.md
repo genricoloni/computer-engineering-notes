@@ -306,3 +306,93 @@ The main control unit is responsible for this operation: knowing which instructi
 - set the multiplexer to correctly write into register file:
 - set the multiplexer to correctly write into the program counter;
 - set the signals to read and write from memory
+
+#### Instruction format
+
+The first principle to have in mind id **simplicity favors regularity**: the instruction format should be as simple as possible, to make the decoding process easier.
+
+- first register operand is always in position $[9:5]$ for both R-type, load and store instructions;
+- the other register operand is always in position $[20:16]$ for R-type instructions, and in position $[4:0]$ when is the destination register;
+- another operand can also be a 19-bit offset, for compare and branch 0-bit, or a 9-bit offset for load and store instructions;
+- destination register for R-type instructions and for loads is always in position $[4:0]$;
+
+These information are used by the main control unit to set the multiplexers and the ALU.
+
+#### Instruction execution
+
+These are the phases of an instruction execution:
+
+- fetch instruction from memory;
+- decode the instruction and read registers;
+- execute the instruction;
+- access memory, if needed;
+- write the result into a register (if necessary).
+
+In the slides, execution of the 3 previous instructions has been described. I won't go into details because I think it' possible to describe with ease the execution of any instruction, given the information above. However, if you want more details, in particular for how the CPU circuit is involved, feel free to look at the slides.
+
+### Why a single cycle CPU is not feasible - Slide "CPU - part 2"
+
+Looking at the previous circuit, let's identify the longest path in the circuit, in order to determine the clock cycle.
+
+- Store and Load executions use 5 functional unities in series (instruction memory, register file, ALU, data memory, register file);
+- ADD uses 4 functional unities in series (instruction memory, register file, ALU, register file);
+- CBZ also uses 4 functional unities in series (instruction memory, register file, sign extension, ALU).
+
+Although the CPI is 1, the overall performance of a single-cycle implementation is likely to be poor, since the clock cycle is too long. This is due to the fact that the longest path in the circuit determines the clock cycle, and the clock cycle must be long enough to allow the slowest path to complete.
+
+### Pipelining - Slide "CPU - part 2"
+
+Pipelining is a technique used to increase the throughput of a CPU, by allowing multiple instructions to be executed in parallel. The idea is to divide the execution of an instruction into multiple stages, and to execute multiple instructions in parallel, each at a different stage.
+
+Using a synchronous pipeline, the clock causes all output to be transferred to the next units, so since it occurs at fixed intervals, we have to consider the time needed to complete the slowest stage.
+
+We can experimentally measure a certain speedup for the total time of execution for a group of instructions, but on the contrary, the time needed to execute a single instruction is increased, because of the fixed time needed to complete the slowest stage, which slows down the fastest stages.
+
+The results can be seen in the following picture:
+
+![Pipelining](./img/CPU4.png)
+
+### Pipeline hazards - Slide "CPU - part 2"
+
+- write-back stage, where the result of the operation is written in the register file, interfering with the execution of another instruction;
+- the selection of the next value for Program Counter, choosing from the incremented PC and the branch address possibly calculated during the execution.
+
+#### Structural hazards
+
+Hardware cannot support the combination of instructions that are to be executed in the same clock cycle. Suppose we had a sigle memory, instead of two: if the pipeline had a fourth instruction, we'd see that in the same clock cycle: the first instruction is reading from memory, and the fourth is fetching another instruction. WIthout two memories, Instruction and Data memory, the pipeline could have a structural hazard.
+
+We define structural hazard as a situation where two instructions are trying to use the same hardware resource at the same time.
+
+#### Data hazards
+
+Occurs when pipeline must be stalled because one step has to wait for another to complete. For example:
+
+```assembly
+ADD X1, X2, X3    #X1 is the destination register
+SUB X4, X1, X5    #X1 is the source register
+```
+
+Without intervention, a **data hazard** will occur, stalling the pipeline. We'll waste three clock cycles, because the second instruction will write the result only in the fifth stage.
+
+How to resolve this issue? **Forwarding**: we don't actually need to wait for the entire instruction to be completed, but only for the result to be written in the register file. We can forward the result directly from the ALU to the ALU, so that the second instruction can be executed in the next clock cycle. This is done by adding some multiplexers in the circuit, to select the right input for the ALU.
+
+However, this solution cannot be applied for a **load-use hazard**, where the second instruction uses the result of the first instruction, which is a load instruction. In this case, we have to stall the pipeline, because we don't know the result of the load instruction until the fifth stage.
+
+Another solution to resolve data hazards is to reorder the instructions, so that the second instruction is executed before the first one. As reference:
+
+```c
+a = b + e;    # ADD X3, X1, X2
+c = b + f;    # STUR X3, [X4, #24]
+```
+
+We can swap the two instructions, so that the second instruction is executed before the first one. This is possible because the two instructions are independent, and the result of the second instruction is not used by the first one.
+
+#### Control hazards and branch prediction
+
+These hazards arise from the need to decide the next instruction to be executed, basing this choice on the result of the current instruction.
+
+**Prediction** is the key to resolve this issue: the simple solution is to always choose the conditional branch, letting the pipeline to run at full speed; in this case, only when the branch is not taken the pipeline stalls. This is called **static prediction**.
+
+In reality, a **dynamic prediction** is used, based on the history of the branch. Accuracy can reach 95%, and the pipeline stalls only when the prediction is wrong: when this case occurs, pipeline control must ensure that the instructions that have been executed won't affect the final result, and that the pipeline can be restarted from the correct instruction.
+
+Deeper pipeline will have severer penalties for a wrong prediction, because the pipeline will have to be restarted from the beginning.
