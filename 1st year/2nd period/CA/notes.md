@@ -396,3 +396,363 @@ These hazards arise from the need to decide the next instruction to be executed,
 In reality, a **dynamic prediction** is used, based on the history of the branch. Accuracy can reach 95%, and the pipeline stalls only when the prediction is wrong: when this case occurs, pipeline control must ensure that the instructions that have been executed won't affect the final result, and that the pipeline can be restarted from the correct instruction.
 
 Deeper pipeline will have severer penalties for a wrong prediction, because the pipeline will have to be restarted from the beginning.
+
+Strategy used: a table is built, look up at the address of the instruction, and check if exist a previous execution of the same instruction and, if so, begin fetching new instructions from the same place of the last time (typical case of a loop). If the prediction appears to be wrong, the entry in the table is updated.
+
+### Pipeline datapath and control - Slide "CPU - part 2"
+
+To store the partial results of the operations within the pipeline, **pipeline registers** are used:
+
+![Pipeline registers](./img/CPU5.png)
+
+#### $\texttt{LDUR}$ instruction
+
+
+In the slides, execution with pipeline is described. It only differs from what seen before for the fact that the partial result is stored in the pipeline registers. The only thing worth to mention is the write-back stage, where the result is written in the register file: given the fact that there are no pipeline register for this final stage, the result is written in the register file only at the end of the clock cycle. How? First of all, we need to preserve the destination register used in the fetched instruction: to allow this, it is passed from the $\texttt{ID/EX}$ register to the $\texttt{MEM/WB}$ pipeline register used in the write-back stage, similar to how store passes the register value from the $\texttt{EX/MEM}$ register to the $\texttt{MEM/WB}$ register in the $\texttt{MEM}$ stage: this ensures that the correct register is updated with the loaded data during the write-back operation.
+
+#### Recap for pipeline stages
+
+Assume that PC is written on each clock, so no separated signal is needed; the same helds for the pipeline registers, that are written on each clock.
+
+1. **Instruction fetch**: the control signals to read an instruction from memory and to write the Program Counter, so no special signal is needed.
+2. **Instruction decode**: we need to select the correct register, so signal Reg2Loc is needed, that reads bits $[20:16]$ for R-type instructions, and $[4:0]$ for the destination register.
+3. **Execution/Addres calculation**: we need to select the correct operation for the ALU, so signal ALUOp is needed.
+4. **Memory access**: signals Branch, MemRead and MemWrite are needed to select the correct operation for the memory unit.
+5. **Write-back**: we need two control lines: MemToReg, which decides between sending the ALU results or the memory results to the register file, and RegWrite, which decides if the result has to be written in the register file.
+
+### Interrupts and exceptions - Slide "CPU - part 2"
+
+We define as exception any unexpected change in control flow, without distinguishing between the cause of the interruption. Specifically, we define as **interrupt** an exception caused by an external event.
+
+When an exception occurs, the CPU must save the address of the instruction into the Exception Link Register, and then transfers the control to the Operating system at a specific address. It performs some actions, such as services for the user,  and then it can terminate the previous program (in case of a fatal error) or resume the execution of the previous program, using the address saved in the ELR. This behavior can be determined only if the OS knows the **reason of the exception** and the address of the instruction that caused it. Two methods can be used to achieve this:
+
+- **single entry point**, with the OS that decodes the status register to understand the reason of the exception;
+- **vectored interrupts**: an index is used to refer to a table of addresses, where each address is the entry point for a specific exception.
+
+From the pipeline point of view, an interruption is seen as a control hazard, where the branch need to be flushed, and the address of the next instruction to be executed is changed.
+
+The circuit to manage the interruption is shown in the following image:
+
+![Interrupts](./img/CPU6.png)
+
+1. retrieve the address of the first instruction of the exception handler;
+2. flush the $\texttt{ID/EX}$ section;
+3. flush the $\texttt{EX/MEM}$ section;
+4. write the exception information in the status register $\texttt{ESR}$ e \texttt{ELR}.
+
+### Instruction Level Parallelism - Slide "CPU - part 2"
+
+Recap on techniques to accelerate single core performance:
+
+| Technique | Description | Limitation |
+|-----------|-------------|------------|
+|Pipelining | Divide the execution of an instruction into multiple stages | Issue rate, stalls, depth of pipeline|
+|Super-pipelining | Inter-clock cycle pipelining | Clock skew, slower ALU, stalls |
+| Super-Scalar | Execute multiple instructions in parallel | Hazard resolution (even with compiler) |
+| VLIW/EPIC | Each instruction specifies multiple scalar operations | Packing |
+| Vector | Execute the same operation on multiple data | Data dependency, data alignment, AVX extensions, GPU|
+
+#### Static vs Dynamic issue
+
+Static multiple issues processors partially rely on the compiler to determine the number and sequence of instructions that can be issued in a clock cycle, while dynamic multiple issues processors use the hardware to determine it at runtime. Static issue systems rely on the compiler to handle data and control hazards, while dynamic ones use hardware techniques to alleviate these hazards at execution time.
+
+#### A design for embedded systems
+
+Some embedded systems are able to issue two 64-bit instructions per cycle, using a specific design. To simplifying decoding and issuing, these processors restrict the layout of simultaneously issued instructions, requiring paired and 64-bit aligned instructions, with the ALU or the branch portion to appears first. If an instruction cannot be used, it is replaced with a NOP.
+
+Static multiple-issue processors may vary in how they manage data and control hazards, relying on compiler or hardware techniques to handle these hazards. In contrast, dynamic multiple-issue processors use hardware techniques to alleviate these hazards at execution time. Hazards often force the entire issue queue to stall, which can be costly in terms of performance: this reinforce the appearance of a large single instruction with multiple operations.
+
+#### Super-scalar processors
+
+In the simplest super-scalar processors, the processor decides how many instructions to issue in a clock cycle, given a liste of ordered instructions. Achieving good performance also depends on the capacity of the compiler to schedule instructions to avoid hazards and dependencies between instructions. Furthermore, there is no need to recompile the code to take advantage of the multiple issue capabilities of the processor, while some VLIW processors require the code to be recompiled when moved across different processors models.
+
+Dynamic pipeline scheduling chooses which instructions to execute next, possibly reordering them in order to avoid stalls; pipeline is divided into three major modules: instruction fetch and issue unit, multiple functional unit and a commit unit. In this way instructions are performed **asyncronously**, and in parallel. The order is guaranteed in the commit unit, exploiting the dynamic scheduling, which offers some advantages:
+
+- don't need a specific compiled version for a specific pipeline;
+- can handle those dependencies that are unknown at compile time;
+- allow the processor to tolerate unpredictable events, such as cache misses, executing other instructions in the meantime.
+
+The schema of a super-scalar processor is shown in the following image:
+
+![Super-scalar processor](./img/superScalar.png)
+
+- the first unit retrieves the instructions **in order**, and send them to the corresponding functional unit;
+- each unit has a **reservation station**, where the instruction is stored until all the operands are available. When all the operands are available, the instruction is sent to the functional unit and the result is calculated. Here the execution is **out of order**;
+- the result is then sent to the commit unit, and it stays there until the instruction is committed;
+- the buffer in the commit unit is called **Reorder Buffer**, and it is used to store the results of the instructions, in order to commit them in the right order.
+
+#### Register renaming
+
+In a super-scalar processor, the number of registers is increased, in order to avoid data hazards. This is done by renaming the registers, so that the same register can be used by multiple instructions at the same time. This is done by the **Reorder Buffer**, which stores the results of the instructions, and the **Register Alias Table**, which stores the mapping between the physical registers and the logical registers. This technique is particularly useful when the same register is used by multiple instructions at the same time, but without an actual data dependency. For example:
+
+```assembly
+ADD X1, X2, X3
+ADD X4, X5, X1
+```
+
+In this case, the second instruction can be executed in parallel with the first one, because the result of the first instruction is not used by the second one. This is possible because the register X1 is renamed, and the result of the first instruction is stored in a different register.
+
+Thus, these operations:
+
+```assembly
+OP R1, R2, R3
+OP R3, R2, R4
+OP R4, R3, R5
+OP R2, R4, R3
+OP R3, R2, R6
+```
+
+became:
+
+```assembly
+OP R1*, R2*, R3*
+OP R3*, R2*, R4*
+OP R4*, R3*, R5*
+OP R2*, R4*, R3**
+OP R3**, R2*, R6*
+```
+
+This is possible because the number of physical register is mich higher than the number of logical ones (1k vs 64); why don't we have the same number of physical and logical registers? Because the number of physical registers is limited by the number of bits used to address them: the number of bits reserved for the register address is limited and predefined, so the number of logical (also called architectural) registers is limited.
+
+A table is used to store the mapping between the physical and the logical registers, and it is called **Register Alias Table**. This table is used to store the mapping between the physical and the logical registers, and it is used to rename the registers. The table is updated every time an instruction is committed, and the physical register is freed.
+
+#### Speculative execution
+
+Speculative execution is a technique used to increase the performance of a processor, by executing an instruction before it is actually needed. This is done by predicting the outcome of a branch, and executing the instructions that follow the branch before the branch is actually executed. If the prediction is correct, the processor can continue the execution without any problem; if the prediction is wrong, the processor must discard the results of the instructions that have been executed, and restart the execution from the correct instruction.
+
+```c
+if (x > 3){
+  instruction_1;
+  instruction_2;
+} else {
+  instruction_3;
+  }
+instruction_4;
+```
+
+The processor starts to execute instruction of both branches and, in the commit phase, looks at the result of the compare instruction to decide which branch to commit, deleting all the effects of the other branch. Note that:
+
+- if an instruction has to raise an exception, this is not raised until the instruction is committed;
+- the rollback of the wrong branch doesn't leave traces in the architecture; however, it can leave traces in the microarchitecture, such as the cache. Look at the Spectre and Meltdown vulnerabilities for more information (just named during the lesson).
+
+### Multithreading - Slide "CPU - part 2"
+
+A thread is like a process, with its own state and program counter, which shares the same memory space with other threads. Hardware threads permit threads to share the same resources, such as the cache, the functional units, etc, using the same physical processor. Obviously, hardware must support this feature, and the OS must be able to manage the threads: change of context between processes can cost few thousands of cycles, while the change of context between threads can be instantaneous.
+
+#### Coarse-grained multithreading
+
+When a costly stall occurs, such as level 2 o 3 cache miss, the processor can switch to another thread, and continue the execution of the other thread. This is called **coarse-grained multithreading**, and relieves the fact that the time to switch between threads is almost negligible compared to the occurred stall. The main limitation of the model is the start-up cost of the pipeline, which is not negligible: for this reason, the coarse-grained multithreading is used only for long stalls. To better understand the concept, look at the following image:
+
+![Coarse-grained multithreading](./img/coarse.png)
+
+#### Fine-grained multithreading
+
+In this technique, switches between threads are made after each instruction, resulting in a **interleaved execution** of multiple threads. Round-robin scheduling is used, in order to skip any thread that is stalled at that clock cycle. The main advantage of this technique is that it can hide the throughput loss due to both long and short stalls, but the main disadvantage is that it slows down the execution of a single thread, because the pipeline is shared among multiple threads. An image that shows the concept is shown below:
+
+![Fine-grained multithreading](./img/fine-grained.png)
+
+#### Simultaneous multithreading
+
+This is a variation of fine-grained multithreading, that arises naturally when fine-grained multithreading is implemented on top of a multiple-issue dynamically scheduled processor. It exploits thread-level parallelism to hide long-latency events, increasing the usage of the functional components. Techniques such as register renaming, and dynamic scheduling allow multiple instructions from independent threads to be executed without regards of dependencies among them. The follow image offers a visual representation of the typical execution:
+
+![Simultaneously Multithreading](../CA/img/SMT.png)
+
+If applied in a out-of-order processor, *per-thread tables* for register renaming and separate PCs helps to avoid conflicts between threads and, at the same time, to increase the performance of the processor.
+
+### Intel i7 architecture - Slide "CPU - part 2"
+
+The Intel i7 architecture is a 64-bit architecture, with a 64-bit address space, and a 64-bit data path. It leverages **CISC** instructions set, so:
+
+- variable-length instructions;
+- complex semantics;
+- variable execution time;
+- complex addressing modes.
+- numerous accesses to memory.
+
+However, at $\mu$-architecture level, the processor is a **RISC** processor.
+
+We'll analyze the operation needed to execute a single instruction, referring its actual architecture.
+
+![Intel i7 architecture](./img/intel1.png)
+
+#### Instruction fetch
+
+Process uses a complex **multilevel branch predictor**, to achieve balance between speed and prediction accuracy(a wrong prediction causes a penalty of 17 cycles ), and a return address stack to speedup functions return. The unit is able to fetch 16 bytes from the instruction cache.
+
+#### Instruction decode
+
+The fetched 16 bytes are placed in the **predecoded instruction buffer**. These can be fused into a single instruction under certain condition, such as compare and branch, but they're able to speedup performance up to 10%. In every other case, instructions are splitted into individual x86 instructions, and placed in the **instruction queue**.
+
+#### $\mu$-operation decode
+
+The x86 instructions placed in the queue are translated into $\mu$-operations: they are simple RISC-V instructions, executable directly by the pipeline. The i7 has three simple decoders, and a complex decoder for those instructions that are translated into the equivalent sequence. Once translated, the $\mu$-operations are placed in 64-entries **$\mu$-operation buffer**.
+
+#### Loop stream detector
+
+A **loop stream detector** is used to detect loops, directly issuing the $\mu$-operations from the buffer, avoiding the use of the instruction fetch and decoder. Microfusion combines instructions and send them into the same reservation station, increasing the usage of the buffer. Note that these fusions produce smaller gains when dealing with integer operations, and larger gains when dealing with floating point operations.
+
+#### Basic instruction issue
+
+The process is similar to the one seen in the previous sections; up to four $\mu$-operations can be issued in a single clock cycle, and they are sent to the first Reorder Buffer available.
+
+#### Reservation stations
+
+The processor uses a centralized reservation station, shared by six functional units, thus up to six $\mu$-operations can be issued in a single clock cycle. The reservation station is used to store the $\mu$-operations until all the operands are available, and then they are sent to the functional units.
+
+#### $\mu$-operation execution
+
+Operations are executed by the single function units, and the results are sent back to any waiting reservation station, where they'll update the register as soon as the instruction is no longer speculative. At that time, the entry corresponding to the instruction in the Reorder Buffer is marked as completed.
+
+#### Commit
+
+When instructions are marked as completed:
+
+- pending writes in the register retirement unit are executed;
+- the entry in the Reorder Buffer is removed.
+
+### ARM Cortex-A53 architecture - Slide "CPU - part 2"
+
+The ARM Cortex-A53 is a 64-bit processor, with a 64-bit address space, and a 64-bit data path, using a RISC instruction set. The schema of the CPU is the following:
+
+![ARM Cortex-A53](./img/ARM1.png)
+
+#### Instruction fetch phase
+
+The **AGU** (Address Generation Unit) is used to calculate the address of the next instruction, exploiting Hybrid Predictor, Indirect predictor, and Return Stack Predictor in order to keep the instruction queue as full as possible. The instruction cache is 32KB, and it can fetch 64 bytes per cycle, which as 13 entries. The first three Fetch stages fetch intructions, while the fourth stage included an address generator that produces the next PC either by incrementing the last PC, or from one of the predictors.
+
+Target cache is checked during the first cycle: if it hits, then the next two instructions are fetched from the target cache,, executing the branch without delays.
+
+#### Decode phase
+
+D1 and D2 are for the basic decoding, while the D3 is used for complex ones, and it's overlapped with the first stage of execution pipeline.
+After ISS, the Ex1, Ex2 and WB stages completed the integer pipeline.
+The floating-point pipeline is 5 cycle deep, that sums up to the 5 cycles for fetch and decode, resulting in a 10-cycle latency for floating-point operations.
+
+Decode stages determine if there are dependencies between instruction, forcing a sequential execution in that case. 
+
+#### Execution phase
+
+The execution section occupies three pipeline stages, providing one pipeline for instruction load, one for store, two for ALU operations, and separate pipelines for integer multiplication and division. The floating-point and SIMD operations add two more stages to the pipeline, and also a pipeline for domain-specific operations (square root, etc).
+
+#### Power saving instructions
+
+- **WFI** (Wait For Interrupt) instruction stops the processor until an interrupt is received;
+- **WFE** (Wait For Event) instruction stops the processor until an event is received;
+- **SEV** (Send Event) instruction sends an event to another processor.
+
+### JTAG - Slide "CPU - part 2"
+
+Device used during the debugging phase of a microprocessor, when there is no OS running. It takes out bit streams from the registers in a predefined order, and at the same time it inserts bit streams in the desired registers, such as new address in the PC, new data in the registers, etc.
+
+### Introduction - Slide "Cache - part 1"
+
+The cache is a small, fast memory, used to store the most frequently used data, in order to reduce the time needed to access the main memory. The cache is divided into **cache lines**, which are the smallest unit of data that can be stored in the cache. The cache is divided into **cache sets**, which are groups of cache lines, and each cache set is divided into **ways**, which are the number of cache lines that can be stored in the same set.
+
+#### Principles of locality
+
+- **Temporal locality**: if a data is accessed, it is likely to be accessed again in the near future. Keeping most recently accessed data near the processor can reduce the time needed to access the data.
+- **Spatial locality**: if a data is accessed, it is likely that nearby data will be accessed soon. Moving data from the main memory closer to the processor can reduce the time needed to access the data.
+
+#### Terminology
+
+- **block**, or **line**: the smallest unit of data that can be stored in the cache;
+- **hit rate**: the fraction of memory accesses founds in the cache;
+- **miss rate**: the fraction of memory accesses not found in the cache. Also calculated as $1 - \text{hit rate}$;
+- **miss penalty**: the time needed to fetch a block from the main memory;
+
+#### Mapping
+
+How do we know if a certain data is in the cache? There are different ways to map the data in the cache:
+
+- **direct-mapped cache**: we use the block address, doing a modulo operation with the number of blocks in cache. Being it a power of 2, we can use the last bits of the address to determine the block in the cache. We also add a **tag** to the block, which contains the address of the block in the main memory. The tag is compared with the tag of the block in the cache, to see if the data is in the cache;
+- **fully associative cache**: allows a flexible mapping of the data in the cache, because the block can be placed in any position in the cache. More expensive, because it requires a comparison of the tag with all the tags in the cache;
+- **set-associative cache**: a compromise between the two previous methods, where the cache is divided into sets, and the block can be placed in any position in the set. Only need of $n$ comparators, where $n$ is the number of ways, being less expensive than the fully associative cache.
+
+#### How to find the data in the cache
+
+For what regards the direct-mapped and the set-associative cache, an index is used: it can be calculated from the memory address of the data and, once accessed in cache, the tag is checked to see if the data is in the cache. If the tag matches, the data is in the cache, and the data is read from the cache. The validity bit is also checked, to see if the data is valid. Time to check the cache is called **hit time**.
+
+#### Miss rate vs Cache size
+
+We observe that the miss rate goes up if the block size becomes a significant fraction of the cache size, because the number of blocks that can be held in the same cache size is smaller.
+
+Bigger block size: more spatial locality, but if increased too much until having few blocks in the cache, temporal locality is lost; furthermore, the miss penalty is higher because the block is bigger, and more time is needed to fetch it from the main memory;
+
+#### Types of cache misses
+
+- **Compulsory miss**: also known as **cold start miss**, occurs when the data is accessed for the first time, and it is not in the cache. It is not possible to avoid this kind of miss, because the data has to be fetched from the main memory. A solution to limit the impact of this kind of miss could be to have a bigger block size, to exploit spatial locality, taking in mind that the miss penalty will be higher and the higher block size could lead to a higher miss rate.
+- **Capacity miss**: occurs when the cache is full, and the data has to be replaced by another data. This kind of miss can be reduced by increasing the size of the cache, but remember the fact that bigger caches have higher access time, because of the higher **hit time**, which is the time needed to check if the data is in the cache.
+- **Conflict miss**: occurs when multiple memory locations are mapped in the same cache location. This is what happens: the index of the memory location within the cache is computed, and the set is accessed. Then, the validity bit and the address tag are checked. If the validity bit is set, but the tag doesn't match, a conflict miss occurs. This kind of miss can be reduced by increasing the number of ways, or by using a fully associative cache.
+
+### Cache - part 2 - Slide "Cache - part 2"
+
+#### Replacement policies
+
+When a block has to be replaced, a replacement policy is used to determine which block has to be replaced. The most common replacement policies are:
+
+- **random replacement**: the block to be replaced is chosen randomly;
+- **least recently used (LRU)**: the block that has been accessed the least recently is replaced. This is the optimal replacement policy, but it is also the most expensive, because it requires a counter for each block, to keep track of the last access time. The counter is updated every time the block is accessed, and the block with the lowest counter is replaced;
+- **first-in first-out (FIFO)**: the block that has been in the cache the longest is replaced. This policy is less expensive than the LRU policy, because it requires only a counter for each set, to keep track of the order in which the blocks have been placed in the cache. The counter is updated every time a block is placed in the cache, and the block with the highest counter is replaced.
+
+#### Write policies
+
+When a write operation is performed, the cache policy decides how to handle the write operation:
+
+- **write-through**: the data is written both in the cache and in the main memory. This policy is simple, but it is also slow, because the write on memory is itself slow. To speed up the write operation, a **write buffer** can be used, to store the data that has to be written in the main memory. The data is written in the buffer, and then it is written in the main memory. The write buffer is used to speed up the write operation, because the write operation is considered completed as soon as the data is written in the buffer. The write buffer is also used to store the data that has to be written in the cache, in case of a write miss.
+- **write-back**: the data is written only in the cache, and the main memory is updated only when the block is replaced. This policy is faster than the write-through policy, but it is also more complex, because the main memory has to be updated only when the block is replaced. To keep track of the blocks that have been modified, a **dirty bit** is used. The dirty bit is set when the block is modified, and it is cleared when the block is written in the main memory. The dirty bit is used to avoid writing the block in the main memory if the block has not been modified. If the cache line is about to be read, the dirty bit is checked: if it is set, the block is written in the main memory, and then the data is read from the main memory. If the dirty bit is not set, the data is read directly from the cache.
+
+What happens in case of write miss? Two possibilities:
+
+- **write-allocate**: the block is read from the main memory, and then the data is written in the cache. This policy is used in combination with the write-back policy, because the block has to be read from the main memory to be written in the cache. The write-allocate policy is used to avoid writing the block in the main memory if the block has not been modified.
+- **write-no-allocate**: the data is written only in the main memory, and the block is not read from the main memory. This policy is used in combination with the write-through policy, because the data is written directly in the main memory, and the block is not read from the main memory.
+
+#### Load policies
+
+When a load operation is performed, the cache policy decides how to handle the load operation:
+
+- **blocking**: the requested word is only sent to the processor when the entire block is in the cache. This policy is simpler to be implemented, and follows the principle of spatial locality;
+- **non-blocking**: the requested word is sent to the processor as soon as it is read from the main memory. This policy has more impact in caches where the block loading implies several memory accesses.
+
+Speaking of **non-blocking** policy, we can have two different implementations:
+
+- **early restart**: words are fetched in order, and the processor has to wait until the requested word is in tha cache. Example: if the requested word is the third word in the block, the processor wait for the load of three words;
+- **critical word first**: the requested word is fetched first, and the other words are fetched, sequentially, in background. This policy is more complex, but it is also faster, because the processor doesn't have to wait for the entire block to be in the cache.
+
+#### Cache performances
+
+Let's assume that cache hit costs are included as part of the normal CPU execution cycle, then we can write:
+
+$$\text{CPU time} = \text{IC} \times \text{CPI} \times \text{CC}$$
+
+where:
+
+$$ \text{CPI} = \text{CPI}_{\text{ideal}} + \text{Memory-stall cycles}$$
+
+Specifically for write-through cache, held the following:
+
+$$\text{Memory-stall cycles} = \text{access/program} \times \text{miss rate} \times \text{miss penalty}$$
+
+Note the impact of hit time in performances: defining **AMAT** as the average time needed to access the memory, we have:
+
+$$ \text{AMAT} = \text{hit time} + \text{miss rate} \times \text{miss penalty}$$
+
+This means that the higher the CPU performances, the higher the influence of the hit time on the metric evaluation. Following the same idea, if we increase the clock rate, the memory stall time will account for more CPU cycle, being it (almost) constant.
+
+In conclusion, **we cannot neglect the cache behavior when we're evaluating system performances**.
+
+#### Cache levels
+
+Multiple levels of cache have been defined, driven by the fact that the nearest the cache is to the processor, the faster it is, but also the smaller it is. Now technology allows to have bigger L1 caches, but the principle is still valid. However, design considerations are different for each level:
+
+- **L1** is , has we just told, attached to the processor, and it's the fastest cache. Its will is to minimize the hit time, thus its dimension is kept *smaller*, compared to the other levels;
+- **L2** is bigger, and focuses on serve the L1 cache when a miss occurs. To reduce the time penalty to access memory, it is larger than L1, with bigger blocks, and an high level of associativity
+
+In modern CPUs, out-of-order execution is performed during a cache miss, such as a pending load/store operation; however, this behavior is strongly related to thee program data flow, which is hard to predict, so we can't measure precisely the impact of a cache miss on the CPU performances.
+
+#### Victim cache
+
+When the necessity to replace a block arises, instead of completely removing it from the cache, it is moved to a **victim buffer**, so rather than stalling on a subsequential cache miss, contents of the buffer are checked first, to see if the requested data is there, in order to reduce the miss penalty. Some details about this buffer:
+
+- is even smaller than a L1 cache, having 4 to 16 positions;
+- it's fully associative;
+- particularly efficient for small direct-mapped caches, showing more than 25% of reduction in miss rate, for a 4kB cache.
