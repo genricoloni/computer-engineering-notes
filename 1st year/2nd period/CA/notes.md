@@ -756,3 +756,62 @@ When the necessity to replace a block arises, instead of completely removing it 
 - is even smaller than a L1 cache, having 4 to 16 positions;
 - it's fully associative;
 - particularly efficient for small direct-mapped caches, showing more than 25% of reduction in miss rate, for a 4kB cache.
+
+#### Improving cache performances
+
+##### Misses
+
+Misses depends on the memory access patterns, so from this point of view, the cache is a passive element. To improve performances, **code must be optimized**: this includes both an improvement on the behavior of the algorithm, and compiler optimizations for the memory access patterns
+
+##### Reduce hit time
+
+An influent factor is the behavior of write operations:
+
+- **no write-allocate**: we avoid the hit time, but we have to write directly in the main memory. This because the policy obliges to write in memory in any case, so we can avoid the hit time since it's not required to do any operation in the cache;
+- **write-allocate**: to avoid a waste of cycles, first to check for the hit, and then for write, a **delayed write buffer** is used by the pipeline to write in the cache.
+
+Furthermore, the hit time can be improved by using smaller cache (which is the case of L1 caches), implemented with smaller blocks.
+
+##### Reduce miss rate
+
+The miss rate can be reduced by increasing the associativity of the cache, so more flexibility is given to the cache to store the data. Using bigger caches, with larger blocks, can also reduce the miss rate, because the spatial locality is exploited, as we can see in the implementation of the L2 cache. We can also combine these hints with the usage of a victim cache, to reduce the miss rate.
+
+##### Reduce miss penalty
+
+The miss penalty can be reduced by using smaller block, because the smaller the block the smaller the data to be fetched from the main memory; a write buffer can also be used, to hold dirty blocks being replaced, diminishing the time needed to read because it doesn't have to wait for the write operation to be completed. Obviously, the write buffer is also used when a read miss occurs: if we're *lucky*, the data is already in the buffer, so we can avoid the miss penalty; if instead the data is not in the buffer, no extra time is wasted, because the data is read from the main memory. We can also consider to use a **fetch critical word first** policy for those larger blocks, to reduce the miss penalty.
+
+Other elements external to the cache can also influence the miss penalty, such as the bus width, the memory speed, and the memory controller, so we can consider to improve these elements to reduce the miss penalty.
+
+### Cache - part 3 - Slide "Cache - part 3"
+
+#### Direct access cache
+
+A direct access cache is implemented using this schema:
+
+![Direct access cache](./img/DAC.png)
+
+This cache has a size of $2^{14}$ bytes, so $16$KBytes, with a block size of $2^6$ bytes and a word size of $4$ bytes. Using these data, we can compute the number of pages, which is $\frac{2^{32}}{2^{14}} = 2^{18}$, from which also derives the width of the tag field, and the number of blocks in the cache, which is $2^{14} / 2^6 = 2^8$.
+Here some insights about the cache circuit:
+
+- the tag filed in cache is compared with the bit $[31:14]$ of the address, to see if the data is in the cache, and the result is ANDed with the valid bit to return hit or miss;
+- to decide which index to read, the bits $[13:6]$ of the address are used to select the row in the cache;
+- all the data fields of the selected row go into a 16-to-1 multiplexer, which is controlled by block offset, that can be found in the bits $[5:2]$ of the address;
+
+This cache implementation uses a separated larger memory for data, and a smaller one for the tags, with block offset supplying the extra address bits for the large data memory.
+
+The hit/miss bit is sent to the write controller, that also receive the R/W signal.
+
+#### Set-associative cache
+
+A set-associative cache is a direct-mapped cache with multiple ways, so each *row* contains multiple blocks. A 4-way set-associative cache is implemented using this schema:
+
+![Set-associative cache](./img/set-associative.png)
+
+The address size is $64$ bits, with a cache size of $32$KBytes, a block size of $32$ bytes and a word sizeof $8$ bytes. From these information, we can compute the size of each way, which is $\frac{\text{cache size}}{\text{number of ways}} = 8$KBytes, and the number of blocks in each way, which is $\frac{\text{way size}}{\text{block size}} = 256$. The number of pages is $\frac{\text{size of memory}}{size of each way}$, so it's $\frac{2^{64}}{2^{13}} = 2^{51}$.
+
+- what seen in the previous cache is repeated here, with the difference that the hit signal is the result of the OR of the hit signals of each way;
+- the multiplexer is a 4-to-1, controlled by hit/miss signal of each way, and the data is sent to the processor.
+
+### Cache effects - Slide "Cache - part 3"
+
+#### Unbalanced distribution of misses 
