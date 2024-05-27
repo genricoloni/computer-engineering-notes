@@ -814,4 +814,28 @@ The address size is $64$ bits, with a cache size of $32$KBytes, a block size of 
 
 ### Cache effects - Slide "Cache - part 3"
 
-#### Unbalanced distribution of misses 
+#### Unbalanced distribution of misses
+
+When the percentage of misses in a program is known, we can observe the distribution of the misses in the cache. If the distribution is unbalanced, it means that the misses are concentrated in a small portion of the code, and this can be a problem, because the cache is not used efficiently. This can lead to a diminishing of throughput, because the cache is not used to its full potential. To solve this problem, a profiling of the code can be done, to see where the misses are concentrated, and then the code can be optimized to reduce, or to balance, the distribution of the misses.
+
+#### Way-prediction
+
+To improve hit time, a prediction of the way, in order to pre-set the multiplexer, can be done. Percentage of correct of prediction depends on the number of ways: 90% is reached for 2-way caches and 80% for 4-way caches. Obviously, when the prediction is wrong, the hit time is increased, because the multiplexer has to be set again. Similar reasoning can be used also for the block offset: even for this case, the penalty for a wrong prediction is an increase in the hit time.
+
+#### Non-blocking caches
+
+Non-blocking caches can be used to reduce the miss penalty, allowing an hit before the previous misses have been resolved, using the *hit-under-miss* and *hit-under-multiple-miss* policies. L2 level must support this feature, and this because, in general, processors are able to hide a possible miss in the L1 cache, but not in the L2 cache.
+
+#### Multi-banked caches
+
+To reduce the hit time, a multi-banked cache can be used, where the cache is divided into multiple banks, and the data can be accessed in parallel from the banks. Interleave banks are calculated according to the actual block address.
+
+### Compiler optimizations - Slide "Cache - part 3"
+
+#### Loop interchange
+
+Loop interchange is a technique used to improve the cache performance, by changing the order of the nested loops, letting the processor to accesses memory in a more efficient, and sequential, order.
+
+#### Blocking
+
+Blocking is a technique used to improve the cache performance: instead of accessing the entire rows, or columns, of a matrix, we subdivide the matrix into smaller blocks, and we access the blocks instead of the rows or columns. Even if the number of memory accesses increases, we gain in terms of cache performance, because of the better exploitation of the spatial locality.
