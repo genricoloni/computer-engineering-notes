@@ -839,3 +839,103 @@ Loop interchange is a technique used to improve the cache performance, by changi
 #### Blocking
 
 Blocking is a technique used to improve the cache performance: instead of accessing the entire rows, or columns, of a matrix, we subdivide the matrix into smaller blocks, and we access the blocks instead of the rows or columns. Even if the number of memory accesses increases, we gain in terms of cache performance, because of the better exploitation of the spatial locality.
+
+### Virtual machines - Slide "Virtual memory"
+
+Virtual machine is a software implementation of a physical machine, that runs an operating system, and applications, in a virtual environment. The virtual machine is isolated from the physical machine, and it has its own memory, CPU, and I/O devices. The virtual machine is created by a hypervisor, which is a software that runs on the physical machine, and it is used to create, manage, and run the virtual machines. The hypervisor is also used to allocate the resources to the virtual machines, and to manage the communication between the virtual machines and the physical machine.
+Two are the main improvements in matter of protection and isolation:
+
+- **managing software**, providing an abstraction that can run the complete software stack, from the operating system to the applications;
+- **managing hardware**, in order to, for example, improve dependability having multiple servers running the same application within different compatible versions of the same OS.
+
+#### Exception handling
+
+All the exceptions and interruptions issued by the VM are managed by the hypervisor, which is responsible for the communication between the VM and the physical machine. Hypervisor usually traps these exceptions, handling them in the right way.
+
+#### Overhead
+
+The virtual machine introduces an overhead, because the hypervisor has to manage the communication between the VM and the physical machine, and this can slow down the execution of the VM. However, when dealing with user-level applications, the overhead is not a thing, because they run on user mode, and the hypervisor only manage those instructions executed in system mode.
+On the contrary, I/O operations, that are generally OS-intensive, can be slowed down because of the system calls, that have to be managed by the hypervisor. It's also true that, if these applications are also I/O-bound, the overhead is not a problem, because the time needed to perform the I/O operation is hidden by the time needed to perform the I/O operation itself.
+
+#### Basic requirements for virtualization
+
+- **two processor modes**: user mode and system/kernel mode;
+- **privileged instructions**: some instructions, able to control and manage every system's resource, that can be executed only in system mode, resulting in a trap if executed in user mode. Used also to manage the exceptions in the VM;
+- a way to **remap the physical memory**.
+
+### Virtual memory - Slide "Virtual memory"
+
+We can see the virtual memory as a *cache* for the secondary storage. A virtual memory block is called **page**, and a virtual memory miss is called **page fault**.
+
+Two main motivations for virtual memory:
+
+- provide an efficient and safe sharing of the memory among multiple processes;
+- remove the programming burdens of a small amount of main memory.
+
+#### Protection and architecture
+
+Virtual memory enables protections between processes, guaranteeing a private memory space for each of them: this is fundamental when Virtual Machines are being executed, because it allows to isolate the memory of each VM from the others, letting every VM to only access and modify its own, assigned, memory.
+
+To do this, architecture must accomplish the following requirements:
+
+- provide **user mode** and **supervisor mode**;
+- protect certain states of the CPU;
+- provide a **switch mechanism** between user and supervisor mode;
+- provide a **mechanism to limit memory accesses**;
+- provide a **TLB** to enable address translation.
+
+#### Address relocation
+
+Virtual memory simplifies program loading for execution, by providing **relocation**, allowing it to be loaded in any memory location. This because the system relocate program as fixed-size blocks of memory, called **pages**,  deleting the need of contiguous memory allocation: OS only needs to find enough pages in main memory, with virtual pages that can reside on disk, if there's no enough space in main memory. Physical pages can be **shared** among different processes, just by having multiple virtual addresses pointing to the same physical address: in this way a program will access to a certain memory location, threat it as a its own, but it will be shared with other programs.
+
+#### Principle of locality for virtual memory
+
+When virtual memory is enabled, we don't need to have the entire program in memory, but only the parts that are currently being executed, with the same reasoning seen for the cache trough the principle of locality. This is possible because the program is split into pages, and only the pages that are currently being executed are loaded in memory. The pages that are not being executed are stored on disk, and they are loaded in memory only when they are needed.
+
+#### Table size for generic 64-bit architecture
+
+In a 64-bit architecture, the upper 16 bits of the address are not used, so only the 48 less significant bit can be used to address the memory. The physical memory is $1\text{TiB}$, so $2^{40}$ bytes, which need a 40-bit address. If the page size is $2^{12}$ bytes, so $4$KB, the number of pages is $2^{48} / 2^{12} = 2^{36}$, corresponding to $64$G virtual pages. When we consider the $1\text{TiB}$ physical memory, we have $2^{40} / 2^{12} = 2^{28}$ physical pages, corresponding to $256$M physical pages. Having a larger number of virtual pages than physical ones is a necessary condition for the illusion of having a larger memory than the physical one.
+
+#### Cost of a page fault
+
+The penalty for a page fault is around a million of clock cycles; in order to reduce this enormous penalty, some techniques have been implemented:
+
+- **larger page size**: we exploit the spatial locality, because the larger the page size, the more data can be loaded in memory, and the more data can be accessed in a single memory access without a page fault, even increasing the miss penalty and the time needed to load the page in memory;
+- **handling the page fault in software**: in particular, specific algorithms can be used to choose how to place pages in memory, and how to replace them when a page fault occurs.
+- use **write-back policy**, because the write operations would take too much time if the write-through policy is used.
+
+#### Segmentation
+
+Segmentation is a technique used to divide the memory into segments. The address consists of a **segment number** and a **segment offset**, in order to access the memory. The segment number is used to access the segment table, which contains the base address of the segment, and the limit of the segment. The base address is added to the segment offset to obtain the physical address. The limit is used to check if the address is within the segment, and if it is not, a segmentation fault occurs.
+
+### ARM Cortex-A8 - Slide "Virtual memory"
+
+This is a configurable core that supports ARMv7 instruction set. Two-level cache hierarchy is implemented, with the first level having a separate instruction and data cache, each of $16$KB or $32$KB, and the second level having a unified cache of $256$KB or $512$KB. The option second level is 8-way associative, configurable from $128$KB to $1$MB.
+
+The page size of virtual memory is $16$KB larger, and we hypothesize $32$KB size, 4-way associative and a block size of $64$ bytes, so we can compute the **way size**: $\frac{cache size}{number of ways} = 8\text{KB}$. This results in having **page size of virtual memory** greater than the way size.
+
+### Intel i7 - Slide "Virtual memory"
+
+- Support x86-64 instruction set, with up to 4 instructions per cycle;
+- 48-bit virtual addresses, and 36-bit physical addresses;
+- memory management handled with two-level TLB.
+
+### Multicore processors - Slide "Multiprocessor"
+
+Multiprocessors can be easily defined as computers with tightly coupled processors, controlled by a single OS, sharing the same memory trough a shared address space. They exploit both **thread-level parallelism**, where tightly coupled threads collaborate on a single task, and **request-level parallelism**, where multiple and independent processes may originate from one or more users. Also **request-level parallelism** can be exploited by a single application, responding to queries or multiple applications, each one with its own independent thread. When these systems have been designed, the main principle involve **limiting the overhead** of the communication between the processors, by using a shared memory and caches, both from HW and SW point of view.
+
+#### Multiprocessor range
+
+Multiprocessors have a wide range of number of processors, from 2 up to hundreds, coordinated trough the sharing of memory: this implies the existence of a **shared address space**, which doesn't necessarily mean that there's a single physical memory. The actual implementation can be done both by having multiple cores in the same chip, or having different cores in different chips. In both cases, multithreading is usually implemented, to exploit the parallelism of the processors.
+
+#### Multi-computers
+
+Those are a type o large-scale multiprocessor systems, loosely coupled, primarily focused on offering performances for high-end scientific computations. They can scale up to hundreds of computer elements, and each of them can be individually managed; overhead cannot be excluded from our consideration, and it usually depends on network type, system size and processor mapping. A crucial point is the **load balancing**, that involves dynamic balancing, optimizing processes such as processors mapping, to minimize communication overhead. Another challenge on the usage of these systems is **designing software**, particularly in achieving scalability in dynamic load balancing, and in managing the communication between the processors. In that sense, a common technique is to physically place processes that communicate frequently in nearby processors, to reduce the communication overhead.
+
+#### MIMD architecture exploration
+
+Given $n$ the number of MIMD multiprocessors, it's a good practice to have at least $n$ threads, or processes, to execute; considering the multithreading, where a processor is able to manage 2 or more threads in the same chip, this number is even higher. **Independent threads** are:
+
+- identified by **programmer** in the application;
+- created by **OS**, from multiple and independent multiple requests;
+- created by **compiler**, from a single program, to exploit the parallelism, e.g. in loops.
