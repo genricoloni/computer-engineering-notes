@@ -939,3 +939,59 @@ Given $n$ the number of MIMD multiprocessors, it's a good practice to have at le
 - identified by **programmer** in the application;
 - created by **OS**, from multiple and independent multiple requests;
 - created by **compiler**, from a single program, to exploit the parallelism, e.g. in loops.
+
+#### Speedup in parallel processing
+
+We briefly recall the Amdahl's law:
+
+$$ \text{Speedup} = \frac{1}{(1 - P) + \frac{P}{n}}$$
+
+where $P$ is the fraction of the program that can be parallelized, and $n$ is the number of processors. This law is used to evaluate the speedup of a program when executed in parallel, and it shows that the speedup is limited by the fraction of the program that can be parallelized. For example, we want to achieve a speedup of 80 while using 100 processor, the fraction of the program that can still remain serial is $0.25%$: this means that, even if having a larger number of processors that can run in parallel, achieving a speedup equal to the number of processors is hard, because the fraction of the program that can be parallelized is limited.
+
+#### Overhead in parallel processing
+
+Threads can be used to exploit data-level parallelism, but we have to take into account the fact that **overhead is higher** than SIMD processors or even GPUs: to justify this increase in overhead, a sufficiently large grain size should be ensured, and let the parallelism to be exploited in a more efficient way. What does it means? While taking a GPU, that is able to complete rapidly operations even for small arrays, a multicore processor is not able to do the same, because of the overhead in managing the threads. This is why the grain size should be large enough to justify the overhead, and to exploit the parallelism in a more efficient way. Moreover, a large number of change of contexts between threads can lead to two main problems:
+
+- **unwanted cache effects**, due to the fact that the cache is shared among the threads, and the cache lines are invalidated when a thread is switched, so misses can occur when the thread is switched back;
+- **waste of CPU utilization**: while switching multiple threads at the same time, these cores are not used; the worst case is when every thread is switched at the same time, because the CPU is not used at all, so change of context for multiple threads at the same time should be avoided.
+
+#### SMP processors
+
+SMP stands for **Symmetric Multiprocessing**, or **Shared-memory Processors**, and it's a type of multiprocessor system where the number of cores is small to moderate, typically 32 or lower; the main feature of these systems is to have a shared, single, centralized memory, that each processor can access to with the same rights. The term **symmetric** refers to the fact that scheduler solves the workload balance by migrating processes between processors, to ensure a fair and equal latency to access the memory, even if it's organized into multiple banks.
+
+#### DSM processors
+
+In **Distributed Shared Memory** processors, the latter have separate memories for each multicore chip, resulting in a distributed memory, instead of SMP where the memory is centralized; DSM processors address the scalability limitation of centralized memory by physically distributing the memory among processors. This method it's necessary when the number of processors is high, because the centralized memory can become a bottleneck, and the latency to access the memory could be unacceptable. Another name for this architecture is **NUMA** (Non-Uniform Memory Access), because the memory access time is not uniform for all the processors, but it depends on the location of the data word in memory.
+
+#### Communication among processes in SMP and DSM
+
+We recall that **S** stands for both architecture for **shared**, so the **address space** is shared, allowing any processor to access any memory location and enabling communication among threads trough that space.
+In **SMP** shared memory is physically present on the same chip, or board, while in **DSM** systems it's distributed across multiple machines, and accessed via software protocols. There also are clusters and grids, where the memory is placed on single machines, connected via network, where it's impossible to connect to each other memory without defining a network protocol. In such designs, message-passing protocols are used to facilitate communication among the processors.
+
+#### Bottleneck
+
+Why do exist different architectures that differs on the memory organization? The answer is simple: the memory access time is the bottleneck in the system, and it's the main factor that limits the performances of the system.
+
+- Distributing memory among nodes, and adding private memories to them, increases the bandwidth, and also reduce the latency to local memory, at the cost of increasing the complexity of the system;
+- cache memories are used to reduce the latency to access the memory, but decrease the bandwidth, and introduces its own effects during the context switch.
+- Techniques such as multithreading, out-of-order execution, and speculative execution are used to hide the latency to access the memory, at the cost of increasing the complexity of the system.
+
+#### Referencing memory
+
+Suppose to have an application running on a 32-thread multiprocessor, that has a $100 \text{ns}$ delay to handle a reference to a remote memory. Processor is stalled on remote requests, and consider a $4\text{GHz}$ clock rate, with a *local* CPI of $0.5$. Assuming a $0.2\%$ of instructions that involves a remote memory reference, we can compute the average CPI, and the average time to execute an instruction:
+
+$$\text{CPI}_{\text{average}} = \text{CPI}_{\text{local}} + \text{remote\_ref} \times \text{delay} = 0.5 + 0.002 \times 400 = 1.3$$
+
+So the multiprocessor with all local references will be $\frac{1.3}{0.5} = 2.6$ times faster than the one with remote references, even with a little percentage of remote references of $0.2\%$, so we can't neglect the impact of remote accesses on the performances of the system.
+
+### Designing a multiprocessor - Slide "Multiprocessor"
+
+#### Design issues
+
+When designing a multiprocessor, we have to take into account the following issues:
+
+- **write operations** on shared copies in cache, that needs a **cache coherence protocol** to ensure that the copies are consistent;
+- **asynchronous features** of writes, that need a **memory consistency model** to ensure that the writes are performed in the right order;
+- low-level atomic operations, such as **test-and-set** and **compare-and-swap**, that need another **coherence protocol** ;
+- **I/O interrupts**, which can be managed by kernel by choosing the right processor to handle the interrupt;
+- **I/O bus** management, which can be done by add a specific bus driver to ensure memory access with ease.
