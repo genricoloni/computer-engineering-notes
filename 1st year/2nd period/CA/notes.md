@@ -994,3 +994,48 @@ When designing a multiprocessor, we have to take into account the following issu
 - low-level atomic operations, such as **test-and-set** and **compare-and-swap**, that need another **coherence protocol** ;
 - **I/O interrupts**, which can be managed by kernel by choosing the right processor to handle the interrupt;
 - **I/O bus** management, which can be done by add a specific bus driver to ensure memory access with ease.
+
+#### Cache coherence
+
+Having a shared address space, it's possible that the same word is present in multiple caches, referred to different processors. If these words are only read, there wouldn't be any problem, because the value is the same in all the caches, but if a write operation is performed wea can encounter a problem of **coherence** of the value between copies among the caches. The problem actually exists because there is a **global state** which is the one resident in the main memory, and (more than one) **local states** defined by the individual caches, private to each processor. Note that because we **don't want to get rid of the cache**, because of some advantages it brings:
+
+- dealing with private data, cache **reduce the latency** to access them;
+- it also **reduce the traffic on the bus**, letting it to be used for other purposes;
+- dealing with **shared data**, we also have reduced latency and a diminished traffic on the bus, that also applies for conflict accesses, when data are red by multiple processors.
+
+This is an example of incoherence, hypothesizing a write-trough policy:
+
+| Time | Event | Cache of A | Cache of B | Main memory X |
+|------|-------|------------|------------|-------------|
+| 0 | -  | - | - | 1 |
+| 1 | A reads X | 1 | - | 1 |
+| 2 | B reads X | 1 | 1 | 1 |
+| 3 | A writes X | 0 | 1 | 0 |
+
+We clearly see how the value of X is incoherent between the caches and the main memory: if B reads X via cache, it won't notice that A has written a new value for X, because the cache of B still has the old value.
+
+The design space of the solution includes the definition of a global status for each copy of the data, the definition of a strategy to handle on local or remote operations and identifying when remote coherence actions should be performed.
+
+The coherence protocol aims to reduce additional misses and memory operations, while the memory consistence seeks to reduce the complexity of additional hardware, and increase the interval within which memory operations can be performed, exploiting asynchronous writes. However, performances of these solutions depend on factors such as the type of sharing in the application, percentage of operations performed on shared areas, and the behavior of the OS.
+
+When we talk about **coherence**, we refer to defining the behavior of reads and writes in the same memory, while the **consistency** refers to the behavior of these operations with respect to accesses to other memory locations. After a write operation on a shared copy, the coherence protocol establishes operations to make the memory view consistent for all processors trough their cache, while memory consistency model specifies when these operations should be carried out.
+
+#### Snooping protocol
+
+This technique expects that each cache that has a copy of a shared data from the main memory can track the sharing status of the block. In **SMPP**, caches are usually all accessible trough a broadcast medium, and the cache controllers monitor (or **snoop**) on that medium to determine if they have a copy of the requested data. By monitoring the medium, each cache controller can determine when another processor is accessing a block that it has a copy of,allowing it to update its own sharing status and take appropriate actions to maintain cache coherence.
+
+#### Directory-based protocol
+
+The sharing status of a particular block of physical memory is kept in one location, called **directory**.
+
+- In a **SMP**, a **centralized directory** is used, associated with the memory or some other single serialization point, such as the outermost cache in a multi-core chip.
+- In a **DSM**, a **distributed directories** are used among the processes.
+
+During a cache miss, the cache controller queries the directory, to determine the status of the requested data, updates its own directory and notifies the other cache the updating of the status of the block.
+
+#### Coherence protocol
+
+Two ways to keep cached copies up-to-date:
+
+- **write-update**: all the copies are updated when a write operation is performed on a shared copy This update takes place in broadcast, using the shared bus between the caches; there also exists a variant, where the broadcast writes also the data in the shared memory. This method has a huge cost in term of bus bandwidth and latency, and it's not used in modern systems.
+- **write-invalidate**: when a write operation is performed on a shared copy, all the other copies are invalidated by a broadcast communication among caches, and the data is written in the main memory. In this way we ensure that there not exist out-to-date copies of the data, but we have to pay the cost of a miss when the data is needed again.
