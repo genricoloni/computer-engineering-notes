@@ -1039,3 +1039,43 @@ Two ways to keep cached copies up-to-date:
 
 - **write-update**: all the copies are updated when a write operation is performed on a shared copy This update takes place in broadcast, using the shared bus between the caches; there also exists a variant, where the broadcast writes also the data in the shared memory. This method has a huge cost in term of bus bandwidth and latency, and it's not used in modern systems.
 - **write-invalidate**: when a write operation is performed on a shared copy, all the other copies are invalidated by a broadcast communication among caches, and the data is written in the main memory. In this way we ensure that there not exist out-to-date copies of the data, but we have to pay the cost of a miss when the data is needed again.
+
+#### MSI protocol
+
+The **MSI** protocol, which stands for **Modified**, **Shared**, **Invalid**, is a protocol used to maintain the coherence of the data in the caches. The protocol defines three states for the data in the cache:
+
+- **Modified**: the data is present in the cache, and it has been modified so it's not longer coherent with the main memory; other caches that have a copy of the data have to be invalidated to guarantee the coherence of the data;
+- **Shared**: the data is present in the cache, and it's coherent with the main memory; cache-line can be re red by processors, but if a write operation is performed, the cache-line has to be moved to the modified state;
+- **Invalid**: the data is not present in the cache, and/or it's not coherent with the main memory; processors can't access the data, and they have to read the data from the main memory.
+
+To perform an invalidation, the processor gain the right to access the bus, and perform a broadcast send of the cache-line address to invalidate, while the other processors have to listen to the bus, and invalidate the cache-line if the address matches the one sent by the processor. Marking data as invalid, it's guaranteed that processors won't use old data, having to retrieve them from the memory if needed.
+
+The fundamental element needed to implement the protocol is the use of the bus, or an equivalent broadcast medium, to execute the invalidation of the cache-lines. If two processors want to write at the same time in the same block, their operations are serialized, and the first write operation will be executed, marking the other processor's cache-line as invalid. This is a consequence of the algorithm: a write operation in a shared block cannot be completed until the processor that issued that operation gains the right to access the bus; in general, every cache-coherence schemas are based on the serialization of the write operations in the same block.
+
+It's also necessary to implement a policy for how to retrieve data when a miss occurs:
+
+- write-trough: it's easy, because the most recent data is always in the main memory, so the data is read from the main memory, and then written in the cache;
+- write-back: the last version of the data could be in another private cache, so the mechanism is trickier. However, a snooping technique, even for read misses, can be implemented: every processor can snoop every address that goes on the bus and, if a processor sees that the data is marked as dirty in its own cache, it give that address as response of the read request, canceling the memory access.
+
+Variation of the MSI protocol:
+
+- **MESI**: **Exclusive** state is added, where the data is present in the cache, but it's not shared with other processors. This state is useful when a processor wants to read a block, but it doesn't want to share it with other processors, so it can read the block in the exclusive state, and then move it to the shared state if it wants to share it with other processors. This protocol is used in modern systems, because it reduces the traffic on the bus, and it's more efficient than the MSI protocol.
+- **MOESI**: **Owned** state is added, where the data is present in the cache, and it's shared with other processors, but it's not modified. This state is useful when a processor wants to read a block, and it wants to share it with other processors, but it doesn't want to modify it. This protocol is used in modern systems, because it reduces the traffic on the bus, and it's more efficient than the MESI protocol.
+
+#### Limitations of SMP
+
+The larger the number of the processors, and/or the larger the requests to access the memory, the higher the chance that the bus will become a bottleneck, because the bus has a limited bandwidth, and it can't handle a large number of requests at the same time. To address this, multi-core designs adopted higher bandwidth buses, and multiple independent memories.
+
+Snooping bandwidth can also be a problem, because every cache must look at the bus to check for misses, and adding bandwidth only pushes the problem to the cache controllers, that have to handle a large number of requests at the same time.
+
+### Memory consistency - Slide "Multiprocessor"
+
+Memory consistency refers to the rules that govern how multiple processors access and update shared memory in a multiprocessor system.
+
+- **strict consistency**: ensures that any read to a memory location always returns the value of the last write to that location;
+- **sequential consistency**: ensures that every processor sees operations in the same order, even if hardware reorders them;
+- **processor consistency**: ensures that every processor sees write  operations in the same order as they were issued, and the value seen by every processor is the value written by the last write operation;
+- **weak consistency**: allows a reordering of the write operations, using synchronization checkpoints to ensure that order of certain operations is preserved;
+- **release consistency**: ensures that writes performed before a release operation are performed before a new acquire operation.
+
+### Synchronization - Slide "Multiprocessor"
