@@ -34,11 +34,11 @@ For each class:
 
 - personal mobile devices require real-time performance for graphics, video, and audio, as well as energy efficiency.
 
-- General-purpose desktops require balanced performance for a range of tasks, including interactive performance for graphics, video, and audio. 
+- General-purpose desktops require balanced performance for a range of tasks, including interactive performance for graphics, video, and audio.
 
-- Servers require support for databases and transaction processing, enhancements for reliability and availability, and support for scalability. 
+- Servers require support for databases and transaction processing, enhancements for reliability and availability, and support for scalability.
 
-- Clusters/warehouse-scale computers require throughput performance for many independent tasks, error correction for memory, and energy proportionality. 
+- Clusters/warehouse-scale computers require throughput performance for many independent tasks, error correction for memory, and energy proportionality.
 
 - Embedded computing often requires special support for graphics or video, power limitations and power control, and real-time constraints.
 
@@ -192,12 +192,12 @@ $$\text{Speedup} = \frac{1}{(1-\text{fraction enhanced}) + \frac{\text{fraction 
 
 Look at this table as an example:
 
-| Solution | Fraction enhanced | Computing time | I/O time | Overall time |
-|----------|-------------------|----------------|---------|--------------|
-| Original | ... | 7s | 3s | 10s |
-| Disk | I/O speedup 3x | 7s | 1s | 8s |
-| CPU 1| Computing speedup 2x | 3.5s | 3s | 6.5s |
-| CPU 2| Computing speedup 3x | 2.33s | 3s | 5.33s |
+| Solution | Fraction enhanced    | Computing time | I/O time | Overall time |
+|----------|----------------------|----------------|----------|--------------|
+| Original | ...                  | 7s             | 3s       | 10s          |
+| Disk     | I/O speedup 3x       | 7s             | 1s       | 8s           |
+| CPU 1    | Computing speedup 2x | 3.5s           | 3s       | 6.5s         |
+| CPU 2    | Computing speedup 3x | 2.33s          | 3s       | 5.33s        |
 
 - Disk: fraction enhanced is 0.3, speedup enhanced is 3, so the speedup is 1.25;
 - CPU 1: fraction enhanced is 0.7, speedup enhanced is 2, so the speedup is 1.54;
@@ -407,7 +407,6 @@ To store the partial results of the operations within the pipeline, **pipeline r
 
 #### $\texttt{LDUR}$ instruction
 
-
 In the slides, execution with pipeline is described. It only differs from what seen before for the fact that the partial result is stored in the pipeline registers. The only thing worth to mention is the write-back stage, where the result is written in the register file: given the fact that there are no pipeline register for this final stage, the result is written in the register file only at the end of the clock cycle. How? First of all, we need to preserve the destination register used in the fetched instruction: to allow this, it is passed from the $\texttt{ID/EX}$ register to the $\texttt{MEM/WB}$ pipeline register used in the write-back stage, similar to how store passes the register value from the $\texttt{EX/MEM}$ register to the $\texttt{MEM/WB}$ register in the $\texttt{MEM}$ stage: this ensures that the correct register is updated with the loaded data during the write-back operation.
 
 #### Recap for pipeline stages
@@ -444,13 +443,13 @@ The circuit to manage the interruption is shown in the following image:
 
 Recap on techniques to accelerate single core performance:
 
-| Technique | Description | Limitation |
-|-----------|-------------|------------|
-|Pipelining | Divide the execution of an instruction into multiple stages | Issue rate, stalls, depth of pipeline|
-|Super-pipelining | Inter-clock cycle pipelining | Clock skew, slower ALU, stalls |
-| Super-Scalar | Execute multiple instructions in parallel | Hazard resolution (even with compiler) |
-| VLIW/EPIC | Each instruction specifies multiple scalar operations | Packing |
-| Vector | Execute the same operation on multiple data | Data dependency, data alignment, AVX extensions, GPU|
+| Technique        | Description                                                 | Limitation                                           |
+|------------------|-------------------------------------------------------------|------------------------------------------------------|
+| Pipelining       | Divide the execution of an instruction into multiple stages | Issue rate, stalls, depth of pipeline                |
+| Super-pipelining | Inter-clock cycle pipelining                                | Clock skew, slower ALU, stalls                       |
+| Super-Scalar     | Execute multiple instructions in parallel                   | Hazard resolution (even with compiler)               |
+| VLIW/EPIC        | Each instruction specifies multiple scalar operations       | Packing                                              |
+| Vector           | Execute the same operation on multiple data                 | Data dependency, data alignment, AVX extensions, GPU |
 
 #### Static vs Dynamic issue
 
@@ -628,7 +627,7 @@ D1 and D2 are for the basic decoding, while the D3 is used for complex ones, and
 After ISS, the Ex1, Ex2 and WB stages completed the integer pipeline.
 The floating-point pipeline is 5 cycle deep, that sums up to the 5 cycles for fetch and decode, resulting in a 10-cycle latency for floating-point operations.
 
-Decode stages determine if there are dependencies between instruction, forcing a sequential execution in that case. 
+Decode stages determine if there are dependencies between instruction, forcing a sequential execution in that case.
 
 #### Execution phase
 
