@@ -24,7 +24,7 @@ A larger fraction of the clock cycle is spent on the wire delay, which is the ti
 - IoT devices: devices in everyday life, such as smartwatches, smart thermostats, etc, connected to internet. **The ability to run third-party applications is the line between non-embedded and embedded systems**. They offers useful data and local services to remote applications, using remote information and resources. Wide range of performances and costs. In general, we want to reach required performances with the lowest cost possible.
 - Personal Mobile Devices: smartphones, tablets, etc. They have limited power consumption, due to battery life and absence of cooling systems. Key aspects are efficient use of energy, and the memory optimization.
 - Desktop computers: spanning from low-cost to high-performance machines, market is driven to *price-performance ratio*. Performance evaluation is challenging, because of the large use of web applications; they also are considered the **access point to data to cloud services**
-- Servers: backbone of large-scale computing. Main points are **availability**, **scalability** and **efficient troughput**. They are used for web services, data storage, etc.
+- Servers: backbone of large-scale computing. Main points are **availability**, **scalability** and **efficient throughput**. They are used for web services, data storage, etc.
 - Clusters/Warehouse-scale computers: collections of desktops/servers, connected to the same network, acting together as a single computer, communicating through the network. Main cost for these systems is the **power consumption and cooling**.
 
 ### Defining a computer architecture - Slide "Performance part 1"
@@ -77,7 +77,7 @@ Tightly coupled MIMD exploit TPL, where cooperative threads are executed in para
 
 WHile CPU performance has been increasing, memory performance has been increasing at a slower rate. Taking as reference an Intel i7 CPU, we can reach a peak bandwidth of 400 GB/s, while the memory bandwidth is 25 GB/s. This is a problem because the CPU is not able to reach its peak performance due to the memory bottleneck. This bandwidth can be reached by exploiting various techniques:
 
-- multiporting and pipelining cache accesses;
+- multi-porting and pipelining cache accesses;
 - use multiple cache levels;
 - using different caches for data and for instructions;
 - implementing different caches for each core;
@@ -88,7 +88,7 @@ Dependability is the ability to deliver service that can justifiably be trusted.
 
 - error detection: parity, checksums, CRCs;
 - system reconfiguration: hot swapping, hot standby;
-- system recovery: checkpointing, rollback, re-execution;
+- system recovery: checkpoint, rollback, re-execution;
 
 #### Fault tolerant system design
 
@@ -555,7 +555,7 @@ In this technique, switches between threads are made after each instruction, res
 
 This is a variation of fine-grained multithreading, that arises naturally when fine-grained multithreading is implemented on top of a multiple-issue dynamically scheduled processor. It exploits thread-level parallelism to hide long-latency events, increasing the usage of the functional components. Techniques such as register renaming, and dynamic scheduling allow multiple instructions from independent threads to be executed without regards of dependencies among them. The follow image offers a visual representation of the typical execution:
 
-![Simultaneously Multithreading](../CA/img/SMT.png)
+![Simultaneously Multithreading](./img/SMT.png)
 
 If applied in a out-of-order processor, *per-thread tables* for register renaming and separate PCs helps to avoid conflicts between threads and, at the same time, to increase the performance of the processor.
 
