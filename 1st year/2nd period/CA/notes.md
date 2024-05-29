@@ -5,6 +5,7 @@ Before starting:
 - I'm writing these notes BEFORE the exam, using the slides the professor gave us, trying to find those arguments that are more likely to be asked during the oral exam;
 - Feel free to add anything you think is useful;
 - After your exam, please add any question you remember, so that we can help future students.
+- Thanks to [Federico Casu](https://github.com/federic0casu) who wrote the [notes](https://github.com/b0-n0-b0/Computer-Engineering/blob/main/FIRST_YEAR/SECOND_SEMESTER/Computer_Architecture/Computer_Architecture_Notes.pdf) from which I took inspiration.
 
 ## Topics
 
@@ -1062,6 +1063,22 @@ Variation of the MSI protocol:
 - **MESI**: **Exclusive** state is added, where the data is present in the cache, but it's not shared with other processors. This state is useful when a processor wants to read a block, but it doesn't want to share it with other processors, so it can read the block in the exclusive state, and then move it to the shared state if it wants to share it with other processors. This protocol is used in modern systems, because it reduces the traffic on the bus, and it's more efficient than the MSI protocol.
 - **MOESI**: **Owned** state is added, where the data is present in the cache, and it's shared with other processors, but it's not modified. This state is useful when a processor wants to read a block, and it wants to share it with other processors, but it doesn't want to modify it. This protocol is used in modern systems, because it reduces the traffic on the bus, and it's more efficient than the MESI protocol.
 
+#### Tag duplication
+
+Every bus transaction must check the cache-address tags, which could potentially lead to interferences with processor cache accesses. One way to reduce this interference is to duplicate the tags, so that the cache controller can check the tags in parallel with the processor, and the processor can continue to execute instructions without waiting for the cache controller to check the tags.
+
+#### L3 cache
+
+TO ensure efficient bus transactions, and prevent interferences with processor cache accesses, a third level of **shared** cache can be added, to reduce the number of bus transactions. With the directory information, invalidates can be directed only on those caches with copies of the target block. Three status are used in this case:
+
+- **Shared**: the data is present one or more caches, and it's coherent with the main memory;
+- **uncached**: the data is not present in any caches;
+- **modified**: exactly one cache has a copy of the data, and it's not coherent with the main memory. The processor that has the copy is called the **owner** of the block, and it's responsible for maintaining the coherence of the block.
+
+A L3 is said to have the **inclusion property** if data present in L1 and L2 caches are also present in L3 cache. This property is useful to reduce the number of bus transactions, because the data is always present in the L3 cache, and the processor can access the data without waiting for the data to be loaded from the main memory.
+
+However, some modern architectures don't have the inclusion property,such as AMD Zen3 architecture; caches without this property are also immune to side-channels attack such as **Flush+Reload** (Off-topic but very interesting, check the paper "Flush+Reload: A High Resolution, Low Noise, L3 Cache Side-Channel Attack" for more details).
+
 #### Limitations of SMP
 
 The larger the number of the processors, and/or the larger the requests to access the memory, the higher the chance that the bus will become a bottleneck, because the bus has a limited bandwidth, and it can't handle a large number of requests at the same time. To address this, multi-core designs adopted higher bandwidth buses, and multiple independent memories.
@@ -1078,4 +1095,44 @@ Memory consistency refers to the rules that govern how multiple processors acces
 - **weak consistency**: allows a reordering of the write operations, using synchronization checkpoints to ensure that order of certain operations is preserved;
 - **release consistency**: ensures that writes performed before a release operation are performed before a new acquire operation.
 
+A *lock-and-unlock* mechanism can be used to ensure that the memory consistency is preserved, by locking the memory location before performing a write operation, and unlocking it after the write operation is completed. Other processors, depending on the model, can invalidate their blocks **before the unlock operation** of the processor that performed the write operation, or just before the acquisition of the lock.
+
 ### Synchronization - Slide "Multiprocessor"
+
+Usually, synchronization mechanisms are implemented trough user-level primitives, that exploit the synchronization mechanisms implemented directly in the hardware. For smaller processors, or low-level scenarios, the crucial hardware feature is an uninterruptible instruction, or a sequence of instructions, that can be executed atomically, without being interrupted by other processors. However, on high-contention situations, synchronization can be a performance bottleneck, due to the additional delays introduced by contention, and potentially higher latency in such multi-core systems.
+
+In general, to address synchronization issues, *locks* are used, and adaptable to different scenarios. The most simple operation that needs atomicity is an **atomic exchange**, that can be implemented in several ways, such as **test-and-set**, **compare-and-swap**, and **load-linked/store-conditional**: all of them offer the possibility to read and **atomically modify** a memory location, along with some mechanism for determining whether the operations have been executed atomically.
+
+As instance, consider two processors that want to do an exchange simultaneously, with a lock policy that use a convention where $0$ means that the lock is free, and $1$ means that the lock is busy: this race is broken, because one processor will be able to perform the exchange first, returning $0$, while the other processor will return $1$. The key to implement a primitive like this is to ensure the **atomicity**: the exchange has to be indivisible, and two simultaneous exchanges have to be serialized, so that the first processor that performs the exchange will be able to do it, while the other processor will be stalled until the first processor has completed the exchange.
+
+#### Verify the atomicity
+
+TO ensure atomicity, another strategy can bu used: implement a sequence of two (or more) instructions where the last one returns a value from which it can be deduced if the sequence has been executed atomically. The sequence of instructions will be effectively atomic if it appears as though alla other operations executed by any processor occurred before or after the pair.
+
+In **RISC-V** architecture, two specific instructions have been designed to ensure atomicity during write and read operations:
+
+- **load-reserved**: it loads a value from a memory location, and it reserves the location for a subsequent store-conditional operation;
+- **store-conditional**: it stores a value in a memory location, but only if the location has been reserved by a previous load-reserved operation.
+
+If the reservation of the load is broken by a write in the same location, the conditional store fails; it also always fails if a context switch is done between the load and the store, because the reservation is lost.
+
+#### Performances of SMP
+
+In a multi-core system with a snooping coherence protocol, overall cache performances are affected by both single processor cache misses traffic, and the traffic caused by communication and snooping, which can lead to invalidations and additional misses. Also the number of processors, cache and block size affect the miss rate, influencing the overall performances of the system.
+
+Additional misses are those misses that occur because of the coherence protocol, and they can be divided into two categories:
+
+- **true sharing misses**: arise from cache coherence protocols, occurring when a processor writes to a shared cache block, causing invalidations in other caches. 
+In a invalidation-based protocol, first write by a processor to a shared cache block causes an invalidation to establish ownership of that block; additionally, when another processor attempts to read a modified word in that cache block, a miss occurs and the resultant block is transferred. Both these misses are classified as true sharing misses because they arise from the sharing of data among processes.
+- **false sharing misses**: occur when a block is invalidated because of a word than the one being read is written into it. This can also happens when a process, or even the kernel, operates on a private variable and migrates between processors, resulting in multiple copies of the same variable in different caches.
+
+#### Misses in Mono-core and Multi-core
+
+- The two largest sources of L3 misses with a fixed, small, size are instruction, capacity and conflict misses, but the larger the size of the cache, the smaller the number of misses from these sources.
+- Compulsory, false and true sharing misses remain constant with the size of the cache, and become the largest sources of misses as the cache size increases ($4$ and $8$MB).
+
+The contribution to memory access cycles increases as the processor count increase, primarily because of the larger number of true sharing misses. Compulsory misses slightly increase because each processor have to handle more compulsory misses.
+
+The number of misses per 1000 instructions drops steadily at the block size increases, indicating an ideal block size of $128$ bytes, because it minimizes the number of misses per 1000 instructions.
+
+The kernel data miss rate in L1 cache increases as the cache size gets larger, leading to an higher number of coherence misses. Increasing block size, however, reduces coherence traffic, but not the number of coherence misses.
